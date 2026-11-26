@@ -1,10 +1,10 @@
 import { css, html, nothing, type PropertyDeclarations, type PropertyValues } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { SubFormControl, formControlStyles, type FormValue } from './shared/form-control'
-import { icons } from './shared/icons'
 import { Popup, highlight, isSheet, listboxStyles, sheetHeader, sheetStyles, supportsPopover } from './shared/listbox'
 import { messages, type MessageContext } from './shared/messages'
 import { debounce, define, emit } from './shared/utils'
+import { iconCheck, iconChevronRight, iconClose, iconKeyboardArrowDown } from './shared/material-icons'
 
 export interface TreeSelectNode {
   value: string
@@ -597,11 +597,11 @@ export class SubTreeSelect extends SubFormControl {
           e.stopPropagation()
           this.#setOpen(row.node.value, !row.open)
         }}
-        >${row.hasKids ? icons.chevronRight() : nothing}</span
+        >${row.hasKids ? iconChevronRight() : nothing}</span
       >
-      ${this.multiple ? html`<span class="tick box" aria-hidden="true">${on ? icons.check() : nothing}</span>` : nothing}
+      ${this.multiple ? html`<span class="tick box" aria-hidden="true">${on ? iconCheck() : nothing}</span>` : nothing}
       <span class="text"><span>${this.searchable ? highlight(row.node.label, this._query) : row.node.label}</span></span>
-      ${!this.multiple ? html`<span class="tick" aria-hidden="true">${on ? icons.check() : nothing}</span>` : nothing}
+      ${!this.multiple ? html`<span class="tick" aria-hidden="true">${on ? iconCheck() : nothing}</span>` : nothing}
     </div>`
   }
 
@@ -636,9 +636,9 @@ export class SubTreeSelect extends SubFormControl {
           @blur=${() => !this._open && this.onControlBlur()}
         >
           <span id="value" class="value ${text ? '' : 'placeholder'}">${text || this.placeholder}</span>
-          <span class="chevron" aria-hidden="true">${icons.chevronDown()}</span>
+          <span class="chevron" aria-hidden="true">${iconKeyboardArrowDown()}</span>
         </button>
-        ${showClear ? html`<button type="button" class="clear" aria-label=${messages.clearSelection(this.label)} @click=${() => this.#clear()}>${icons.close()}</button>` : nothing}
+        ${showClear ? html`<button type="button" class="clear" aria-label=${messages.clearSelection(this.label)} @click=${() => this.#clear()}>${iconClose()}</button>` : nothing}
         <div id="panel" class="panel" part="panel" popover=${supportsPopover ? 'auto' : nothing} @keydown=${this.#onPanelKey} @keyup=${this.#onKeyUp}>
           ${sheetHeader(this.label, messages.done, () => this.#close())}
           ${this.searchable
@@ -678,7 +678,7 @@ export class SubTreeSelect extends SubFormControl {
       ${this.multiple && this.selected.length
         ? html`<ul class="tags">
             ${this.selected.map(
-              (v) => html`<li class="tag"><span>${this.#labelOf(v)}</span><button type="button" aria-label=${messages.removeValue(this.#labelOf(v))} ?disabled=${this.isDisabled} @click=${() => this.#remove(v)}>${icons.close()}</button></li>`,
+              (v) => html`<li class="tag"><span>${this.#labelOf(v)}</span><button type="button" aria-label=${messages.removeValue(this.#labelOf(v))} ?disabled=${this.isDisabled} @click=${() => this.#remove(v)}>${iconClose()}</button></li>`,
             )}
           </ul>`
         : nothing}

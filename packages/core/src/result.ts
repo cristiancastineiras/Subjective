@@ -1,12 +1,12 @@
 import { LitElement, css, nothing } from 'lit'
 import { html, unsafeStatic } from 'lit/static-html.js'
-import { icons } from './shared/icons'
 import { baseStyles, iconStyles } from './shared/styles'
 import { define } from './shared/utils'
+import { iconCheckCircleFill, iconErrorFill, iconInfoFill, iconLock, iconSearchOff, iconWarningFill } from './shared/material-icons'
 
 export type ResultStatus = 'success' | 'info' | 'warning' | 'error' | '403' | '404' | '500'
 
-const ICON = { success: 'check_circle-fill', info: 'info-fill', warning: 'warning-fill', error: 'error-fill', '403': 'lock', '404': 'search_off', '500': 'error-fill' } as const
+const ICON = { success: iconCheckCircleFill, info: iconInfoFill, warning: iconWarningFill, error: iconErrorFill, '403': iconLock, '404': iconSearchOff, '500': iconErrorFill } as const
 const COLOUR = { success: 'success', info: 'info', warning: 'warning', error: 'danger', '403': 'warning', '404': 'info', '500': 'danger' } as const
 
 /**
@@ -100,7 +100,7 @@ export class SubResult extends LitElement {
     const colour = COLOUR[this.status] ?? 'info'
     const code = /^\d{3}$/.test(this.status) ? this.status : ''
     return html`<section class="result" style=${`--_c: var(--sub-color-${colour})`}>
-      ${icons[ICON[this.status] ?? 'info-fill']()}${code ? html`<span class="code" aria-hidden="true">${code}</span>` : nothing}
+      ${(ICON[this.status] ?? iconInfoFill)()}${code ? html`<span class="code" aria-hidden="true">${code}</span>` : nothing}
       <${tag}>${this.heading}</${tag}>
       ${this.subtitle ? html`<p class="sub">${this.subtitle}</p>` : nothing}
       <slot></slot>

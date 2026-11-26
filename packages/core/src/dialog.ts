@@ -1,8 +1,8 @@
 import { LitElement, css, html, nothing, type PropertyValues } from 'lit'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, emit, warn } from './shared/utils'
+import { iconClose } from './shared/material-icons'
 
 const supportsClosedBy = typeof HTMLDialogElement !== 'undefined' && 'closedBy' in HTMLDialogElement.prototype
 
@@ -335,7 +335,7 @@ export class SubDialog extends LitElement {
         <header>
           <h1 id="title">${this.heading}</h1>
           <button class="close" type="button" aria-label=${messages.close} @click=${() => this.#onCancelRequest()}>
-            ${icons.close()}
+            ${iconClose()}
           </button>
         </header>
         <div class="body">

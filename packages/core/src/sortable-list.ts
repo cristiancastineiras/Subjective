@@ -1,9 +1,9 @@
 import { LitElement, css, html } from 'lit'
 import { announce } from './announce'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define, emit, warn } from './shared/utils'
+import { iconArrowDownward, iconArrowUpward, iconDragIndicator } from './shared/material-icons'
 
 /**
  * Reorderable list with a COMPLETE keyboard alternative to dragging (WCAG 2.5.7 Dragging Movements):
@@ -180,14 +180,14 @@ export class SubSortableItem extends LitElement {
         @pointercancel=${() => this.#list?.cancel(this)}
         @blur=${() => this.grabbed && this.#list?.drop(this)}
       >
-        ${icons.grip()}
+        ${iconDragIndicator()}
       </button>
       <div class="content"><slot></slot></div>
       <button type="button" aria-label=${messages.moveItemUp(this.name)} ?disabled=${index <= 0} @click=${() => list?.move(this, -1, true)}>
-        ${icons.arrowUp()}
+        ${iconArrowUpward()}
       </button>
       <button type="button" aria-label=${messages.moveItemDown(this.name)} ?disabled=${last} @click=${() => list?.move(this, 1, true)}>
-        ${icons.arrowDown()}
+        ${iconArrowDownward()}
       </button>
     </div>`
   }

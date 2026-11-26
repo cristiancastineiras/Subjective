@@ -1,6 +1,7 @@
 {
   "$comment": "Icons shipped with @sub/core. Use the names from https://fonts.google.com/icons (snake_case). Add a name, run `pnpm --filter @sub/core icons`, commit src/shared/material-icons.ts. Append `-fill` for the filled variant.",
   "style": "outlined",
+  "directional": ["arrow_back", "arrow_forward", "chevron_left", "chevron_right", "send"],
   "icons": [
     "add",
     "air",

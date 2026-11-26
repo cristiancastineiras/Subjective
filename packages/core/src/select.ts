@@ -1,11 +1,11 @@
 import { css, html, nothing, type PropertyDeclarations, type PropertyValues } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { SubFormControl, formControlStyles, type FormValue } from './shared/form-control'
-import { icons } from './shared/icons'
 import { Popup, filterItems, highlight, isSheet, listboxStyles, renderGroups, sheetHeader, sheetStyles, supportsPopover, type ListItem } from './shared/listbox'
 import { messages, type MessageContext } from './shared/messages'
 import { debounce, define, emit, wrap } from './shared/utils'
 import { OptionsController, defineOption } from './option'
+import { iconCheck, iconClose, iconKeyboardArrowDown } from './shared/material-icons'
 
 type Focusable = 'trigger' | 'listbox' | 'search'
 
@@ -499,9 +499,9 @@ export class SubSelect extends SubFormControl {
       @pointerdown=${(e: Event) => e.preventDefault()}
       @click=${() => this.#choose(item)}
     >
-      ${this.multiple ? html`<span class="tick box" aria-hidden="true">${on ? icons.check() : nothing}</span>` : nothing}
+      ${this.multiple ? html`<span class="tick box" aria-hidden="true">${on ? iconCheck() : nothing}</span>` : nothing}
       <span class="text"><span>${this.searchable ? highlight(item.label, this._query) : item.label}</span>${item.description ? html`<span class="desc">${item.description}</span>` : nothing}</span>
-      ${!this.multiple ? html`<span class="tick" aria-hidden="true">${on ? icons.check() : nothing}</span>` : nothing}
+      ${!this.multiple ? html`<span class="tick" aria-hidden="true">${on ? iconCheck() : nothing}</span>` : nothing}
     </div>`
   }
 
@@ -535,9 +535,9 @@ export class SubSelect extends SubFormControl {
           @blur=${() => !this._open && this.onControlBlur()}
         >
           <span id="value" class="value ${text ? '' : 'placeholder'}">${text || this.placeholder}</span>
-          <span class="chevron" aria-hidden="true">${icons.chevronDown()}</span>
+          <span class="chevron" aria-hidden="true">${iconKeyboardArrowDown()}</span>
         </button>
-        ${showClear ? html`<button type="button" class="clear" aria-label=${messages.clearSelection(this.label)} @click=${() => this.#clear()}>${icons.close()}</button>` : nothing}
+        ${showClear ? html`<button type="button" class="clear" aria-label=${messages.clearSelection(this.label)} @click=${() => this.#clear()}>${iconClose()}</button>` : nothing}
         <div
           id="panel"
           class="panel"
@@ -584,7 +584,7 @@ export class SubSelect extends SubFormControl {
       ${this.multiple && this.selected.length
         ? html`<ul class="tags">
             ${this.selected.map(
-              (v) => html`<li class="tag"><span>${this.#labelOf(v)}</span><button type="button" aria-label=${messages.removeValue(this.#labelOf(v))} ?disabled=${this.isDisabled} @click=${() => this.#remove(v)}>${icons.close()}</button></li>`,
+              (v) => html`<li class="tag"><span>${this.#labelOf(v)}</span><button type="button" aria-label=${messages.removeValue(this.#labelOf(v))} ?disabled=${this.isDisabled} @click=${() => this.#remove(v)}>${iconClose()}</button></li>`,
             )}
           </ul>`
         : nothing}

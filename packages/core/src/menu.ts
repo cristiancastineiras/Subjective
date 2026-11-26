@@ -1,9 +1,10 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { icons } from './shared/icons'
 import { placeNear } from './shared/position'
+import { bottomSheet, isSheet } from './shared/sheet'
 import { baseStyles, controlTypography, focusInset, focusStyles, iconStyles, popupMotion, visuallyHidden } from './shared/styles'
 import { define, emit, warn, wrap } from './shared/utils'
 import { OptionsController, defineOption } from './option'
+import { iconKeyboardArrowDown, iconMoreHoriz } from './shared/material-icons'
 
 const supportsPopover = typeof HTMLElement !== 'undefined' && typeof HTMLElement.prototype.showPopover === 'function'
 
@@ -14,6 +15,8 @@ const supportsPopover = typeof HTMLElement !== 'undefined' && typeof HTMLElement
  * Trigger: `aria-haspopup="menu"` + `aria-expanded`. Keys: Enter/Space/Down open on the first item,
  * Up opens on the last; Up/Down/Home/End move, type a letter to jump, Esc closes and returns focus
  * to the trigger, Tab closes. `icon-only` shows "..." with `label` as its accessible name.
+ * On small screens the list is an action sheet docked to the bottom edge (full-width items within thumb
+ * reach); tapping the dimmed page closes it without touching what is underneath.
  */
 export class SubMenu extends LitElement {
   static override shadowRootOptions: ShadowRootInit = { mode: 'open', delegatesFocus: true }
@@ -98,6 +101,13 @@ export class SubMenu extends LitElement {
       }
 
       ${popupMotion("[role='menu']")}
+      ${bottomSheet("[role='menu']", '.items')}
+
+      @media (max-width: 40rem) {
+        .items {
+          padding: var(--sub-space-2);
+        }
+      }
 
       [role='menuitem'] {
         display: flex;
@@ -134,6 +144,14 @@ export class SubMenu extends LitElement {
     defineOption()
   }
 
+  override disconnectedCallback(): void {
+    super.disconnectedCallback()
+    // Removed while open (a route change, a re-render): the popover closes with it, so stop listening to the page.
+    // Removal hides the popover without a toggle event, hence the explicit reset.
+    document.removeEventListener('pointerdown', this.#onOutside)
+    this._open = false
+  }
+
   protected override firstUpdated(): void {
     if (!this.label) warn('<sub-menu> needs a "label" (its text, or its accessible name when icon-only).')
   }
@@ -155,7 +173,9 @@ export class SubMenu extends LitElement {
     this._open = true
     if (supportsPopover) menu.showPopover()
     else menu.setAttribute('data-open', '')
-    placeNear(trigger, menu, 'bottom', 'start', 4)
+    // an action sheet on small screens (CSS): no placement
+    if (isSheet()) menu.style.top = menu.style.left = ''
+    else placeNear(trigger, menu, 'bottom', 'start', 4)
     const items = this.#items
     if (focus !== 'none') (focus === 'last' ? items[items.length - 1] : items[0])?.focus()
     document.addEventListener('pointerdown', this.#onOutside)
@@ -250,7 +270,7 @@ export class SubMenu extends LitElement {
         @click=${() => (this._open ? this.#hide() : this.#show('first'))}
         @keydown=${this.#onTriggerKey}
       >
-        ${this.iconOnly ? icons.more() : html`<span>${this.label}</span>${icons.chevronDown()}`}
+        ${this.iconOnly ? iconMoreHoriz() : html`<span>${this.label}</span>${iconKeyboardArrowDown()}`}
       </button>
       <div
         id="menu"
@@ -260,19 +280,22 @@ export class SubMenu extends LitElement {
         @toggle=${this.#onToggle}
         @keydown=${this.#onMenuKey}
       >
-        ${options.map((o) =>
-          o.href
-            ? html`<a role="menuitem" href=${o.href} tabindex="-1" aria-disabled=${o.disabled ? 'true' : nothing} @click=${() => this.#hide(false)}>${o.label}</a>`
-            : html`<button
-                role="menuitem"
-                type="button"
-                tabindex="-1"
-                aria-disabled=${o.disabled ? 'true' : nothing}
-                @click=${() => !o.disabled && this.#activate(o.value)}
-              >
-                ${o.label}
-              </button>`,
-        )}
+        <div class="scrim" aria-hidden="true" @click=${() => this.#hide()}></div>
+        <div class="items" role="none">
+          ${options.map((o) =>
+            o.href
+              ? html`<a role="menuitem" href=${o.href} tabindex="-1" aria-disabled=${o.disabled ? 'true' : nothing} @click=${() => this.#hide(false)}>${o.label}</a>`
+              : html`<button
+                  role="menuitem"
+                  type="button"
+                  tabindex="-1"
+                  aria-disabled=${o.disabled ? 'true' : nothing}
+                  @click=${() => !o.disabled && this.#activate(o.value)}
+                >
+                  ${o.label}
+                </button>`,
+          )}
+        </div>
       </div>`
   }
 }

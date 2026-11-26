@@ -1,12 +1,12 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define, emit } from './shared/utils'
+import { iconCheckCircleFill, iconClose, iconErrorFill, iconInfoFill, iconWarningFill } from './shared/material-icons'
 
 export type AlertVariant = 'info' | 'success' | 'warning' | 'error'
 
-const GLYPH = { info: 'info-fill', success: 'check_circle-fill', warning: 'warning-fill', error: 'error-fill' } as const
+const GLYPH = { info: iconInfoFill, success: iconCheckCircleFill, warning: iconWarningFill, error: iconErrorFill } as const
 const LABEL: Record<AlertVariant, string> = { info: 'Information', success: 'Success', warning: 'Warning', error: 'Error' }
 
 /**
@@ -131,7 +131,7 @@ export class SubAlert extends LitElement {
   }
 
   protected override render() {
-    const glyph = icons[GLYPH[this.variant]]()
+    const glyph = GLYPH[this.variant]()
     return html`<div class="alert" part="alert" role=${this.variant === 'error' ? 'alert' : 'status'}>
       <span class="glyph">${glyph}</span>
       <div class="content">
@@ -140,7 +140,7 @@ export class SubAlert extends LitElement {
         <div class="actions"><slot name="actions"></slot></div>
       </div>
       ${this.dismissible
-        ? html`<button class="dismiss" type="button" aria-label=${messages.close} @click=${this.#dismiss}>${icons.close()}</button>`
+        ? html`<button class="dismiss" type="button" aria-label=${messages.close} @click=${this.#dismiss}>${iconClose()}</button>`
         : nothing}
     </div>`
   }

@@ -184,8 +184,7 @@ export function setupDashboard(root: HTMLElement): SubApp {
   const refresh = () => {
     api.clearCache()
     loadView(state.view, true)
-    announce('Refreshing the data')
-    app.toast({ message: 'Refreshing from the live APIs…' })
+    app.toast({ message: 'Refreshing from the live APIs…' }) // the toast is a polite live region: announcing too would say it twice
   }
 
   const go = (view: View, focusTitle = true) => {
@@ -404,7 +403,7 @@ export function setupDashboard(root: HTMLElement): SubApp {
                     update()
                   }}></sub-table>
                   <sub-space>
-                    <sub-button disabled-reason=${state.picked.length < 2 ? 'Select at least two packages to compare' : nothing} @click=${() => compareSelected()}>Compare ${state.picked.length || ''} selected</sub-button>
+                    <sub-button ?disabled=${state.picked.length < 2} disabled-reason="Select at least two packages to compare" @click=${() => compareSelected()}>Compare ${state.picked.length || ''} selected</sub-button>
                     <sub-button variant="secondary" ?disabled=${!state.picked.length} @click=${() => state.picked.forEach((n) => !settings.watchPkgs.includes(n) && toggleWatchPkg(n))}>Add selected to watchlist</sub-button>
                   </sub-space>`}
       ${compareCard()}`

@@ -53,6 +53,8 @@ export const defaultMessages = {
 
   // Generic UI
   close: 'Close',
+  /** The button that shows the navigation of <sub-layout> on narrow screens */
+  navigationMenu: 'Menu',
   loading: 'Loading',
   cancel: 'Cancel',
   expandAll: 'Expand all',

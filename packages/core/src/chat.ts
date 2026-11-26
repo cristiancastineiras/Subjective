@@ -1,10 +1,10 @@
 import { LitElement, css, html, nothing } from 'lit'
 import { defineButton } from './button'
 import { defineChatMessage } from './chat-message'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define, emit, warn } from './shared/utils'
+import { iconStop } from './shared/material-icons'
 
 /**
  * AI chat shell following SubUX "UX for AI chatbots":
@@ -324,9 +324,9 @@ export class SubChat extends LitElement {
           : nothing}
         <form @submit=${(e: Event) => { e.preventDefault(); this.#send(this.#input?.value ?? '', 'composer') }}>
           <label for="msg">${messages.message}</label>
-          <textarea id="msg" rows="2" aria-describedby="hint" @keydown=${this.#onKey}></textarea>
+          <textarea id="msg" rows="2" enterkeyhint="send" aria-describedby="hint" @keydown=${this.#onKey}></textarea>
           ${this.generating
-            ? html`<sub-button variant="secondary" @click=${() => emit(this, 'sub-stop')}>${icons.stop()}${messages.stopGenerating}</sub-button>`
+            ? html`<sub-button variant="secondary" @click=${() => emit(this, 'sub-stop')}>${iconStop()}${messages.stopGenerating}</sub-button>`
             : html`<sub-button type="submit">${messages.send}</sub-button>`}
           <p id="hint" class="hint">${messages.chatHint}</p>
         </form>

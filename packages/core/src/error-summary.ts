@@ -1,8 +1,8 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, focusElement } from './shared/utils'
+import { iconError } from './shared/material-icons'
 
 export interface FormError {
   /** Field label */
@@ -97,7 +97,7 @@ export class SubErrorSummary extends LitElement {
   protected override render() {
     if (!this.errors.length) return nothing
     return html`<div class="summary" role="alert" tabindex="-1" aria-labelledby="title">
-      <h2 id="title">${icons.error()}${this.heading || messages.errorsToFix(this.errors.length)}</h2>
+      <h2 id="title">${iconError()}${this.heading || messages.errorsToFix(this.errors.length)}</h2>
       <ul>
         ${this.errors.map(
           (e) => html`<li><a href="#" @click=${(ev: Event) => this.#go(ev, e.target)}>${e.label}: ${e.message}</a></li>`,

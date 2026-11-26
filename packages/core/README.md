@@ -22,7 +22,9 @@ src/
     children.ts       ChildrenController: enhance plain light-DOM children (li, a, sub-option)
     messages.ts       every user-facing string (translate with setMessages)
     config.ts         configure({ requiredIndicator })
-    icons.ts          Material Symbols registry + renderIcon; material-icons.ts is GENERATED
+    material-icons.ts GENERATED: one export per icon (iconClose()...) so a component ships only what it draws
+    icons.ts          icons by NAME (registerIcon, renderIcon): only <sub-icon> / <sub-icon-button> import it
+    icon-svg.ts       svgIcon(): the inline SVG every icon renders
     position.ts       placeNear(): flip/clamp for tooltip and menu
     listbox.ts        option panel for select/autocomplete: Popup (top-layer popover, light dismiss, sheet on phones), filterItems, listboxStyles
     utils.ts          define, emit, warn, uid, focusElement, debounce

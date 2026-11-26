@@ -1,9 +1,9 @@
 import { LitElement, css, html, nothing } from 'lit'
 import { announce } from './announce'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define } from './shared/utils'
+import { iconContentCopy } from './shared/material-icons'
 
 export type TextTone = 'default' | 'muted' | 'danger' | 'success' | 'warning' | 'info'
 
@@ -135,7 +135,7 @@ export class SubText extends LitElement {
           ? html`<del><slot></slot></del>`
           : html`<slot></slot>`
     return html`${body}${this.copyable
-      ? html`<button type="button" aria-label=${messages.copy} @click=${() => void this.#copy()}>${icons.content_copy()}</button>`
+      ? html`<button type="button" aria-label=${messages.copy} @click=${() => void this.#copy()}>${iconContentCopy()}</button>`
       : nothing}`
   }
 }

@@ -90,12 +90,38 @@ point at `--sub-control-radius`, so a theme scoped to a subtree must re-declare 
 Dark theme and compact density are saved in the browser (`localStorage`, with a safe fallback when storage is blocked),
 survive page changes and reloads, are painted before the first frame (no flash) and follow changes made in another tab.
 
+## Moving around the playground
+
+Pages change in place (`playground/src/router.ts`): no reload, the header and the component list stay put, a short
+crossfade (none with reduced motion), Back/Forward restore each page's scroll position, and focus lands on the new
+`h1` with an announcement (`afterNavigation()`), as after a real page load. Only the page you open is downloaded:
+the navigation reads an index built from the demo files (`virtual:demo-index`), and pointing at a link starts
+loading its page. Ctrl/Cmd+K finds a component, every page has its **Code** (with Copy) and Previous / Next links.
+
 ## Responsive and mobile
 
-Every component reflows to 320px without page-level horizontal scrolling (a Playwright spec checks all of them).
-Below 40rem: `<sub-dialog>` / `<sub-modal>` cover the whole screen (`mobile="sheet"` for a bottom sheet,
-`mobile="dialog"` to keep the box), `<sub-select>` opens its options as a full-screen sheet with a Done button, and
-dialog buttons become full width. Wide tables scroll inside their own keyboard-focusable region.
+Every component reflows to 320px without page-level horizontal scrolling (a Playwright spec checks all of them),
+and on a 375px touch phone every overlay stays inside the screen (another one opens each of them).
+
+Below 40rem of screen (one breakpoint for the whole library, `shared/sheet.ts`):
+
+| Component | On a phone |
+|---|---|
+| `<sub-dialog>`, `<sub-modal>`, `<sub-drawer>` | cover the screen (`mobile="sheet"` for a bottom sheet, `mobile="dialog"` to keep the box); full-width buttons above the home indicator |
+| `<sub-select>`, `<sub-tree-select>`, `<sub-cascader>` | full-screen sheet with the field's name and Done |
+| `<sub-date-picker>` | the calendar is a bottom sheet (field name + Done, full-size days); focus returns to the button, so no keyboard pops up; digits alone (`20261126`) are a date, since phone number pads have no "-" |
+| `<sub-menu>`, `<sub-dropdown>` | action sheet docked to the bottom edge, full-width items within thumb reach |
+| `<sub-tour>`, `<sub-toaster>`, `<sub-float-button>` | docked to the bottom edge, clear of the notch and the home indicator (`env(safe-area-inset-*)`) |
+
+Tapping the dimmed page around a sheet closes it and never activates what is underneath.
+
+Components that are containers answer to their **own** width (container queries), so they adapt in a sidebar too:
+`<sub-layout>` folds its navigation behind a **Menu** button below 40rem (Esc or following a link folds it again),
+`<sub-carousel>` shows "2 / 5" in one row of controls below 24rem and changes slide with a swipe (the buttons do the
+same, WCAG 2.5.1), `<sub-splitter>` stacks its panes below 24rem, `<sub-transfer>` stacks its lists with full-width
+buttons whose arrows point up and down, `<sub-descriptions>` stacks label over value. Touch screens are not offered
+"drag and drop" (`<sub-upload>`). Wide tables scroll inside their own keyboard-focusable region. Popups that fit
+neither above nor below their anchor (a landscape phone, a zoomed page) stay on screen and scroll inside.
 
 ## Corners: controls, panels, items
 
@@ -205,7 +231,11 @@ The playground page "Developer tools" runs each of them live.
 
 Material Symbols (<https://fonts.google.com/icons>) as inline SVG, decorative by default. Only the icons in
 [`packages/core/icons.config.json`](packages/core/icons.config.json) ship. Add a name, run
-`pnpm --filter @sub/core icons`, commit `src/shared/material-icons.ts`.
+`pnpm --filter @sub/core icons`, commit `src/shared/material-icons.ts`. Names in `directional` are mirrored right-to-left.
+
+Each icon is its own export, so an app ships only the icons of the components it uses (an app with
+`<sub-breadcrumbs>` and `<sub-input>` went from 25.2 to 13.6 kB gzip). Only `<sub-icon>` and `<sub-icon-button>`, which
+take a name at runtime, include the whole set. A unit test keeps it that way.
 
 ```html
 <sub-icon name="search"></sub-icon>
@@ -230,4 +260,5 @@ pnpm check      build + type-check + token contrast + token usage + theme SDK un
 pnpm test       build + Playwright: axe on every demo and the Studio in both themes, audit per component, keyboard specs
 ```
 
-Playwright needs a browser: `SUB_BROWSER_CHANNEL=chrome pnpm test` uses the installed Chrome.
+Playwright needs a browser: `SUB_BROWSER_CHANNEL=chrome pnpm test` uses the installed Chrome. `SUB_FIREFOX=1` adds the
+cross-browser specs (what you see follows the state) in the installed Firefox; `SUB_FIREFOX=all` runs every spec there.

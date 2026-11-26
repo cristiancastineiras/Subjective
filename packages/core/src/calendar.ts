@@ -1,8 +1,8 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, emit } from './shared/utils'
+import { iconChevronLeft, iconChevronRight } from './shared/material-icons'
 
 const pad = (n: number) => String(n).padStart(2, '0')
 export const toIso = (d: Date): string => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
@@ -222,9 +222,9 @@ export class SubCalendar extends LitElement {
     const weeks = Array.from({ length: 6 }, (_, w) => Array.from({ length: 7 }, (_, d) => addDays(start, w * 7 + d)))
     return html`<div class="cal" part="calendar">
       <header>
-        <button class="nav" type="button" aria-label=${messages.previousMonth} @click=${() => this.#move(addMonths(f, -1))}>${icons.chevron_left()}</button>
+        <button class="nav" type="button" aria-label=${messages.previousMonth} @click=${() => this.#move(addMonths(f, -1))}>${iconChevronLeft()}</button>
         <div class="title" id="title" aria-live="polite">${title}</div>
-        <button class="nav" type="button" aria-label=${messages.nextMonth} @click=${() => this.#move(addMonths(f, 1))}>${icons.chevron_right()}</button>
+        <button class="nav" type="button" aria-label=${messages.nextMonth} @click=${() => this.#move(addMonths(f, 1))}>${iconChevronRight()}</button>
       </header>
       <table role="grid" aria-labelledby="title" @keydown=${this.#onKey}>
         <thead>

@@ -1,9 +1,9 @@
 import { LitElement, css, nothing } from 'lit'
 import { html, unsafeStatic } from 'lit/static-html.js'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusInset, focusStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define, emit, warn } from './shared/utils'
+import { iconError, iconKeyboardArrowDown } from './shared/material-icons'
 
 /**
  * One accordion section: `<h{level}><button aria-expanded>` + a `region` panel. The whole header is
@@ -126,9 +126,9 @@ export class SubAccordionItem extends LitElement {
           aria-controls="panel"
           @click=${() => this.toggle()}
         >
-          <span class="chevron">${icons.chevronDown()}</span>
+          <span class="chevron">${iconKeyboardArrowDown()}</span>
           <span>${this.heading}${this.invalid ? html`<span class="sr-only"> - contains an error</span>` : nothing}</span>
-          ${this.invalid ? html`<span class="invalid">${icons.error()}</span>` : nothing}
+          ${this.invalid ? html`<span class="invalid">${iconError()}</span>` : nothing}
         </button>
       </${tag}>
       <div

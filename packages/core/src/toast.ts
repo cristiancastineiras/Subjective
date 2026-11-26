@@ -1,9 +1,9 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, emit, uid } from './shared/utils'
 import type { AlertVariant } from './alert'
+import { iconClose } from './shared/material-icons'
 
 export interface ToastOptions {
   message: string
@@ -48,8 +48,9 @@ export class SubToaster extends LitElement {
     css`
       :host {
         position: fixed;
-        inset-inline: var(--sub-space-4);
-        inset-block-end: var(--sub-space-4);
+        /* clear of the notch and the home indicator on phones (env() is 0 elsewhere) */
+        inset-inline: calc(var(--sub-space-4) + max(env(safe-area-inset-left), env(safe-area-inset-right)));
+        inset-block-end: calc(var(--sub-space-4) + env(safe-area-inset-bottom));
         z-index: var(--sub-z-toast);
         display: flex;
         flex-direction: column;
@@ -183,7 +184,7 @@ export class SubToaster extends LitElement {
         (t) => html`<div class="toast" data-variant=${t.variant}>
           <span class="message">${t.message}</span>
           ${t.actionLabel ? html`<button type="button" @click=${() => this.#act(t)}>${t.actionLabel}</button>` : nothing}
-          <button class="x" type="button" aria-label=${messages.close} @click=${() => this.dismiss(t.id)}>${icons.close()}</button>
+          <button class="x" type="button" aria-label=${messages.close} @click=${() => this.dismiss(t.id)}>${iconClose()}</button>
         </div>`,
       )}
     </div>`

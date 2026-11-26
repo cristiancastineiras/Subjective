@@ -1,9 +1,9 @@
 import { LitElement, css, html, nothing, type TemplateResult } from 'lit'
 import { announce } from './announce'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusInset, focusStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define, emit, warn } from './shared/utils'
+import { iconArrowDropDown, iconArrowDropUp, iconChevronRight, iconUnfoldMore } from './shared/material-icons'
 
 export interface TableColumn<Row = Record<string, unknown>> {
   key: string
@@ -308,6 +308,17 @@ export class SubTable extends LitElement {
     return String(row[this.columns[0]?.key ?? ''] ?? this.#key(row))
   }
 
+  /** A cell's content. One failing `render` (bad data, a bug) must not blank the whole table: it shows the raw value. */
+  #cell(col: TableColumn, row: Row): TemplateResult | string | number {
+    if (!col.render) return String(row[col.key] ?? '')
+    try {
+      return col.render(row)
+    } catch (error) {
+      warn(`<sub-table> column "${col.key}": render() threw (${error instanceof Error ? error.message : String(error)}). Showing the raw value instead.`)
+      return String(row[col.key] ?? '')
+    }
+  }
+
   #sort(col: TableColumn): void {
     this.sortDir = this.sortKey === col.key && this.sortDir === 'ascending' ? 'descending' : 'ascending'
     this.sortKey = col.key
@@ -370,7 +381,7 @@ export class SubTable extends LitElement {
               return html`<th scope="col" class=${c.align ?? ''} aria-sort=${c.sortable ? (active ? this.sortDir : 'none') : nothing}>
                 ${c.sortable
                   ? html`<button class="sort" type="button" @click=${() => this.#sort(c)}>
-                      ${c.label}${active ? (this.sortDir === 'ascending' ? icons.arrow_drop_up() : icons.arrow_drop_down()) : icons.unfold_more()}
+                      ${c.label}${active ? (this.sortDir === 'ascending' ? iconArrowDropUp() : iconArrowDropDown()) : iconUnfoldMore()}
                     </button>`
                   : c.label}
               </th>`
@@ -389,12 +400,12 @@ export class SubTable extends LitElement {
                     ? html`<td class="sel"><label><input type="checkbox" aria-label=${`Select ${rowName}`} .checked=${state === 'all'} .indeterminate=${state === 'some'} @change=${(e: Event) => this.#toggle(row, (e.target as HTMLInputElement).checked)} /></label></td>`
                     : nothing}
                   ${this.columns.map((c, i) => {
-                    const content = c.render ? c.render(row) : String(row[c.key] ?? '')
+                    const content = this.#cell(c, row)
                     if (i > 0) return html`<td class=${c.align ?? ''}>${content}</td>`
                     return html`<th scope="row" class=${c.align ?? ''}>
                       <div class="first" style="padding-inline-start: calc(var(--sub-table-subrow-indent) * ${level})">
                         ${kids.length
-                          ? html`<button class="exp" type="button" aria-expanded=${open ? 'true' : 'false'} aria-controls=${kids.map((k) => `r-${this.#key(k)}`).join(' ')} aria-label=${messages.subRows(rowName)} @click=${() => this.#toggleOpen(row)}>${icons.chevronRight()}</button>`
+                          ? html`<button class="exp" type="button" aria-expanded=${open ? 'true' : 'false'} aria-controls=${kids.map((k) => `r-${this.#key(k)}`).join(' ')} aria-label=${messages.subRows(rowName)} @click=${() => this.#toggleOpen(row)}>${iconChevronRight()}</button>`
                           : gap
                             ? html`<span class="exp-gap"></span>`
                             : nothing}

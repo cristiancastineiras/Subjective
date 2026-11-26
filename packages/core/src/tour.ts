@@ -6,7 +6,7 @@ import { messages } from './shared/messages'
 import { placeNear } from './shared/position'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, emit, warn } from './shared/utils'
-import { icons } from './shared/icons'
+import { iconClose } from './shared/material-icons'
 
 export interface TourStep {
   /** CSS selector, element or function returning it. Without a target the step is centred. */
@@ -246,7 +246,8 @@ export class SubTour extends LitElement {
       /* Small screens: the step docks to the bottom edge (the page above stays visible) */
       @media (max-width: 40rem) {
         .card:not(.centered) {
-          inset: auto 0.5rem 0.5rem;
+          /* above the home indicator, clear of the notch */
+          inset: auto calc(0.5rem + max(env(safe-area-inset-left), env(safe-area-inset-right))) calc(0.5rem + env(safe-area-inset-bottom));
           inline-size: auto;
           max-block-size: 60dvh;
         }
@@ -435,7 +436,7 @@ export class SubTour extends LitElement {
       >
         <header>
           <p id="count" class="count">${messages.tourStep(this.index + 1, steps.length)}</p>
-          <button class="close" type="button" aria-label=${messages.tourClose} @click=${() => this.close('skip')}>${icons.close()}</button>
+          <button class="close" type="button" aria-label=${messages.tourClose} @click=${() => this.close('skip')}>${iconClose()}</button>
         </header>
         <h2 id="title">${step.title}</h2>
         ${step.description ? html`<p id="text" class="text">${step.description}</p>` : nothing}

@@ -1,11 +1,10 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { unsafeHTML } from 'lit/directives/unsafe-html.js'
 import { ChildrenController } from './shared/children'
-import { icons } from './shared/icons'
 import { baseStyles, focusStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define } from './shared/utils'
+import { iconCheckCircleFill, iconErrorFill, iconInfoFill, iconSchedule } from './shared/material-icons'
 
-const STATUS = { done: 'check_circle-fill', current: 'schedule', todo: 'schedule', error: 'error-fill', info: 'info-fill' } as const
+const STATUS = { done: iconCheckCircleFill, current: iconSchedule, todo: iconSchedule, error: iconErrorFill, info: iconInfoFill } as const
 const WORD = { done: 'Completed', current: 'In progress', todo: 'Upcoming', error: 'Failed', info: 'Note' } as const
 
 /**
@@ -15,7 +14,7 @@ const WORD = { done: 'Completed', current: 'In progress', todo: 'Upcoming', erro
  *     <sub-timeline-item time="2026-11-20" status="done" heading="Order placed">We received it.</sub-timeline-item>
  *   </sub-timeline>
  *
- * Status is icon + a visually hidden word, never colour alone. The author's item markup is reused as is.
+ * Status is icon + a visually hidden word, never colour alone. The author's item markup is shown in place (a slot).
  */
 export class SubTimeline extends LitElement {
   static override properties = {
@@ -105,17 +104,22 @@ export class SubTimeline extends LitElement {
     `,
   ]
 
+  protected override willUpdate(): void {
+    // the item's content is projected into its entry, not copied: the author's nodes and listeners keep working
+    this.#items.elements.forEach((el, i) => el.setAttribute('slot', `item-${i}`))
+  }
+
   protected override render() {
     return html`<ol aria-label=${this.label || nothing}>
-      ${this.#items.elements.map((el) => {
+      ${this.#items.elements.map((el, i) => {
         const status = (el.getAttribute('status') ?? 'done') as keyof typeof STATUS
         const time = el.getAttribute('time')
         return html`<li data-status=${status}>
-          <span class="dot">${icons[STATUS[status] ?? 'check_circle-fill']()}</span>
+          <span class="dot">${(STATUS[status] ?? iconCheckCircleFill)()}</span>
           <div>
             ${time ? html`<time datetime=${time}>${time}</time>` : nothing}
             <div class="title">${el.getAttribute('heading')}<span class="sr-only"> (${WORD[status] ?? ''})</span></div>
-            <div>${unsafeHTML(el.innerHTML)}</div>
+            <div><slot name=${`item-${i}`}></slot></div>
           </div>
         </li>`
       })}
@@ -123,7 +127,7 @@ export class SubTimeline extends LitElement {
   }
 }
 
-/** Data holder for <sub-timeline>. Renders nothing itself. */
+/** One entry of <sub-timeline>: the attributes describe it, its content is shown in place. */
 export class SubTimelineItem extends LitElement {
   static override properties = { time: { type: String }, status: { type: String }, heading: { type: String } }
   declare time: string
@@ -137,11 +141,11 @@ export class SubTimelineItem extends LitElement {
   }
   static override styles = css`
     :host {
-      display: none;
+      display: contents;
     }
   `
   protected override render() {
-    return nothing
+    return html`<slot></slot>`
   }
 }
 

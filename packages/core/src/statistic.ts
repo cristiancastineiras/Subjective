@@ -1,7 +1,7 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { icons } from './shared/icons'
 import { baseStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define } from './shared/utils'
+import { iconTrendingDown, iconTrendingFlat, iconTrendingUp } from './shared/material-icons'
 
 /**
  * Key figure with context: label, value, optional prefix/suffix and a trend. A metric always has a
@@ -107,7 +107,7 @@ export class SubStatistic extends LitElement {
   }
 
   protected override render() {
-    const trendIcon = this.trend === 'up' ? icons.trending_up() : this.trend === 'down' ? icons.trending_down() : icons.trending_flat()
+    const trendIcon = this.trend === 'up' ? iconTrendingUp() : this.trend === 'down' ? iconTrendingDown() : iconTrendingFlat()
     const trendWord = this.trend === 'up' ? 'Up' : this.trend === 'down' ? 'Down' : 'No change'
     return html`<dl part="statistic">
       <dt>${this.label}</dt>

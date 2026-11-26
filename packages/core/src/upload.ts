@@ -2,9 +2,9 @@ import { css, html, nothing } from 'lit'
 import { ifDefined } from 'lit/directives/if-defined.js'
 import { announce } from './announce'
 import { SubFormControl, formControlStyles, type FormValue } from './shared/form-control'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { define } from './shared/utils'
+import { iconClose, iconError, iconUploadFile } from './shared/material-icons'
 
 const size = (bytes: number): string => (bytes < 1024 ? `${bytes} B` : bytes < 1048576 ? `${(bytes / 1024).toFixed(0)} KB` : `${(bytes / 1048576).toFixed(1)} MB`)
 
@@ -95,6 +95,23 @@ export class SubUpload extends SubFormControl {
       .drop {
         color: var(--sub-color-muted);
         font-size: var(--sub-text-sm);
+      }
+
+      /* Touch screens cannot drag a file onto the page: do not offer it */
+      @media (hover: none) and (pointer: coarse) {
+        .drop {
+          display: none;
+        }
+      }
+
+      /* Phones: the button spans the zone, easy to hit with a thumb */
+      @media (max-width: 40rem) {
+        .pick {
+          display: flex;
+          justify-content: center;
+          align-self: stretch;
+          inline-size: 100%;
+        }
       }
 
       ul {
@@ -225,7 +242,7 @@ export class SubUpload extends SubFormControl {
             @change=${(e: Event) => this.#add([...((e.target as HTMLInputElement).files ?? [])])}
             @blur=${this.onControlBlur}
           />
-          ${icons.upload_file()}<span id="pick-text">${messages.chooseFiles}</span>
+          ${iconUploadFile()}<span id="pick-text">${messages.chooseFiles}</span>
         </label>
         <span class="drop" aria-hidden="true">${messages.dragFilesHere}</span>
       </div>
@@ -234,12 +251,12 @@ export class SubUpload extends SubFormControl {
             ${this._files.map(
               (f) => html`<li>
                 <span class="name">${f.name} <span class="drop">(${size(f.size)})</span></span>
-                <button type="button" aria-label=${messages.removeFile(f.name)} @click=${() => this.#remove(f)}>${icons.close()}</button>
+                <button type="button" aria-label=${messages.removeFile(f.name)} @click=${() => this.#remove(f)}>${iconClose()}</button>
               </li>`,
             )}
           </ul>`
         : nothing}
-      ${this._problems.length ? html`<div class="error" role="alert">${icons.error()}<span>${this._problems.join('. ')}</span></div>` : nothing}
+      ${this._problems.length ? html`<div class="error" role="alert">${iconError()}<span>${this._problems.join('. ')}</span></div>` : nothing}
       ${this.renderError()}
     </div>`
   }

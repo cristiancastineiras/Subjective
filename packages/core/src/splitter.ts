@@ -8,6 +8,7 @@ import { define, emit } from './shared/utils'
  * Left/Right (or Up/Down when `orientation="vertical"`) move it by 1%, with Shift by 10%; Home/End go to
  * the limits; Enter collapses / restores the first pane. Dragging works with the pointer, but the
  * keyboard alternative is complete (WCAG 2.5.7). Values are the first pane's percentage.
+ * Narrower than 24rem (a phone), a horizontal splitter stacks its panes at full width (no handle).
  */
 export class SubSplitter extends LitElement {
   static override properties = {
@@ -41,6 +42,8 @@ export class SubSplitter extends LitElement {
     css`
       :host {
         display: block;
+        inline-size: 100%; /* a container never shrink-wraps its content: fill the line (also inside a flex row) */
+        container-type: inline-size;
         min-block-size: 8rem;
         font-family: var(--sub-font-sans);
       }
@@ -55,6 +58,24 @@ export class SubSplitter extends LitElement {
       :host([orientation='vertical']) .split {
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: minmax(0, var(--_a)) var(--sub-splitter-handle-size) minmax(0, var(--_b));
+      }
+
+      /* Narrow (a phone): side-by-side panes would be a few words wide. They stack at full width and the
+         handle goes away (nothing to resize, so no control that does nothing for keyboard or screen readers). */
+      @container (inline-size < 24rem) {
+        :host(:not([orientation='vertical'])) .split {
+          grid-template-columns: minmax(0, 1fr);
+          grid-template-rows: auto auto;
+          block-size: auto;
+        }
+
+        :host(:not([orientation='vertical'])) .handle {
+          display: none;
+        }
+
+        :host(:not([orientation='vertical'])) #end {
+          border-block-start: var(--sub-border-width-thin) solid var(--sub-color-border-subtle);
+        }
       }
 
       .pane {

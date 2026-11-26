@@ -10,13 +10,20 @@ export type PropControl =
   | { name: string; type: 'select'; options: string[] }
   | { name: string; type: 'number'; min?: number; max?: number; step?: number }
 
-export interface Demo {
+/**
+ * What the navigation knows about every demo without loading it (see `virtual:demo-index` in vite.config.ts).
+ * Write these four fields as double-quoted string literals: the index reads them from the source.
+ */
+export interface DemoMeta {
   /** Same as the file name; used in `?c=<id>` */
   id: string
   title: string
   /** Sidebar group */
   group: 'Actions' | 'Forms' | 'Navigation' | 'Disclosure' | 'Feedback' | 'Data' | 'Content' | 'Layout' | 'Patterns' | 'Utilities'
   description: string
+}
+
+export interface Demo extends DemoMeta {
   /** Registers the custom elements this demo uses */
   define: () => void
   html: string

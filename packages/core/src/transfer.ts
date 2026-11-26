@@ -1,9 +1,9 @@
 import { css, html } from 'lit'
 import { announce } from './announce'
 import { SubFormControl, formControlStyles, type FormValue } from './shared/form-control'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { define } from './shared/utils'
+import { iconArrowDownward, iconArrowUpward, iconChevronLeft, iconChevronRight } from './shared/material-icons'
 
 export interface TransferItem {
   key: string
@@ -110,10 +110,34 @@ export class SubTransfer extends SubFormControl {
         justify-items: center;
       }
 
+      /* the arrows point where the items go: sideways next to each other, up and down once the lists stack */
+      .v {
+        display: none;
+      }
+
+      .h {
+        display: contents;
+      }
+
+      /* Stacked (a phone): full-width buttons on one line each, easy to hit with a thumb */
       @container (inline-size < 36rem) {
         .moves {
-          grid-auto-flow: column;
+          grid-template-columns: minmax(0, 1fr);
+          justify-items: stretch;
+        }
+
+        .moves button {
           justify-content: center;
+          padding-block: var(--sub-space-2);
+          line-height: var(--sub-leading-snug);
+        }
+
+        .h {
+          display: none;
+        }
+
+        .v {
+          display: contents;
         }
       }
 
@@ -223,10 +247,10 @@ export class SubTransfer extends SubFormControl {
         ${this.#list('_left', this.titles[0], left)}
         <div class="moves">
           <button type="button" ?disabled=${this._left.size === 0 || this.isDisabled} @click=${() => this.#move(true)}>
-            ${messages.moveToRight(this.titles[1])}${icons.chevron_right()}
+            ${messages.moveToRight(this.titles[1])}<span class="h">${iconChevronRight()}</span><span class="v">${iconArrowDownward()}</span>
           </button>
           <button type="button" ?disabled=${this._right.size === 0 || this.isDisabled} @click=${() => this.#move(false)}>
-            ${icons.chevron_left()}${messages.moveToLeft(this.titles[0])}
+            <span class="h">${iconChevronLeft()}</span><span class="v">${iconArrowUpward()}</span>${messages.moveToLeft(this.titles[0])}
           </button>
         </div>
         ${this.#list('_right', this.titles[1], right)}

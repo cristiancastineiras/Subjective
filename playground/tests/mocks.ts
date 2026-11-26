@@ -51,7 +51,8 @@ export async function mockApis(page: Page, options: { fail?: Service[] } = {}): 
       return json(route, {
         current: { time: '2026-11-26T14:00', temperature_2m: t(21.6), apparent_temperature: t(20.1), relative_humidity_2m: 41, weather_code: 2, wind_speed_10m: 12.4, is_day: 1 },
         daily: {
-          time: Array.from({ length: days }, (_, i) => `2026-11-${26 + i}`),
+          // real consecutive dates (a 7-day forecast from the 26th crosses into December)
+          time: Array.from({ length: days }, (_, i) => new Date(Date.UTC(2026, 10, 26 + i)).toISOString().slice(0, 10)),
           weather_code: Array.from({ length: days }, (_, i) => [2, 0, 61, 3, 71, 45, 95][i % 7]),
           temperature_2m_max: Array.from({ length: days }, (_, i) => t(22 - i)),
           temperature_2m_min: Array.from({ length: days }, (_, i) => t(11 - i)),

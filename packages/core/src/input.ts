@@ -2,10 +2,10 @@ import { css, html, nothing, type PropertyValues } from 'lit'
 import { ifDefined } from 'lit/directives/if-defined.js'
 import { live } from 'lit/directives/live.js'
 import { formControlStyles } from './shared/form-control'
-import { icons } from './shared/icons'
 import { messages, type MessageContext } from './shared/messages'
 import { SubTextField } from './shared/text-field'
 import { define, warn } from './shared/utils'
+import { iconVisibility, iconVisibilityOff } from './shared/material-icons'
 
 export type InputType = 'text' | 'email' | 'tel' | 'url' | 'password' | 'search' | 'number' | 'date' | 'time'
 
@@ -150,7 +150,7 @@ export class SubInput extends SubTextField {
               ?disabled=${this.isDisabled}
               @click=${() => (this._reveal = !this._reveal)}
             >
-              ${this._reveal ? icons.eyeOff() : icons.eye()}<span class="sr-only">${messages.showPassword}</span>
+              ${this._reveal ? iconVisibilityOff() : iconVisibility()}<span class="sr-only">${messages.showPassword}</span>
             </button>`
           : nothing}
       </div>

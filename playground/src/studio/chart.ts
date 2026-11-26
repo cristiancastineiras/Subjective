@@ -24,15 +24,16 @@ export function barChart({ title, unit, data }: { title: string; unit: string; d
   const last = data[data.length - 1]!
   const summary = `${title}: from ${first.label} to ${last.label}, ${fmt(total)} ${unit} in total, peak ${fmt(peak.value)} on ${peak.label}.`
   return html`
-    <figure class="app-chart">
+    <figure class="app-chart" aria-label=${title}>
       <div class="app-bars" role="img" aria-label=${summary}>
         ${data.map((d) => html`<span style=${`block-size: ${Math.max(2, (d.value / max) * 100)}%`}></span>`)}
       </div>
-      <figcaption>
+      <!-- the axis repeats the image's text summary for sighted users; read aloud it would only be "Nov 1 Peak 1,290, Nov 30 Nov 30" -->
+      <div class="app-axis" aria-hidden="true">
         <span class="app-muted">${short(first.label)}</span>
         <span>Peak ${fmt(peak.value)}, ${short(peak.label)}</span>
         <span class="app-muted">${short(last.label)}</span>
-      </figcaption>
+      </div>
       <details>
         <summary>Show the numbers</summary>
         <sub-table class="app-table" caption=${title} .columns=${[{ key: 'label', label: 'Day', sortable: true }, { key: 'value', label: 'Downloads', sortable: true, align: 'end' as const }]} .rows=${data.map((d) => ({ id: d.label, label: d.label, value: d.value }))}></sub-table>

@@ -86,16 +86,16 @@ export class SubRadioGroup extends SubFormControl {
         color: var(--sub-color-muted);
       }
 
-      .option:has(input:disabled) {
+      .option[data-disabled] {
         cursor: not-allowed;
         color: var(--sub-color-on-disabled);
       }
 
-      .option:has(input:disabled) .desc {
+      .option[data-disabled] .desc {
         color: var(--sub-color-on-disabled);
       }
 
-      .option:has(input:disabled) {
+      .option[data-disabled] {
         background: transparent;
       }
 
@@ -145,18 +145,18 @@ export class SubRadioGroup extends SubFormControl {
         opacity: 0;
       }
 
-      :host([variant='segmented']) .option:has(input:checked) {
+      :host([variant='segmented']) .option[data-checked] {
         background: var(--sub-color-accent);
         color: var(--sub-color-on-accent);
         font-weight: var(--sub-weight-bold);
       }
 
-      :host([variant='segmented']) .option:has(input:disabled) {
+      :host([variant='segmented']) .option[data-disabled] {
         background: var(--sub-color-disabled);
         color: var(--sub-color-on-disabled);
       }
 
-      :host([variant='segmented']) .option:has(input:focus-visible) {
+      :host([variant='segmented']) .option[data-focus-visible] {
         outline: var(--sub-focus-width) solid var(--sub-color-focus);
         outline-offset: calc(var(--sub-focus-width) * -1);
         box-shadow: inset 0 0 0 calc(var(--sub-focus-width) + var(--sub-focus-inner-width)) var(--sub-color-focus-inner);
@@ -177,14 +177,14 @@ export class SubRadioGroup extends SubFormControl {
         background: var(--sub-color-surface);
       }
 
-      :host([variant='card']) .option:has(input:checked) {
+      :host([variant='card']) .option[data-checked] {
         border-color: var(--sub-color-accent);
         background: var(--sub-color-accent-subtle);
         color: var(--sub-color-on-accent-subtle);
         box-shadow: inset 0 0 0 var(--sub-radio-card-border-width) var(--sub-color-accent);
       }
 
-      :host([variant='card']) .option:has(input:focus-visible) {
+      :host([variant='card']) .option[data-focus-visible] {
         outline: var(--sub-focus-width) solid var(--sub-color-focus);
         outline-offset: var(--sub-focus-inner-width);
         box-shadow: 0 0 0 var(--sub-focus-inner-width) var(--sub-color-focus-inner);
@@ -227,6 +227,18 @@ export class SubRadioGroup extends SubFormControl {
     this.dispatchEvent(new Event('change', { bubbles: true }))
   }
 
+  // The option's look follows data-* state written here, not `:has(input:...)`: Firefox does not re-evaluate
+  // `:host(...) .option:has(input:checked)` when a radio changes, so the strip kept showing the old choice.
+  #onFocus = (event: FocusEvent): void => {
+    const input = event.target as HTMLInputElement
+    input.parentElement?.toggleAttribute('data-focus-visible', input.matches(':focus-visible'))
+  }
+
+  #onBlur = (event: FocusEvent): void => {
+    ;(event.target as HTMLInputElement).parentElement?.removeAttribute('data-focus-visible')
+    this.onControlBlur()
+  }
+
   protected override render() {
     return html`<fieldset
       class="field"
@@ -237,7 +249,7 @@ export class SubRadioGroup extends SubFormControl {
       ${this.renderHint()}
       <div class="options">
         ${this.#options.options.map(
-          (o, i) => html`<label class="option">
+          (o, i) => html`<label class="option" ?data-checked=${o.value === this.value} ?data-disabled=${o.disabled || this.isDisabled}>
             <input
               type="radio"
               name="group"
@@ -247,7 +259,8 @@ export class SubRadioGroup extends SubFormControl {
               ?disabled=${o.disabled}
               aria-describedby=${ifDefined(o.description ? `desc-${i}` : undefined)}
               @change=${this.#onChange}
-              @blur=${this.onControlBlur}
+              @focus=${this.#onFocus}
+              @blur=${this.#onBlur}
             />
             <span class="text"
               ><span>${o.label}</span>${o.description ? html`<span class="desc" id="desc-${i}">${o.description}</span>` : nothing}</span

@@ -1,8 +1,8 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, emit } from './shared/utils'
+import { iconClose } from './shared/material-icons'
 
 /**
  * Chip / tag, optionally removable (an active filter). The remove button names WHAT it removes:
@@ -85,7 +85,7 @@ export class SubChip extends LitElement {
     return html`<span class="chip"
       ><span><slot></slot></span>${this.removable
         ? html`<button type="button" aria-label=${this.removeLabel || messages.removeFilter(text)} @click=${this.#remove}>
-            ${icons.close()}
+            ${iconClose()}
           </button>`
         : nothing}</span
     >`

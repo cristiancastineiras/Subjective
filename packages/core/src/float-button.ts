@@ -43,8 +43,10 @@ export class SubFloatButton extends LitElement {
     css`
       :host {
         position: fixed;
-        inset-block-end: var(--sub-float-button-offset);
-        inset-inline-end: var(--sub-float-button-offset);
+        /* clear of the notch and the home indicator on phones (env() is 0 elsewhere) */
+        --_side: max(env(safe-area-inset-left), env(safe-area-inset-right));
+        inset-block-end: calc(var(--sub-float-button-offset) + env(safe-area-inset-bottom));
+        inset-inline-end: calc(var(--sub-float-button-offset) + var(--_side));
         z-index: var(--sub-z-sticky);
         display: block;
         --sub-icon-button-size: var(--sub-float-button-size);
@@ -54,7 +56,7 @@ export class SubFloatButton extends LitElement {
 
       :host([position='start']) {
         inset-inline-end: auto;
-        inset-inline-start: var(--sub-float-button-offset);
+        inset-inline-start: calc(var(--sub-float-button-offset) + var(--_side));
       }
 
       :host([static]) {

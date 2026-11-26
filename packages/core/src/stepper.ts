@@ -1,9 +1,9 @@
 import { LitElement, css, html, nothing } from 'lit'
 import { ChildrenController } from './shared/children'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define } from './shared/utils'
+import { iconCheck } from './shared/material-icons'
 
 /**
  * Progress through a multi-step form: "Step 2 of 3: Profile". Never hides the total number of steps.
@@ -130,7 +130,7 @@ export class SubStepper extends LitElement {
           const state = n < current ? 'done' : n === current ? 'current' : 'todo'
           return html`<li data-state=${state} aria-current=${state === 'current' ? 'step' : nothing}>
             <span class="name"
-              >${state === 'done' ? icons.check() : nothing}<span>${text}</span>${state === 'done'
+              >${state === 'done' ? iconCheck() : nothing}<span>${text}</span>${state === 'done'
                 ? html`<span class="sr-only"> (completed)</span>`
                 : nothing}</span
             >

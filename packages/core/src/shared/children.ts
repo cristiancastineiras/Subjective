@@ -18,8 +18,9 @@ export class ChildrenController<T extends Element = HTMLElement> implements Reac
 
   hostConnected(): void {
     this.#observer = new MutationObserver((records) => {
-      // Ignore the host's own attribute reflection
-      if (records.some((r) => r.target !== this.host)) this.host.requestUpdate()
+      // Ignore only the host's own attribute reflection. Children added or removed directly under the host are
+      // childList records whose target IS the host: they must re-render (a router swapping breadcrumbs, a new tab panel).
+      if (records.some((r) => r.type !== 'attributes' || r.target !== this.host)) this.host.requestUpdate()
     })
     this.#observer.observe(this.host, {
       childList: true,

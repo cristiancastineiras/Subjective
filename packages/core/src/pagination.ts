@@ -1,8 +1,8 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, emit } from './shared/utils'
+import { iconChevronLeft, iconChevronRight } from './shared/material-icons'
 
 type Slot = number | 'gap'
 
@@ -197,13 +197,13 @@ export class SubPagination extends LitElement {
         ${messages.pageOf(page, total)}${this.totalItems && this.pageSize ? html` &middot; ${messages.showing(from, to, this.totalItems)}` : nothing}
       </p>
       <ul>
-        <li>${this.#control(page - 1, html`${icons.chevronLeft()}${messages.previous}`, { disabled: page <= 1 })}</li>
+        <li>${this.#control(page - 1, html`${iconChevronLeft()}${messages.previous}`, { disabled: page <= 1 })}</li>
         ${pageWindow(page, total, this.siblings).map((s) =>
           s === 'gap'
             ? html`<li class="num gap" aria-hidden="true">&hellip;</li>`
             : html`<li class="num">${this.#control(s, String(s), { current: s === page, name: `Page ${s}` })}</li>`,
         )}
-        <li>${this.#control(page + 1, html`${messages.next}${icons.chevronRight()}`, { disabled: page >= total })}</li>
+        <li>${this.#control(page + 1, html`${messages.next}${iconChevronRight()}`, { disabled: page >= total })}</li>
       </ul>
     </nav>`
   }

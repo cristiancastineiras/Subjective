@@ -2,10 +2,10 @@ import { css, html, nothing } from 'lit'
 import { ifDefined } from 'lit/directives/if-defined.js'
 import { live } from 'lit/directives/live.js'
 import { formControlStyles } from './shared/form-control'
-import { icons } from './shared/icons'
 import { messages, type MessageContext } from './shared/messages'
 import { SubTextField } from './shared/text-field'
 import { define } from './shared/utils'
+import { iconAdd, iconRemove } from './shared/material-icons'
 
 /**
  * Numeric input for real quantities (spinbutton): native `type="number"` (Up/Down change the value,
@@ -131,7 +131,7 @@ export class SubInputNumber extends SubTextField {
       <div class="wrap">
         ${this.controls
           ? html`<button class="dec" type="button" aria-label=${messages.decrease(this.label)} ?disabled=${this.isDisabled || this.readonly || atMin} @click=${() => this.#step(-1)}>
-              ${icons.remove()}
+              ${iconRemove()}
             </button>`
           : nothing}
         <input
@@ -157,7 +157,7 @@ export class SubInputNumber extends SubTextField {
         />
         ${this.controls
           ? html`<button class="inc" type="button" aria-label=${messages.increase(this.label)} ?disabled=${this.isDisabled || this.readonly || atMax} @click=${() => this.#step(1)}>
-              ${icons.add()}
+              ${iconAdd()}
             </button>`
           : nothing}
       </div>

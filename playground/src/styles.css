@@ -173,6 +173,95 @@ code {
   }
 }
 
+/* ---- page changes: content swaps in place (see router.ts), a short crossfade, no reload ------- */
+/* The header and the sidebar are identical in both snapshots, so only what changed visibly fades.
+   The motion tokens are 0 for reduced motion, and the router skips the transition entirely then. */
+::view-transition-group(root) {
+  animation-duration: var(--sub-duration-base);
+  animation-timing-function: var(--sub-ease-standard);
+}
+
+/* Shown only when a page takes a moment to load (slow network) */
+.route-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 10;
+  block-size: 4px;
+  background: var(--sub-color-focus);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+html[data-navigating] .route-progress {
+  opacity: 1;
+  animation: route-progress 4s cubic-bezier(0.1, 0.6, 0.2, 1) forwards;
+}
+
+@keyframes route-progress {
+  from {
+    transform: scaleX(0.08);
+  }
+
+  to {
+    transform: scaleX(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-navigating] .route-progress {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
+/* ---- find a component ------------------------------------------------------------------- */
+.nav-filter {
+  display: grid;
+  gap: var(--sub-space-1);
+  margin-block: var(--sub-space-3) var(--sub-space-4);
+}
+
+@media (min-width: 60rem) {
+  /* stays on top while the list scrolls under it */
+  .nav-filter {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    margin-block-start: 0;
+    padding-block-end: var(--sub-space-2);
+    background: var(--sub-color-page);
+  }
+}
+
+.nav-filter label {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.nav-filter input {
+  inline-size: 100%;
+  min-block-size: var(--sub-target-size);
+  padding: var(--sub-space-2) var(--sub-space-3);
+  border: 2px solid var(--sub-color-border);
+  border-radius: 0;
+  background: var(--sub-color-surface);
+  color: var(--sub-color-text);
+  font: 1rem var(--sub-font-sans);
+}
+
+.nav-filter-hint,
+.nav-empty {
+  margin: 0;
+  color: var(--sub-color-muted);
+  font-size: 1rem;
+}
+
+.nav-empty {
+  padding: var(--sub-space-2) var(--sub-space-3);
+}
+
 #nav h2 {
   margin: var(--sub-space-4) 0 var(--sub-space-1);
   padding-inline-start: var(--sub-space-3);
@@ -306,6 +395,74 @@ h3 {
   color: var(--sub-color-muted);
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
+}
+
+/* ---- the example's code ---------------------------------------------------------------- */
+.code-block {
+  margin-block-start: var(--sub-space-4);
+  border: 1px solid var(--sub-color-border-subtle);
+}
+
+.code-block > summary {
+  min-block-size: var(--sub-target-size);
+  padding: var(--sub-space-2) var(--sub-space-3);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.code-block pre {
+  max-block-size: 24rem;
+  margin: 0;
+  padding: var(--sub-space-3);
+  overflow: auto;
+  border-block: 1px solid var(--sub-color-border-subtle);
+  background: var(--sub-color-surface-hover);
+  font-size: 1rem;
+  white-space: pre;
+}
+
+.code-block .cfg-actions {
+  margin: 0;
+  padding: var(--sub-space-3);
+}
+
+/* ---- previous / next component ------------------------------------------------------------ */
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sub-space-4) var(--sub-space-8);
+  justify-content: space-between;
+  margin-block-start: var(--sub-space-12);
+  padding-block-start: var(--sub-space-6);
+  border-block-start: 1px solid var(--sub-color-border-subtle);
+}
+
+.pager a {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  min-block-size: var(--sub-target-size);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.pager a[rel='next'] {
+  margin-inline-start: auto;
+  text-align: end;
+}
+
+.pager-dir {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* ---- a page that does not exist ------------------------------------------------------------ */
+.notice {
+  max-inline-size: 44rem;
+  margin: 0 0 var(--sub-space-8);
+  padding: var(--sub-space-4);
+  border-inline-start: 5px solid var(--sub-color-warning);
+  background: var(--sub-color-warning-subtle);
 }
 
 /* ---- tables, tags ----------------------------------------------------------------------- */
@@ -725,7 +882,7 @@ th {
   background: var(--sub-color-accent);
 }
 
-.app-chart figcaption {
+.app-chart .app-axis {
   display: flex;
   flex-wrap: wrap;
   gap: var(--sub-space-2) var(--sub-space-4);

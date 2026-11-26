@@ -1,8 +1,8 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define, warn } from './shared/utils'
+import { iconOpenInNew } from './shared/material-icons'
 
 const VAGUE = /^(click here|here|read more|more|link)$/i
 
@@ -82,7 +82,7 @@ export class SubLink extends LitElement {
       rel=${this.external ? 'noopener noreferrer' : nothing}
       download=${this.download || nothing}
       ><slot></slot>${this.external
-        ? html`<span class="sr-only"> ${messages.opensInNewTab}</span>${icons.external()}`
+        ? html`<span class="sr-only"> ${messages.opensInNewTab}</span>${iconOpenInNew()}`
         : nothing}</a
     >`
   }

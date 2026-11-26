@@ -1,7 +1,7 @@
 import { LitElement, css, html, nothing, type TemplateResult } from 'lit'
-import { icons } from './shared/icons'
 import { baseStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define, emit } from './shared/utils'
+import { iconChevronRight } from './shared/material-icons'
 
 export interface TreeNode {
   id: string
@@ -214,7 +214,7 @@ export class SubTree extends LitElement {
       @focus=${(e: Event) => e.target === e.currentTarget && (this._active = node.id)}
     >
       <div class="row" @click=${() => (hasKids ? this.#toggle(node.id) : null, this._active = node.id, this.#select(node))}>
-        ${hasKids ? html`<span class="chev">${icons.chevron_right()}</span>` : html`<span class="spacer"></span>`}
+        ${hasKids ? html`<span class="chev">${iconChevronRight()}</span>` : html`<span class="spacer"></span>`}
         <span>${node.label}</span>
       </div>
       ${hasKids && isOpen

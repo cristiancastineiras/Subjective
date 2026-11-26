@@ -1,9 +1,9 @@
 import { LitElement, css, html, nothing } from 'lit'
 import { ChildrenController } from './shared/children'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, warn } from './shared/utils'
+import { iconArrowBack, iconChevronRight } from './shared/material-icons'
 
 /**
  * Breadcrumb trail for hierarchies of 3+ levels: Home > Category > Sub > Current.
@@ -108,8 +108,10 @@ export class SubBreadcrumbs extends LitElement {
     `,
   ]
 
-  protected override firstUpdated(): void {
-    if (this.#items.elements.length < 3) warn('<sub-breadcrumbs> is for hierarchies of 3+ levels.')
+  protected override updated(): void {
+    // 0 items = still being filled (frameworks and routers often add the children after connecting): not a mistake yet
+    const count = this.#items.elements.length
+    if (count > 0 && count < 3) warn('<sub-breadcrumbs> is for hierarchies of 3+ levels.')
   }
 
   protected override render() {
@@ -124,12 +126,12 @@ export class SubBreadcrumbs extends LitElement {
             ${last
               ? html`<span aria-current="page">${text}</span>`
               : html`<a href=${el.getAttribute('href') ?? '#'}>${text}</a
-                  ><span class="sep" aria-hidden="true">${icons.chevronRight()}</span>`}
+                  ><span class="sep" aria-hidden="true">${iconChevronRight()}</span>`}
           </li>`
         })}
       </ol>
       ${parent
-        ? html`<a class="back" href=${parent.getAttribute('href') ?? '#'}>${icons.arrowLeft()}${parent.textContent?.trim()}</a>`
+        ? html`<a class="back" href=${parent.getAttribute('href') ?? '#'}>${iconArrowBack()}${parent.textContent?.trim()}</a>`
         : nothing}
     </nav>`
   }

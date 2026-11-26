@@ -11,6 +11,7 @@
   </script>
 </head>
   <body>
+    <div class="route-progress" aria-hidden="true"></div>
     <header class="site-header">
       <sub-skip-link href="#main">Skip to main content</sub-skip-link>
       <div class="wrap header-row">
@@ -25,6 +26,11 @@
     <div class="wrap layout">
       <details id="nav-menu" class="nav-menu" open>
         <summary>Components</summary>
+        <div class="nav-filter" role="search">
+          <label for="nav-filter">Find a component</label>
+          <input id="nav-filter" type="search" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-describedby="nav-filter-hint" aria-keyshortcuts="Control+K Meta+K">
+          <p id="nav-filter-hint" class="nav-filter-hint">Ctrl+K to get here. Enter opens the first match.</p>
+        </div>
         <nav id="nav" aria-label="Components"></nav>
       </details>
 
@@ -53,6 +59,11 @@
                 <div class="samples" id="preview"></div>
                 <p role="status" id="result">No action yet.</p>
               </div>
+              <details class="code-block" id="code-block">
+                <summary>Code</summary>
+                <pre tabindex="0" role="region" aria-label="Example code"><code id="code"></code></pre>
+                <div class="cfg-actions"><button type="button" id="code-copy">Copy code</button></div>
+              </details>
             </section>
 
             <section aria-labelledby="keys-title" class="block" id="keys-block" hidden>
@@ -73,6 +84,8 @@
             <div id="configure" class="configure"></div>
           </section>
         </div>
+
+        <nav id="pager" class="pager" aria-label="Previous and next component" hidden></nav>
       </main>
     </div>
     <script type="module" src="/src/main.ts"></script>

@@ -1,9 +1,9 @@
 import { css, html, nothing } from 'lit'
 import { ifDefined } from 'lit/directives/if-defined.js'
 import { SubFormControl, formControlStyles, type FormValue } from './shared/form-control'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { define } from './shared/utils'
+import { iconStar, iconStarFill } from './shared/material-icons'
 
 /**
  * Rating. Interactive: a radio group of stars (arrows move, each star says "3 of 5 stars"), `allow-clear`
@@ -123,7 +123,7 @@ export class SubRate extends SubFormControl {
       return html`<div class="field">
         <div id="label">${this.labelContent()}</div>
         <div class="stars" role="img" aria-labelledby="label" aria-describedby="summary">
-          ${stars.map((n) => (n <= this.value ? icons['star-fill']() : icons.star()))}
+          ${stars.map((n) => (n <= this.value ? iconStarFill() : iconStar()))}
         </div>
         <div id="summary" class="hint">${messages.starsOf(this.value, this.count)}</div>
       </div>`
@@ -145,7 +145,7 @@ export class SubRate extends SubFormControl {
               @change=${() => this.#set(n)}
               @blur=${this.onControlBlur}
             />
-            ${n <= this.value ? icons['star-fill']() : icons.star()}
+            ${n <= this.value ? iconStarFill() : iconStar()}
           </label>`,
         )}
       </div>

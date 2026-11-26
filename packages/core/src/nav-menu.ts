@@ -1,8 +1,8 @@
 import { LitElement, css, html, nothing } from 'lit'
 import { ChildrenController } from './shared/children'
-import { icons } from './shared/icons'
 import { baseStyles, focusInset, focusStyles, iconStyles } from './shared/styles'
 import { define } from './shared/utils'
+import { iconKeyboardArrowDown } from './shared/material-icons'
 
 /**
  * Site / app navigation (SUB "Menu"). A `nav` of links with optional groups, using the disclosure
@@ -131,7 +131,7 @@ export class SubNavMenu extends LitElement {
           const open = this._open.has(id) || links.some((a) => a.getAttribute('aria-current') === 'page')
           return html`<li>
             <button type="button" aria-expanded=${open ? 'true' : 'false'} aria-controls=${id} @click=${() => this.#toggle(id)}>
-              <span>${el.getAttribute('label')}</span><span class="chev">${icons.keyboard_arrow_down()}</span>
+              <span>${el.getAttribute('label')}</span><span class="chev">${iconKeyboardArrowDown()}</span>
             </button>
             <ul id=${id} ?hidden=${!open}>
               ${links.map((a) => html`<li>${this.#link(a)}</li>`)}

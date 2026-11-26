@@ -3,17 +3,26 @@ import { ifDefined } from 'lit/directives/if-defined.js'
 import { live } from 'lit/directives/live.js'
 import { defineCalendar, parseIso, toIso, type SubCalendar } from './calendar'
 import { SubFormControl, formControlStyles, type FormValue } from './shared/form-control'
-import { icons } from './shared/icons'
 import { messages, type MessageContext } from './shared/messages'
 import { placeNear } from './shared/position'
+import { bottomSheet, isSheet, sheetHeadStyles, sheetHeader } from './shared/sheet'
 import { define } from './shared/utils'
+import { iconCalendarMonth } from './shared/material-icons'
+
+/** `20261126`, `2026/11/26`, `2026.11.26` -> `2026-11-26` (phone number pads have no "-"); anything else is kept */
+const normalizeDate = (raw: string): string => {
+  const parts = raw.trim().match(/^(\d{4})[-/. ]?(\d{2})[-/. ]?(\d{2})$/)
+  return parts ? `${parts[1]}-${parts[2]}-${parts[3]}` : raw
+}
 
 const supportsPopover = typeof HTMLElement !== 'undefined' && typeof HTMLElement.prototype.showPopover === 'function'
 
 /**
  * Date field: a typeable text field (`yyyy-mm-dd`, so keyboard users never need the picker) plus a
  * button that opens a calendar. The calendar is a non-modal popover: Esc closes it and returns focus to
- * the field. `min` / `max` are ISO dates. The value submitted is always ISO.
+ * where it was opened from (the field after Alt+Down, the button after a click or tap). `min` / `max` are
+ * ISO dates. The value submitted is always ISO; digits alone (`20261126`) are accepted and formatted.
+ * On small screens the calendar is a bottom sheet with the field's name and a Done button.
  */
 export class SubDatePicker extends SubFormControl {
   static override properties = {
@@ -85,7 +94,9 @@ export class SubDatePicker extends SubFormControl {
         padding: 0;
         border: 0;
         background: transparent;
-        overflow: visible;
+        /* a short window (landscape phone, zoom): the calendar scrolls inside instead of leaving the screen */
+        max-block-size: calc(100dvh - 1rem);
+        overflow: auto;
         z-index: var(--sub-z-dropdown);
       }
 
@@ -93,7 +104,23 @@ export class SubDatePicker extends SubFormControl {
         display: none;
       }
     `,
+    sheetHeadStyles,
+    bottomSheet('.pop', '.sheet'),
+    css`
+      @media (max-width: 40rem) {
+        /* the calendar spans the sheet: full-size days within thumb reach */
+        .sheet sub-calendar {
+          display: flex;
+          justify-content: center;
+          padding: var(--sub-space-2) 0 var(--sub-space-3);
+          --sub-calendar-border-width: 0px;
+        }
+      }
+    `,
   ]
+
+  /** Where focus goes back when the calendar closes */
+  #opener: 'input' | 'button' = 'button'
 
   override connectedCallback(): void {
     super.connectedCallback()
@@ -134,25 +161,38 @@ export class SubDatePicker extends SubFormControl {
     return this.renderRoot.querySelector('.pop')
   }
 
-  #show(): void {
+  #show(opener: 'input' | 'button'): void {
     const pop = this.#pop
     const anchor = this.renderRoot.querySelector('.wrap')
     if (!pop || !anchor || this._open) return
     this._open = true
+    this.#opener = opener
     if (supportsPopover) pop.showPopover()
     else pop.setAttribute('data-open', '')
-    placeNear(anchor, pop, 'bottom', 'start', 4)
+    // a bottom sheet on small screens (CSS): no placement
+    if (isSheet()) pop.style.top = pop.style.left = ''
+    else placeNear(anchor, pop, 'bottom', 'start', 4)
     const cal = this.renderRoot.querySelector<SubCalendar>('sub-calendar')
     cal?.focusDay()
   }
 
-  #hide(focusInput = true): void {
+  #hide(returnFocus = true): void {
     const pop = this.#pop
     if (!this._open || !pop) return
     this._open = false
     if (supportsPopover && pop.matches(':popover-open')) pop.hidePopover()
     pop.removeAttribute('data-open')
-    if (focusInput) this.control()?.focus()
+    // back to the opener: the button after a tap does not pop up the phone keyboard
+    if (returnFocus) (this.#opener === 'input' ? this.control() : this.renderRoot.querySelector<HTMLElement>('.open'))?.focus()
+  }
+
+  #onBlur = (): void => {
+    const formatted = normalizeDate(this.value)
+    if (formatted !== this.value) {
+      this.value = formatted
+      this.dispatchEvent(new Event('change', { bubbles: true }))
+    }
+    this.onControlBlur()
   }
 
   #onOutside = (e: Event): void => {
@@ -182,30 +222,34 @@ export class SubDatePicker extends SubFormControl {
           aria-invalid=${this.displayedError ? 'true' : nothing}
           aria-describedby=${ifDefined(this.describedBy())}
           @input=${this.#onInput}
-          @keydown=${(e: KeyboardEvent) => e.altKey && e.key === 'ArrowDown' && (e.preventDefault(), this.#show())}
-          @blur=${this.onControlBlur}
+          @keydown=${(e: KeyboardEvent) => e.altKey && e.key === 'ArrowDown' && (e.preventDefault(), this.#show('input'))}
+          @blur=${this.#onBlur}
         />
-        <button class="open" type="button" aria-label=${messages.chooseDate} aria-expanded=${this._open ? 'true' : 'false'} ?disabled=${this.isDisabled} @click=${() => (this._open ? this.#hide() : this.#show())}>
-          ${icons.calendar_month()}
+        <button class="open" type="button" aria-label=${messages.chooseDate} aria-expanded=${this._open ? 'true' : 'false'} ?disabled=${this.isDisabled} @click=${() => (this._open ? this.#hide() : this.#show('button'))}>
+          ${iconCalendarMonth()}
         </button>
         <div
           class="pop"
           popover=${supportsPopover ? 'manual' : nothing}
           role="dialog"
-          aria-label=${messages.chooseDate}
+          aria-label=${this.label ? `${messages.chooseDate}: ${this.label}` : messages.chooseDate}
           @keydown=${(e: KeyboardEvent) => e.key === 'Escape' && (e.stopPropagation(), this.#hide())}
         >
-          <sub-calendar
-            value=${this.value}
-            min=${this.min}
-            max=${this.max}
-            locale=${this.locale}
-            @sub-select=${(e: CustomEvent<{ value: string }>) => {
-              this.value = e.detail.value
-              this.dispatchEvent(new Event('change', { bubbles: true }))
-              this.#hide()
-            }}
-          ></sub-calendar>
+          <div class="scrim" aria-hidden="true" @click=${() => this.#hide()}></div>
+          <div class="sheet">
+            ${sheetHeader(this.label || messages.chooseDate, messages.done, () => this.#hide())}
+            <sub-calendar
+              value=${this.value}
+              min=${this.min}
+              max=${this.max}
+              locale=${this.locale}
+              @sub-select=${(e: CustomEvent<{ value: string }>) => {
+                this.value = e.detail.value
+                this.dispatchEvent(new Event('change', { bubbles: true }))
+                this.#hide()
+              }}
+            ></sub-calendar>
+          </div>
         </div>
       </div>
       ${this.renderError()}

@@ -1,6 +1,6 @@
 import { LitElement, css, html, nothing, type PropertyDeclarations, type PropertyValues, type TemplateResult } from 'lit'
 import { config } from './config'
-import { icons } from './icons'
+import { iconError } from './material-icons'
 import { messages, type MessageContext } from './messages'
 import { baseStyles, focusStyles, iconStyles, visuallyHidden } from './styles'
 import { auditState, warn } from './utils'
@@ -369,7 +369,7 @@ export abstract class SubFormControl extends LitElement {
   protected renderError(): TemplateResult {
     const text = this.displayedError
     if (!this.error) this.#shown = text
-    return html`<div id="error" class="error" aria-live="polite">${text ? html`${icons.error()}<span>${text}</span>` : nothing}</div>`
+    return html`<div id="error" class="error" aria-live="polite">${text ? html`${iconError()}<span>${text}</span>` : nothing}</div>`
   }
 
   /** ids for aria-describedby, in reading order: hint, then error, then extras (e.g. counter) */

@@ -5,7 +5,12 @@ import { mockApis } from './mocks'
 
 // The Studio's sample app ("Dev Desk") talks to public APIs; the tests answer them with fixed data (mocks.ts).
 
-const nav = (page: Page, name: string) => page.getByRole('link', { name, exact: true }).click()
+/** Go to a section of the app; on a phone its navigation is behind the layout's Menu button first */
+const nav = async (page: Page, name: string) => {
+  const menu = page.locator('#studio-app').getByRole('button', { name: 'Menu', exact: true })
+  if ((await menu.isVisible()) && (await menu.getAttribute('aria-expanded')) !== 'true') await menu.click()
+  await page.getByRole('link', { name, exact: true }).click()
+}
 const title = (page: Page, name: string | RegExp) => page.getByRole('heading', { level: 3, name })
 const toast = (page: Page, text: string | RegExp) => page.getByRole('status').filter({ hasText: text })
 
@@ -20,7 +25,9 @@ test.describe('overview: live data from the APIs', () => {
     await expect(page.getByText('v3.3.3').first()).toBeVisible()
     await expect(page.getByText('19,500')).toBeVisible()
     await expect(page.getByText('BSD-3-Clause').first()).toBeVisible()
-    await expect(page.getByRole('img', { name: /Downloads of lit, last 30 days: from .* 38,?\d+ downloads in total/ })).toBeVisible()
+    // 30 days of 1000 + 10 * day (mocks.ts): 34,350 in total
+    await expect(page.getByRole('img', { name: /Downloads of lit, last 30 days: from .* 34,350 downloads in total/ })).toBeVisible()
+    await expect(page.getByRole('figure', { name: 'Downloads of lit, last 30 days' })).toBeVisible()
     // the exact numbers are one click away, as a real table
     await page.getByText('Show the numbers').click()
     await expect(page.getByRole('table', { name: 'Downloads of lit, last 30 days' })).toBeVisible()
@@ -65,7 +72,8 @@ test.describe('navigation, search and watchlist', () => {
   test('switching sections moves focus to the new title (and the nav says where you are)', async ({ page }) => {
     await open(page, 'studio')
     await nav(page, 'Packages')
-    await expect(page.getByRole('link', { name: 'Packages', exact: true })).toHaveAttribute('aria-current', 'page')
+    // (the app is narrow inside the Studio: its navigation folds again behind Menu once a section is chosen)
+    await expect(page.locator('#app-nav').getByRole('link', { name: 'Packages', exact: true, includeHidden: true }).first()).toHaveAttribute('aria-current', 'page')
     await expect(title(page, 'Packages')).toBeFocused()
     await nav(page, 'Watchlist')
     await expect(title(page, 'Watchlist')).toBeFocused()

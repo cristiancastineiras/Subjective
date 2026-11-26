@@ -1,6 +1,5 @@
 import { LitElement, css, nothing } from 'lit'
 import { html, unsafeStatic } from 'lit/static-html.js'
-import { unsafeHTML } from 'lit/directives/unsafe-html.js'
 import { ChildrenController } from './shared/children'
 import { baseStyles, focusStyles } from './shared/styles'
 import { define } from './shared/utils'
@@ -13,7 +12,7 @@ import { define } from './shared/utils'
  *     <sub-desc label="Customer">Ana Ruiz</sub-desc>
  *   </sub-descriptions>
  *
- * (`<sub-desc>` content is the author's own markup, re-used as is.)
+ * (`<sub-desc>` content is the author's own markup, shown in place through a slot: never copied.)
  */
 export class SubDescriptions extends LitElement {
   static override properties = {
@@ -97,18 +96,24 @@ export class SubDescriptions extends LitElement {
     `,
   ]
 
+  protected override willUpdate(): void {
+    // Each value is projected into its row, not copied: the author's own nodes (links, buttons, listeners) keep working
+    // and the text exists once (find in page, screen readers, tests).
+    this.#items.elements.forEach((el, i) => el.setAttribute('slot', `value-${i}`))
+  }
+
   protected override render() {
     const tag = unsafeStatic(`h${Math.min(6, Math.max(2, this.level))}`)
     return html`${this.heading ? html`<${tag}>${this.heading}</${tag}>` : nothing}
       <dl part="list">
         ${this.#items.elements.map(
-          (el) => html`<div class="row"><dt>${el.getAttribute('label')}</dt><dd>${unsafeHTML(el.innerHTML)}</dd></div>`,
+          (el, i) => html`<div class="row"><dt>${el.getAttribute('label')}</dt><dd><slot name=${`value-${i}`}></slot></dd></div>`,
         )}
       </dl>`
   }
 }
 
-/** Data holder for <sub-descriptions>: `<sub-desc label="Customer">Ana</sub-desc>`. Renders nothing itself. */
+/** One label/value pair of <sub-descriptions>: `<sub-desc label="Customer">Ana</sub-desc>`. Its content is the value. */
 export class SubDesc extends LitElement {
   static override properties = { label: { type: String } }
   declare label: string
@@ -118,11 +123,11 @@ export class SubDesc extends LitElement {
   }
   static override styles = css`
     :host {
-      display: none;
+      display: contents;
     }
   `
   protected override render() {
-    return nothing
+    return html`<slot></slot>`
   }
 }
 

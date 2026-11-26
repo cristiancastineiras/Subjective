@@ -1,9 +1,9 @@
 import { LitElement, css, html, nothing } from 'lit'
 import { announce } from './announce'
-import { icons } from './shared/icons'
 import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define, emit } from './shared/utils'
+import { iconContentCopy, iconRefresh, iconThumbDown, iconThumbUp } from './shared/material-icons'
 
 /**
  * One message in <sub-chat>. `assistant` messages are labelled as AI (never pretending to be a
@@ -124,10 +124,10 @@ export class SubChatMessage extends LitElement {
       <div class="body" part="body"><span class="sr-only">${mine ? messages.youSaid : messages.assistantSaid} </span><slot></slot></div>
       ${this.actions && !mine
         ? html`<div class="actions" role="group" aria-label=${messages.messageActions}>
-            <button type="button" aria-label=${messages.copy} @click=${() => void this.#copy()}>${icons.copy()}</button>
-            <button type="button" aria-label=${messages.regenerate} @click=${() => emit(this, 'sub-regenerate')}>${icons.refresh()}</button>
-            <button type="button" aria-label=${messages.goodResponse} aria-pressed=${this.feedback === 'up' ? 'true' : 'false'} @click=${() => this.#rate('up')}>${icons.thumbUp()}</button>
-            <button type="button" aria-label=${messages.badResponse} aria-pressed=${this.feedback === 'down' ? 'true' : 'false'} @click=${() => this.#rate('down')}>${icons.thumbDown()}</button>
+            <button type="button" aria-label=${messages.copy} @click=${() => void this.#copy()}>${iconContentCopy()}</button>
+            <button type="button" aria-label=${messages.regenerate} @click=${() => emit(this, 'sub-regenerate')}>${iconRefresh()}</button>
+            <button type="button" aria-label=${messages.goodResponse} aria-pressed=${this.feedback === 'up' ? 'true' : 'false'} @click=${() => this.#rate('up')}>${iconThumbUp()}</button>
+            <button type="button" aria-label=${messages.badResponse} aria-pressed=${this.feedback === 'down' ? 'true' : 'false'} @click=${() => this.#rate('down')}>${iconThumbDown()}</button>
           </div>`
         : nothing}`
   }

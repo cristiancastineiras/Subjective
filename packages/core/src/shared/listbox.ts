@@ -1,6 +1,7 @@
 import { css, html, type ReactiveControllerHost } from 'lit'
-import { icons } from './icons'
+import { iconCheck } from './material-icons'
 import { placeNear } from './position'
+import { isSheet, sheetHeadStyles } from './sheet'
 
 /** One entry of an option panel (select, autocomplete) */
 export interface ListItem {
@@ -14,9 +15,8 @@ export interface ListItem {
 
 export const supportsPopover = typeof HTMLElement !== 'undefined' && typeof HTMLElement.prototype.showPopover === 'function'
 
-/** Below this width panels become a full-screen sheet (the same breakpoint as `<sub-dialog>` and the layout components) */
-export const SHEET_QUERY = '(max-width: 40rem)'
-export const isSheet = (): boolean => typeof matchMedia === 'function' && matchMedia(SHEET_QUERY).matches
+/** Below SHEET_QUERY panels become a full-screen sheet (the same breakpoint as `<sub-dialog>` and the layout components) */
+export { SHEET_QUERY, isSheet, sheetHeader } from './sheet'
 
 const norm = (s: string): string => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
@@ -142,12 +142,7 @@ export class Popup {
   }
 }
 
-/** Mobile header of the sheet: the field's label and a "Done" button (hidden on larger screens by CSS) */
-export function sheetHeader(title: string, done: string, onDone: () => void) {
-  return html`<div class="sheet-head"><span class="sheet-title">${title}</span><button type="button" class="sheet-done" @click=${onDone}>${done}</button></div>`
-}
-
-export const checkIcon = () => icons.check()
+export const checkIcon = iconCheck
 
 /** Rows of an option panel. `row` renders one option; groups get a heading and `role="group"`. */
 export function renderGroups<T extends ListItem>(items: T[], row: (item: T) => unknown, idPrefix: string) {
@@ -327,11 +322,9 @@ export const listboxStyles = css`
 `
 
 /** Full-screen sheet below 40rem (select). Autocomplete keeps an anchored list: its input must stay visible. */
-export const sheetStyles = css`
-  .sheet-head {
-    display: none;
-  }
-
+export const sheetStyles = [
+  sheetHeadStyles,
+  css`
   /* ---- small screens: the panel is a full-screen sheet with a header and a Done button ---- */
   @media (max-width: 40rem) {
     .panel {
@@ -357,33 +350,6 @@ export const sheetStyles = css`
       }
     }
 
-    .sheet-head {
-      display: flex;
-      flex: none;
-      gap: var(--sub-space-3);
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--sub-space-2) var(--sub-space-4);
-      border-block-end: var(--sub-listbox-border-width) solid var(--sub-color-border-subtle);
-    }
-
-    .sheet-title {
-      font-weight: var(--sub-weight-bold);
-      font-size: var(--sub-text-lg);
-    }
-
-    .sheet-done {
-      min-block-size: var(--sub-target-size);
-      min-inline-size: var(--sub-target-size);
-      padding: 0 var(--sub-space-4);
-      border: var(--sub-field-border-width) solid var(--sub-color-accent);
-      border-radius: var(--sub-field-radius);
-      background: var(--sub-color-accent);
-      color: var(--sub-color-on-accent);
-      font: var(--sub-weight-semibold) var(--sub-text-md) / 1 var(--sub-font-sans);
-      cursor: pointer;
-    }
-
     .search {
       padding: var(--sub-space-3) var(--sub-space-4);
     }
@@ -393,4 +359,5 @@ export const sheetStyles = css`
       padding: var(--sub-space-1) var(--sub-space-2);
     }
   }
-`
+`,
+]

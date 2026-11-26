@@ -1,11 +1,11 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { icons } from './shared/icons'
 import { baseStyles, iconStyles } from './shared/styles'
 import { define } from './shared/utils'
+import { iconCheckCircleFill, iconErrorFill, iconInfoFill, iconWarningFill } from './shared/material-icons'
 
 export type BadgeVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger'
 
-const GLYPH = { info: 'info-fill', success: 'check_circle-fill', warning: 'warning-fill', danger: 'error-fill' } as const
+const GLYPH = { info: iconInfoFill, success: iconCheckCircleFill, warning: iconWarningFill, danger: iconErrorFill } as const
 
 /**
  * Status label: colour + icon + TEXT (never colour alone). The text is what carries the meaning
@@ -75,7 +75,7 @@ export class SubBadge extends LitElement {
   ]
 
   protected override render() {
-    const glyph = this.variant === 'neutral' ? nothing : icons[GLYPH[this.variant]]()
+    const glyph = this.variant === 'neutral' ? nothing : GLYPH[this.variant]()
     return html`<span class="badge" part="badge">${glyph}<slot></slot></span>`
   }
 }

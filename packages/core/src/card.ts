@@ -34,6 +34,9 @@ export class SubCard extends LitElement {
 
       article {
         display: grid;
+        /* one column that may be narrower than its content: a wide table or code block scrolls in its own region
+           instead of pushing the card past its container (WCAG 1.4.10 at 320px) */
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--sub-card-gap);
         padding: var(--sub-card-padding);
         border: var(--sub-card-border-width) solid var(--sub-color-border-subtle);

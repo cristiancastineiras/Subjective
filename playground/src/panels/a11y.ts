@@ -45,9 +45,15 @@ function mergeByTag(reports: A11yReport[]): Array<A11yReport & { instances: numb
  * Accessibility panel: audits the rendered preview (see @sub/core/a11y) and lists every check.
  * Statuses are words, not just colours. Failing checks come first.
  */
-export function mountA11y(host: HTMLElement, preview: HTMLElement): { run(): void } {
+export function mountA11y(host: HTMLElement, preview: HTMLElement): { run(): void; dispose(): void } {
   let timer: ReturnType<typeof setTimeout> | undefined
   let last: A11yReport[] = []
+  let disposed = false
+  // a new page: nothing from the previous one may show (or satisfy a test waiting for a score)
+  host.replaceChildren()
+  delete host.dataset.score
+  delete host.dataset.compliant
+  delete host.dataset.strict
 
   const render = () => {
     const reports = last
@@ -99,10 +105,12 @@ export function mountA11y(host: HTMLElement, preview: HTMLElement): { run(): voi
     ])
 
   const run = () => {
+    if (disposed) return
     clearTimeout(timer)
     timer = setTimeout(async () => {
       if (isBusy(preview)) return run() // the user is inside the component: auditing would move their focus
       await settle()
+      if (disposed) return // the page changed while the animations settled
       last = auditAll(preview)
       render()
     }, 120)
@@ -112,5 +120,9 @@ export function mountA11y(host: HTMLElement, preview: HTMLElement): { run(): voi
     await settle()
     return auditAll(preview)
   }
-  return { run }
+  const dispose = () => {
+    disposed = true
+    clearTimeout(timer)
+  }
+  return { run, dispose }
 }
