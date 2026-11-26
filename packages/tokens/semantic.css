@@ -1,0 +1,76 @@
+/*
+ * Tier 2 - SEMANTIC (non-colour). Decisions the design system makes once.
+ * Defaults are RAW and WCAG-compliant: square corners, 2px borders, big targets,
+ * a double-ring focus indicator. Change them here (or per component in components/*.css).
+ */
+:root {
+  /* Focus (WCAG 2.4.7, 2.4.11, 2.4.13): inner dark ring + outer yellow ring, contrasts on any background */
+  --sub-focus-width: 3px;
+  --sub-focus-inner-width: 2px;
+  --sub-focus-offset: 0px;
+
+  /* Touch/click target (WCAG 2.5.8 AA = 24px, 2.5.5 AAA + SubUX = 44px), 8px between targets */
+  --sub-target-size: 2.75rem;
+  --sub-target-gap: var(--sub-space-2);
+
+  /* ---- Shared CONTROL shape: every control component starts from these ---- */
+  --sub-control-radius: var(--sub-radius-none);
+  --sub-control-border-width: var(--sub-border-width-base);
+  --sub-control-padding-block: var(--sub-space-2);
+  --sub-control-padding-inline: var(--sub-space-3);
+  --sub-control-gap: var(--sub-space-2);
+  --sub-control-min-size: var(--sub-target-size);
+  --sub-control-font-size: var(--sub-text-md);
+
+  /* ---- Corner tiers. CONTROLS (buttons, fields, chips) may be a full pill; panels and the items inside
+     them are capped so a "fully rounded" theme never turns a dialog, a menu or an option into a circle. ---- */
+  --sub-surface-radius-max: var(--sub-radius-xl); /* dialogs, drawers, menus, popups, cards, tables */
+  --sub-item-radius-max: var(--sub-radius-md); /* options, menu items, nav items, calendar days */
+  --sub-surface-radius: min(var(--sub-control-radius), var(--sub-surface-radius-max));
+  --sub-item-radius: min(var(--sub-control-radius), var(--sub-item-radius-max));
+
+  /* ---- Shared SURFACE shape: dialogs, alerts, menus, cards ---- */
+  --sub-surface-border-width: var(--sub-border-width-base);
+  --sub-surface-padding: var(--sub-space-4);
+
+  /* Form rhythm: label -> input 4-8px, field -> field 16-24px, section -> section 32-48px */
+  --sub-label-gap: var(--sub-space-2);
+  --sub-field-gap: var(--sub-space-6);
+  --sub-section-gap: var(--sub-space-12);
+
+  /* Reading width: 45-75 characters per line */
+  --sub-measure: 65ch;
+
+  /* Page widths */
+  --sub-page-prose: 45rem;
+  --sub-page-wide: 75rem;
+  --sub-page-max: 90rem;
+  --sub-gutter: clamp(var(--sub-space-4), 4vw, var(--sub-space-8));
+
+  /* Motion. Collapsed to 0 for users who ask for reduced motion. */
+  --sub-duration-fast: 140ms;
+  --sub-duration-base: 200ms;
+  --sub-duration-slow: 300ms; /* upper bound for UI animation */
+  --sub-motion-distance: 0.5rem; /* how far popups, toasts and sheets travel while they appear */
+  --sub-motion-scale: 1; /* multiplies long decorative loops (border beam...): 0 stops them */
+}
+
+/* Motion is switched off for users who ask (OS setting) AND by the product:
+   <html data-sub-motion="off">, <sub-app motion="off"> or configure({ motion: 'off' }). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --sub-duration-fast: 0ms;
+    --sub-duration-base: 0ms;
+    --sub-duration-slow: 0ms;
+    --sub-motion-distance: 0rem;
+    --sub-motion-scale: 0;
+  }
+}
+
+[data-sub-motion='off'] {
+  --sub-duration-fast: 0ms;
+  --sub-duration-base: 0ms;
+  --sub-duration-slow: 0ms;
+  --sub-motion-distance: 0rem;
+  --sub-motion-scale: 0;
+}

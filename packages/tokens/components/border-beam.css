@@ -1,0 +1,10 @@
+/* Tier 3 - COMPONENT tokens for <sub-border-beam>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-border-beam-radius: var(--sub-surface-radius); /* @length 0 2 rem | Corner radius */
+  --sub-border-beam-width: var(--sub-border-width-base); /* @length 1 8 px | Border thickness */
+  --sub-border-beam-duration: 3s; /* @length 1 10 s | Time for one turn (stops when animations are off) */
+  --sub-border-beam-color: var(--sub-color-accent); /* @color | Colour of the moving beam */
+  --sub-border-beam-base: var(--sub-color-border); /* @color | Colour of the still border under it */
+}

@@ -1,0 +1,11 @@
+/* Tier 3 - COMPONENT tokens for <sub-pagination>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-pagination-radius: var(--sub-control-radius); /* @length 0 2 rem | Corner radius */
+  --sub-pagination-border-width: var(--sub-control-border-width); /* @length 0 6 px | Border width */
+  --sub-pagination-gap: var(--sub-target-gap); /* @length 0 2 rem | Space between items (>= 0.5rem recommended) */
+  --sub-pagination-min-size: var(--sub-control-min-size); /* @length 1 4 rem | Item size (2.75rem = 44px) */
+  --sub-pagination-padding-inline: var(--sub-control-padding-inline); /* @length 0 3 rem | Horizontal padding */
+  --sub-pagination-font-size: var(--sub-control-font-size); /* @length 0.75 2 rem | Text size */
+}

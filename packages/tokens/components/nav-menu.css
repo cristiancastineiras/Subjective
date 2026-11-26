@@ -1,0 +1,11 @@
+/* Tier 3 - COMPONENT tokens for <sub-nav-menu>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-nav-menu-gap: var(--sub-space-1); /* @length 0 2 rem | Space between items */
+  --sub-nav-menu-padding-inline: var(--sub-space-3); /* @length 0 3 rem | Item horizontal padding */
+  --sub-nav-menu-indicator-width: 4px; /* @length 0 10 px | Thickness of the current-page bar */
+  --sub-nav-menu-radius: var(--sub-item-radius); /* @length 0 2 rem | Corner radius */
+  --sub-nav-menu-min-size: var(--sub-control-min-size); /* @length 1 4 rem | Item height (2.75rem = 44px) */
+  --sub-nav-menu-indent: var(--sub-space-4); /* @length 0 3 rem | Submenu indent */
+}

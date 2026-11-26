@@ -1,0 +1,9 @@
+/* Tier 3 - COMPONENT tokens for <sub-shell>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-shell-sider-width: 16rem; /* @length 8 30 rem | Sidebar width */
+  --sub-shell-header-height: 3.75rem; /* @length 2 8 rem | Header minimum height */
+  --sub-shell-border-width: var(--sub-border-width-base); /* @length 0 8 px | Border between regions */
+  --sub-shell-padding: var(--sub-space-4); /* @length 0 4 rem | Content padding */
+}

@@ -1,0 +1,6 @@
+/* Tier 3 - COMPONENT tokens for <sub-cascader>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-cascader-gap: var(--sub-space-3); /* @length 0 2 rem | Space between levels */
+}

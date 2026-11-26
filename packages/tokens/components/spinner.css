@@ -1,0 +1,7 @@
+/* Tier 3 - COMPONENT tokens for <sub-spinner>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-spinner-size: var(--sub-icon-lg); /* @length 1 4 rem | Diameter */
+  --sub-spinner-thickness: 3px; /* @length 1 10 px | Ring thickness */
+}

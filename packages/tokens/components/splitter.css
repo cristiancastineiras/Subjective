@@ -1,0 +1,7 @@
+/* Tier 3 - COMPONENT tokens for <sub-splitter>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-splitter-handle-size: var(--sub-control-min-size); /* @length 1 4 rem | Handle hit area (2.75rem = 44px) */
+  --sub-splitter-thickness: 4px; /* @length 1 12 px | Visible line of the handle */
+}

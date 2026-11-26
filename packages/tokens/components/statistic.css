@@ -1,0 +1,8 @@
+/* Tier 3 - COMPONENT tokens for <sub-statistic>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-statistic-value-size: var(--sub-text-2xl); /* @length 1 4 rem | Value size */
+  --sub-statistic-label-size: var(--sub-text-sm); /* @length 0.75 1.5 rem | Label size */
+  --sub-statistic-gap: var(--sub-space-1); /* @length 0 2 rem | Space between parts */
+}

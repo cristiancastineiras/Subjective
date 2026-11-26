@@ -1,0 +1,14 @@
+/*
+ * OPTIONAL self-hosted fonts (no third-party requests). Import before theme.css:
+ *   import '@sub/tokens/fonts.css'
+ *
+ * Atkinson Hyperlegible Next: designed by the Braille Institute for maximum character
+ * distinction (I / l / 1, O / 0, rn / m) - the best legibility-first UI face with an open licence (OFL).
+ * Atkinson Hyperlegible Mono: same idea for code. `font-display: swap` keeps text visible while loading.
+ */
+@import "@fontsource/atkinson-hyperlegible-next/400.css";
+@import "@fontsource/atkinson-hyperlegible-next/400-italic.css";
+@import "@fontsource/atkinson-hyperlegible-next/600.css";
+@import "@fontsource/atkinson-hyperlegible-next/700.css";
+@import "@fontsource/atkinson-hyperlegible-mono/400.css";
+@import "@fontsource/atkinson-hyperlegible-mono/700.css";

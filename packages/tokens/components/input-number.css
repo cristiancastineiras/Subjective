@@ -1,0 +1,6 @@
+/* Tier 3 - COMPONENT tokens for <sub-input-number>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-input-number-button-width: var(--sub-field-min-size); /* @length 1.5 4 rem | Width of the +/- buttons (2.75rem = 44px) */
+}

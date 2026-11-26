@@ -1,0 +1,8 @@
+/* Tier 3 - COMPONENT tokens for <sub-divider>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-divider-thickness: 1px; /* @length 0 8 px | Line thickness */
+  --sub-divider-spacing: var(--sub-space-4); /* @length 0 4 rem | Space above and below */
+  --sub-divider-color: var(--sub-color-border-subtle); /* @color | Line colour */
+}

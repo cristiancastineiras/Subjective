@@ -1,0 +1,6 @@
+/* Tier 3 - COMPONENT tokens for <sub-heading>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-heading-margin-block: 0; /* @length 0 3 rem | Vertical margin */
+}

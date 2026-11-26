@@ -1,0 +1,12 @@
+/* Tier 3 - COMPONENT tokens for <sub-accordion>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-accordion-border-width: var(--sub-border-width-thin); /* @length 0 6 px | Line between sections */
+  --sub-accordion-padding-block: var(--sub-space-3); /* @length 0 2 rem | Header vertical padding */
+  --sub-accordion-padding-inline: var(--sub-space-2); /* @length 0 3 rem | Header horizontal padding */
+  --sub-accordion-gap: var(--sub-space-3); /* @length 0 2 rem | Space between chevron and heading */
+  --sub-accordion-min-size: var(--sub-control-min-size); /* @length 1 4 rem | Header height (2.75rem = 44px) */
+  --sub-accordion-font-size: var(--sub-control-font-size); /* @length 0.75 2 rem | Header text size */
+  --sub-accordion-panel-padding-block: var(--sub-space-2); /* @length 0 3 rem | Panel vertical padding */
+}

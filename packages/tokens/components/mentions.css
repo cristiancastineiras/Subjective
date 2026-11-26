@@ -1,0 +1,7 @@
+/* Tier 3 - COMPONENT tokens for <sub-mentions>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-mentions-list-min-width: 14rem; /* @length 8 30 rem | Minimum width of the suggestion list */
+  --sub-mentions-list-max-width: 24rem; /* @length 12 40 rem | Maximum width of the suggestion list */
+}

@@ -1,0 +1,11 @@
+/*
+ * Entry point: everything, in order. Import this, or pick the pieces
+ * (palette -> primitives -> semantic -> a theme) from the package exports.
+ */
+@import "./palette.css";
+@import "./primitives.css";
+@import "./semantic.css";
+@import "./themes/light.css";
+@import "./themes/dark.css";
+@import "./components/index.css";
+@import "./density.css";

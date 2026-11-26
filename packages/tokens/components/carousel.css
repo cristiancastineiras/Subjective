@@ -1,0 +1,9 @@
+/* Tier 3 - COMPONENT tokens for <sub-carousel>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-carousel-control-size: var(--sub-control-min-size); /* @length 1.5 4 rem | Control size (2.75rem = 44px) */
+  --sub-carousel-gap: var(--sub-space-2); /* @length 0 2 rem | Space between controls */
+  --sub-carousel-radius: var(--sub-surface-radius); /* @length 0 2 rem | Corner radius */
+  --sub-carousel-border-width: var(--sub-control-border-width); /* @length 0 8 px | Border width */
+}

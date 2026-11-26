@@ -1,0 +1,54 @@
+/*
+ * Tier 1 - PALETTE. Raw colour values, no meaning. High-contrast, neutral base.
+ * Never reference these from components: use the semantic tokens in themes/*.css.
+ */
+:root {
+  --sub-palette-black: #0b0c0c;
+  --sub-palette-white: #ffffff;
+
+  /* Gray */
+  --sub-palette-gray-50: #f3f2f1;
+  --sub-palette-gray-100: #e8e8e8;
+  --sub-palette-gray-200: #dbdad9;
+  --sub-palette-gray-300: #b1b4b6;
+  --sub-palette-gray-500: #626a6e;
+  --sub-palette-gray-600: #505a5f;
+  --sub-palette-gray-800: #3b3d3e;
+  --sub-palette-gray-850: #2b2d2e;
+  --sub-palette-gray-900: #1d1f20;
+  --sub-palette-gray-950: #121314;
+
+  /* Blue */
+  --sub-palette-blue-50: #e8f1f8;
+  --sub-palette-blue-100: #bcd5ea;
+  --sub-palette-blue-300: #8ab4dc;
+  --sub-palette-blue-400: #5694ca;
+  --sub-palette-blue-600: #1d70b8;
+  --sub-palette-blue-700: #144e81;
+  --sub-palette-blue-800: #003078;
+  --sub-palette-blue-subtle-dark: #1c3a57;
+  --sub-palette-blue-info-dark: #14283d;
+
+  /* Red */
+  --sub-palette-red-50: #fcebe8;
+  --sub-palette-red-300: #ff8a7a;
+  --sub-palette-red-600: #d4351c;
+  --sub-palette-red-700: #aa2a16;
+  --sub-palette-red-subtle-dark: #3b1410;
+
+  /* Green */
+  --sub-palette-green-50: #e6f2ec;
+  --sub-palette-green-300: #68c394;
+  --sub-palette-green-700: #005a30;
+  --sub-palette-green-subtle-dark: #0e2a1d;
+
+  /* Yellow / amber */
+  --sub-palette-yellow-focus: #ffdd00;
+  --sub-palette-yellow-50: #fff7bf;
+  --sub-palette-yellow-900: #594d00;
+  --sub-palette-yellow-subtle-dark: #3a3000;
+
+  /* Purple (visited links) */
+  --sub-palette-purple-300: #b8a4ee;
+  --sub-palette-purple-700: #4c2c92;
+}

@@ -1,0 +1,8 @@
+/* Tier 3 - COMPONENT tokens for <sub-result>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-result-icon-size: 4rem; /* @length 2 8 rem | Icon size */
+  --sub-result-gap: var(--sub-space-3); /* @length 0 3 rem | Space between parts */
+  --sub-result-padding-block: var(--sub-space-8); /* @length 0 8 rem | Vertical padding */
+}

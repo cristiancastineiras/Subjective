@@ -1,0 +1,14 @@
+/* Tier 3 - COMPONENT tokens for the option panel shared by <sub-select> and <sub-autocomplete>.
+ * Defaults point at the shared tiers: panel = surface corners, options = item corners (never a circle).
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-listbox-radius: var(--sub-surface-radius); /* @length 0 2 rem | Panel corner radius */
+  --sub-listbox-border-width: var(--sub-surface-border-width); /* @length 0 8 px | Panel border width */
+  --sub-listbox-padding: var(--sub-space-1); /* @length 0 1 rem | Panel inner padding */
+  --sub-listbox-max-height: 18rem; /* @length 8 40 rem | Maximum panel height before it scrolls */
+  --sub-listbox-item-radius: var(--sub-item-radius); /* @length 0 1 rem | Option corner radius */
+  --sub-listbox-item-padding-block: var(--sub-control-padding-block); /* @length 0 2 rem | Option vertical padding */
+  --sub-listbox-item-padding-inline: var(--sub-control-padding-inline); /* @length 0 3 rem | Option horizontal padding */
+  --sub-listbox-item-min-size: var(--sub-control-min-size); /* @length 1 4 rem | Option height (2.75rem = 44px) */
+  --sub-listbox-tag-radius: var(--sub-control-radius); /* @length 0 2 rem | Selected-value tag corner radius */
+}

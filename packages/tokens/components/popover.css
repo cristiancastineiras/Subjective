@@ -1,0 +1,9 @@
+/* Tier 3 - COMPONENT tokens for <sub-popover>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-popover-radius: var(--sub-surface-radius); /* @length 0 2 rem | Corner radius */
+  --sub-popover-border-width: var(--sub-surface-border-width); /* @length 0 8 px | Border width */
+  --sub-popover-padding: var(--sub-space-4); /* @length 0 3 rem | Padding */
+  --sub-popover-max-width: 22rem; /* @length 10 40 rem | Maximum width */
+}

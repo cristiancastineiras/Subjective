@@ -1,0 +1,9 @@
+/* Tier 3 - COMPONENT tokens for <sub-float-button>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-float-button-size: var(--sub-control-min-size); /* @length 2 5 rem | Button size (2.75rem = 44px) */
+  --sub-float-button-radius: var(--sub-radius-full); /* @length 0 3 rem | Corner radius */
+  --sub-float-button-offset: var(--sub-space-6); /* @length 0 4 rem | Distance from the viewport edge */
+  --sub-float-button-border-width: var(--sub-control-border-width); /* @length 0 8 px | Border width */
+}

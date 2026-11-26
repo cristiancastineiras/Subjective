@@ -1,0 +1,10 @@
+/* Tier 3 - COMPONENT tokens for <sub-badge>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-badge-radius: var(--sub-control-radius); /* @length 0 2 rem | Corner radius */
+  --sub-badge-border-width: var(--sub-border-width-thin); /* @length 0 4 px | Border width */
+  --sub-badge-padding-block: var(--sub-space-1); /* @length 0 1 rem | Vertical padding */
+  --sub-badge-padding-inline: var(--sub-space-2); /* @length 0 2 rem | Horizontal padding */
+  --sub-badge-font-size: var(--sub-text-sm); /* @length 0.75 1.5 rem | Text size */
+}

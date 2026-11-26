@@ -1,0 +1,55 @@
+import { html, type TemplateResult } from 'lit'
+import { iconAliases, materialIcons } from './material-icons'
+
+/**
+ * Icons are Material Symbols (Google, Apache-2.0) rendered as inline SVG: `fill="currentColor"`
+ * (follows the text colour, forced-colors safe), no icon font (no ligature text read aloud, no flash
+ * while loading). Names are the ones on https://fonts.google.com/icons; `name-fill` is the filled
+ * variant. Only the icons listed in `icons.config.json` are shipped (see `pnpm --filter @sub/core icons`).
+ * Apps add more with `registerIcon()`.
+ */
+export type IconName = keyof typeof materialIcons | keyof typeof iconAliases
+
+/** Directional icons are mirrored in right-to-left layouts */
+const directional = new Set<string>(['arrow_back', 'arrow_forward', 'chevron_left', 'chevron_right', 'send'])
+const custom = new Map<string, string>()
+
+/**
+ * Register an extra icon: `path` is the `d` of a Material Symbols SVG (960 grid, viewBox
+ * "0 -960 960 960"). Trusted, developer-provided data only.
+ */
+export function registerIcon(name: string, path: string, options: { directional?: boolean } = {}): void {
+  custom.set(name, path)
+  if (options.directional) directional.add(name)
+}
+
+const resolve = (name: string): string => (iconAliases as Record<string, string>)[name] ?? name
+
+export function iconPath(name: string): string | undefined {
+  return custom.get(name) ?? (materialIcons as Record<string, string>)[resolve(name)]
+}
+
+export const isDirectional = (name: string): boolean => directional.has(name) || directional.has(resolve(name))
+
+export function iconNames(): string[] {
+  return [...Object.keys(materialIcons), ...custom.keys()]
+}
+
+/** Decorative inline icon for internal use. Meaning must always live in text next to it. */
+function render(name: string): TemplateResult {
+  return html`<svg
+    class="icon${isDirectional(name) ? ' flip' : ''}"
+    viewBox="0 -960 960 960"
+    aria-hidden="true"
+    focusable="false"
+    fill="currentColor"
+  >
+    <path d=${iconPath(name) ?? ''}></path>
+  </svg>`
+}
+
+export const icons = Object.fromEntries(
+  [...Object.keys(materialIcons), ...Object.keys(iconAliases)].map((name) => [name, () => render(name)]),
+) as Record<IconName, () => TemplateResult>
+
+export { render as renderIcon }

@@ -1,0 +1,11 @@
+/* Tier 3 - COMPONENT tokens for <sub-switch>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-switch-track-width: 2.75rem; /* @length 1.5 5 rem | Track width */
+  --sub-switch-track-height: 1.5rem; /* @length 1 3 rem | Track height */
+  --sub-switch-thumb-size: 1rem; /* @length 0.5 2.5 rem | Thumb size */
+  --sub-switch-border-width: var(--sub-control-border-width); /* @length 0 6 px | Track border width */
+  --sub-switch-radius: var(--sub-radius-full); /* @length 0 2 rem | Track corner radius */
+  --sub-switch-gap: var(--sub-space-3); /* @length 0 2 rem | Space between track, label and state */
+}

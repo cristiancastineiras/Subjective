@@ -1,0 +1,7 @@
+/* Tier 3 - COMPONENT tokens for <sub-image>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-image-caption-size: var(--sub-text-sm); /* @length 0.75 1.5 rem | Caption text size */
+  --sub-image-border-width: 0px; /* @length 0 6 px | Border width */
+}

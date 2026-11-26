@@ -1,0 +1,14 @@
+/* Tier 3 - COMPONENT tokens for <sub-menu>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-menu-radius: var(--sub-surface-radius); /* @length 0 2 rem | Corner radius */
+  --sub-menu-border-width: var(--sub-surface-border-width); /* @length 0 8 px | Border width */
+  --sub-menu-item-radius: var(--sub-item-radius); /* @length 0 1 rem | Item corner radius */
+  --sub-menu-item-padding-block: var(--sub-control-padding-block); /* @length 0 2 rem | Item vertical padding */
+  --sub-menu-item-padding-inline: var(--sub-control-padding-inline); /* @length 0 3 rem | Item horizontal padding */
+  --sub-menu-min-width: 12rem; /* @length 6 30 rem | Minimum menu width */
+  --sub-menu-trigger-radius: var(--sub-control-radius); /* @length 0 2 rem | Trigger corner radius */
+  --sub-menu-trigger-border-width: var(--sub-control-border-width); /* @length 0 6 px | Trigger border width */
+  --sub-menu-min-size: var(--sub-control-min-size); /* @length 1 4 rem | Item height (2.75rem = 44px) */
+}

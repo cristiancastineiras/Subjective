@@ -1,0 +1,9 @@
+/* Tier 3 - COMPONENT tokens for <sub-card>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-card-radius: var(--sub-surface-radius); /* @length 0 2 rem | Corner radius */
+  --sub-card-border-width: var(--sub-surface-border-width); /* @length 0 8 px | Border width */
+  --sub-card-padding: var(--sub-surface-padding); /* @length 0 4 rem | Padding */
+  --sub-card-gap: var(--sub-space-3); /* @length 0 3 rem | Space between parts */
+}

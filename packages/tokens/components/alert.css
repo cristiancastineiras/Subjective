@@ -1,0 +1,10 @@
+/* Tier 3 - COMPONENT tokens for <sub-alert>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-alert-radius: var(--sub-surface-radius); /* @length 0 2 rem | Corner radius */
+  --sub-alert-border-width: var(--sub-surface-border-width); /* @length 0 8 px | Border width */
+  --sub-alert-accent-width: 6px; /* @length 0 16 px | Thickness of the coloured edge */
+  --sub-alert-padding: var(--sub-surface-padding); /* @length 0 3 rem | Padding */
+  --sub-alert-gap: var(--sub-space-3); /* @length 0 2 rem | Space between icon and content */
+}

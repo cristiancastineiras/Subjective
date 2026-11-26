@@ -1,0 +1,46 @@
+/* Tier 2 - SEMANTIC colours, dark. Not an inversion: own tokens, elevation = lighter, no pure white. */
+[data-sub-theme="dark"] {
+  color-scheme: dark;
+
+  --sub-color-page: var(--sub-palette-black);
+  --sub-color-surface: var(--sub-palette-gray-900);
+  --sub-color-surface-raised: var(--sub-palette-gray-850);
+  --sub-color-surface-hover: var(--sub-palette-gray-850);
+  --sub-color-surface-sunken: var(--sub-palette-gray-950);
+  --sub-color-overlay: rgb(0 0 0 / 0.75);
+
+  --sub-color-text: var(--sub-palette-gray-50);
+  --sub-color-muted: var(--sub-palette-gray-300);
+
+  --sub-color-border: var(--sub-palette-gray-300);
+  --sub-color-border-subtle: var(--sub-palette-gray-600);
+
+  --sub-color-accent: var(--sub-palette-blue-300);
+  --sub-color-on-accent: var(--sub-palette-black);
+  --sub-color-accent-hover: var(--sub-palette-blue-100);
+  --sub-color-accent-active: var(--sub-palette-white);
+  --sub-color-accent-subtle: var(--sub-palette-blue-subtle-dark);
+  --sub-color-on-accent-subtle: var(--sub-palette-blue-100);
+
+  --sub-color-focus: var(--sub-palette-yellow-focus);
+  --sub-color-focus-inner: var(--sub-palette-black);
+
+  --sub-color-link: var(--sub-palette-blue-300);
+  --sub-color-link-hover: var(--sub-palette-blue-100);
+  --sub-color-link-visited: var(--sub-palette-purple-300);
+
+  --sub-color-disabled: var(--sub-palette-gray-800);
+  --sub-color-on-disabled: var(--sub-palette-gray-300);
+
+  --sub-color-danger: var(--sub-palette-red-300);
+  --sub-color-danger-subtle: var(--sub-palette-red-subtle-dark);
+  --sub-color-danger-solid: var(--sub-palette-red-300);
+  --sub-color-danger-solid-hover: var(--sub-palette-red-50);
+  --sub-color-on-danger-solid: var(--sub-palette-black);
+  --sub-color-success: var(--sub-palette-green-300);
+  --sub-color-success-subtle: var(--sub-palette-green-subtle-dark);
+  --sub-color-warning: var(--sub-palette-yellow-focus);
+  --sub-color-warning-subtle: var(--sub-palette-yellow-subtle-dark);
+  --sub-color-info: var(--sub-palette-blue-300);
+  --sub-color-info-subtle: var(--sub-palette-blue-info-dark);
+}

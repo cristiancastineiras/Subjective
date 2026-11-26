@@ -1,0 +1,7 @@
+/* Tier 3 - COMPONENT tokens for <sub-masonry>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-masonry-gap: var(--sub-space-4); /* @length 0 4 rem | Space between items */
+  --sub-masonry-column-width: 18rem; /* @length 8 40 rem | Ideal column width */
+}

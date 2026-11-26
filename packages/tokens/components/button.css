@@ -1,0 +1,13 @@
+/* Tier 3 - COMPONENT tokens for <sub-button>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-button-radius: var(--sub-control-radius); /* @length 0 2 rem | Corner radius */
+  --sub-button-border-width: var(--sub-control-border-width); /* @length 0 8 px | Border width */
+  --sub-button-padding-block: var(--sub-control-padding-block); /* @length 0 2 rem | Vertical padding */
+  --sub-button-padding-inline: var(--sub-control-padding-inline); /* @length 0 3 rem | Horizontal padding */
+  --sub-button-gap: var(--sub-control-gap); /* @length 0 2 rem | Space between inner parts */
+  --sub-button-min-size: var(--sub-control-min-size); /* @length 1 4 rem | Minimum target size (2.75rem = 44px) */
+  --sub-button-font-size: var(--sub-control-font-size); /* @length 0.75 2 rem | Text size */
+  --sub-button-font-weight: var(--sub-weight-semibold); /* @number 400 700 | Font weight */
+}

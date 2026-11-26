@@ -1,0 +1,12 @@
+/* Tier 3 - COMPONENT tokens for <sub-tour>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-tour-radius: var(--sub-surface-radius); /* @length 0 2 rem | Corner radius of a step */
+  --sub-tour-border-width: var(--sub-surface-border-width); /* @length 0 8 px | Border width of a step */
+  --sub-tour-width: 22rem; /* @length 14 36 rem | Width of a step */
+  --sub-tour-padding: var(--sub-space-4); /* @length 0 3 rem | Inner padding of a step */
+  --sub-tour-spotlight-radius: var(--sub-item-radius); /* @length 0 2 rem | Corner radius of the highlighted target */
+  --sub-tour-spotlight-padding: 0.5rem; /* @length 0 2 rem | Space between the target and its outline */
+  --sub-tour-ring-width: var(--sub-focus-width); /* @length 1 8 px | Thickness of the outline around the target */
+}

@@ -1,0 +1,7 @@
+/* Tier 3 - COMPONENT tokens for <sub-skeleton>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-skeleton-radius: var(--sub-control-radius); /* @length 0 2 rem | Corner radius */
+  --sub-skeleton-line-height: 1em; /* @length 0.5 2 em | Height of a text line */
+}

@@ -1,0 +1,66 @@
+/*
+ * Tier 1 - PRIMITIVES. Non-colour scales. All sizes in rem so they follow the
+ * user's font size (WCAG 1.4.4). Spacing sits on the 4/8px grid.
+ */
+:root {
+  /* Fonts: legibility first. Falls back to the system UI font if fonts.css is not loaded. */
+  --sub-font-sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sub-font-mono: "Atkinson Hyperlegible Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+
+  /* Type scale: modular, ratio 1.25 (major third). Body is never below 1rem. */
+  --sub-text-xs: 0.75rem;
+  --sub-text-sm: 0.875rem;
+  --sub-text-md: 1rem;
+  --sub-text-lg: 1.25rem;
+  --sub-text-xl: 1.563rem;
+  --sub-text-2xl: 1.953rem;
+  --sub-text-3xl: 2.441rem;
+
+  /* Max 3 working weights (+ bold for h1) */
+  --sub-weight-regular: 400;
+  --sub-weight-medium: 500;
+  --sub-weight-semibold: 600;
+  --sub-weight-bold: 700;
+
+  /* Unitless line heights */
+  --sub-leading-tight: 1.15;
+  --sub-leading-snug: 1.3;
+  --sub-leading-normal: 1.5;
+  --sub-leading-relaxed: 1.6;
+
+  /* Spacing: 4, 8, 12, 16, 24, 32, 48, 64, 96 */
+  --sub-space-0: 0;
+  --sub-space-1: 0.25rem;
+  --sub-space-2: 0.5rem;
+  --sub-space-3: 0.75rem;
+  --sub-space-4: 1rem;
+  --sub-space-6: 1.5rem;
+  --sub-space-8: 2rem;
+  --sub-space-12: 3rem;
+  --sub-space-16: 4rem;
+  --sub-space-24: 6rem;
+
+  /* Shape scale (components pick from it through their own tokens) */
+  --sub-radius-none: 0px;
+  --sub-radius-sm: 0.25rem;
+  --sub-radius-md: 0.5rem;
+  --sub-radius-lg: 0.75rem;
+  --sub-radius-xl: 1rem;
+  --sub-radius-full: 9999px;
+  --sub-border-width-thin: 1px;
+  --sub-border-width-base: 2px;
+  --sub-border-width-thick: 4px;
+
+  /* Icons */
+  --sub-icon-sm: 1.25rem;
+  --sub-icon-md: 1.5rem;
+  --sub-icon-lg: 2rem;
+
+  /* Easing */
+  --sub-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Layering (only for UI that cannot use the top layer) */
+  --sub-z-sticky: 100;
+  --sub-z-dropdown: 200;
+  --sub-z-toast: 900;
+}

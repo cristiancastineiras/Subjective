@@ -1,0 +1,55 @@
+/* Tier 2 - SEMANTIC colours, light. Same token names as dark.css. Pairs are verified by `check-contrast`. */
+:root,
+[data-sub-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces */
+  --sub-color-page: var(--sub-palette-white);
+  --sub-color-surface: var(--sub-palette-white);
+  --sub-color-surface-raised: var(--sub-palette-white);
+  --sub-color-surface-hover: var(--sub-palette-gray-50);
+  --sub-color-surface-sunken: var(--sub-palette-gray-100);
+  --sub-color-overlay: rgb(11 12 12 / 0.7);
+
+  /* Text */
+  --sub-color-text: var(--sub-palette-black);
+  --sub-color-muted: var(--sub-palette-gray-600);
+
+  /* Borders: `border` outlines controls (>= 3:1), `border-subtle` only separates */
+  --sub-color-border: var(--sub-palette-black);
+  --sub-color-border-subtle: var(--sub-palette-gray-300);
+
+  /* Interactive */
+  --sub-color-accent: var(--sub-palette-blue-600);
+  --sub-color-on-accent: var(--sub-palette-white);
+  --sub-color-accent-hover: var(--sub-palette-blue-800);
+  --sub-color-accent-active: var(--sub-palette-black);
+  --sub-color-accent-subtle: var(--sub-palette-blue-50);
+  --sub-color-on-accent-subtle: var(--sub-palette-blue-800);
+
+  /* Focus: two rings so it shows on light AND dark backgrounds */
+  --sub-color-focus: var(--sub-palette-yellow-focus);
+  --sub-color-focus-inner: var(--sub-palette-black);
+
+  /* Links */
+  --sub-color-link: var(--sub-palette-blue-600);
+  --sub-color-link-hover: var(--sub-palette-blue-800);
+  --sub-color-link-visited: var(--sub-palette-purple-700);
+
+  /* Disabled: legible (>= 3:1), muted, never error-looking */
+  --sub-color-disabled: var(--sub-palette-gray-200);
+  --sub-color-on-disabled: var(--sub-palette-gray-600);
+
+  /* Status. `<s>` = text/icon/border colour, `<s>-subtle` = tinted background */
+  --sub-color-danger: var(--sub-palette-red-700);
+  --sub-color-danger-subtle: var(--sub-palette-red-50);
+  --sub-color-danger-solid: var(--sub-palette-red-600);
+  --sub-color-danger-solid-hover: var(--sub-palette-red-700);
+  --sub-color-on-danger-solid: var(--sub-palette-white);
+  --sub-color-success: var(--sub-palette-green-700);
+  --sub-color-success-subtle: var(--sub-palette-green-50);
+  --sub-color-warning: var(--sub-palette-yellow-900);
+  --sub-color-warning-subtle: var(--sub-palette-yellow-50);
+  --sub-color-info: var(--sub-palette-blue-700);
+  --sub-color-info-subtle: var(--sub-palette-blue-50);
+}

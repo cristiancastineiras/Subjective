@@ -1,0 +1,9 @@
+/* Tier 3 - COMPONENT tokens for <sub-list>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-list-border-width: var(--sub-border-width-thin); /* @length 0 6 px | Line between items */
+  --sub-list-padding-block: var(--sub-space-3); /* @length 0 2 rem | Item vertical padding */
+  --sub-list-padding-inline: var(--sub-space-3); /* @length 0 3 rem | Item horizontal padding */
+  --sub-list-gap: var(--sub-space-3); /* @length 0 2 rem | Space between item parts */
+}

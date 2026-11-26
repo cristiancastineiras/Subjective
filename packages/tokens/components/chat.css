@@ -1,0 +1,11 @@
+/* Tier 3 - COMPONENT tokens for <sub-chat>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-chat-radius: var(--sub-surface-radius); /* @length 0 2 rem | Corner radius */
+  --sub-chat-border-width: var(--sub-surface-border-width); /* @length 0 8 px | Border width */
+  --sub-chat-gap: var(--sub-space-3); /* @length 0 2 rem | Space between messages */
+  --sub-chat-bubble-padding: var(--sub-space-3); /* @length 0 2 rem | Message padding */
+  --sub-chat-bubble-radius: var(--sub-surface-radius); /* @length 0 2 rem | Message corner radius */
+  --sub-chat-height: 28rem; /* @length 15 50 rem | Conversation height */
+}

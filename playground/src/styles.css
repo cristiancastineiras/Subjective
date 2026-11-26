@@ -1,0 +1,815 @@
+/*
+ * Playground shell. Serious, plain, legible (in the spirit of the GOV.UK Design System site:
+ * white page, black text, blue links, thick borders, yellow focus). Uses the library tokens only.
+ * No logos, crests or trademarks.
+ */
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  background: var(--sub-color-page);
+  color: var(--sub-color-text);
+  font: 1.125rem / var(--sub-leading-normal) var(--sub-font-sans);
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  color: var(--sub-color-link);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  color: var(--sub-color-link-hover);
+  text-decoration-thickness: 3px;
+}
+
+:is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  --_ring: calc(var(--sub-focus-offset) + var(--sub-focus-inner-width));
+  outline: var(--sub-focus-width) solid var(--sub-color-focus);
+  outline-offset: var(--_ring);
+  box-shadow: 0 0 0 var(--_ring) var(--sub-color-focus-inner);
+}
+
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+kbd {
+  padding: 0.1em 0.4em;
+  border: 2px solid var(--sub-color-border);
+  background: var(--sub-color-surface-hover);
+  font: 600 0.875em var(--sub-font-mono);
+}
+
+code {
+  font-family: var(--sub-font-mono);
+  font-size: 0.875em;
+}
+
+/* ---- header: black band, blue rule ------------------------------------------------------ */
+.site-header {
+  background: #0b0c0c;
+  color: #fff;
+  border-block-end: 10px solid #1d70b8;
+}
+
+.wrap {
+  margin-inline: auto;
+  padding-inline: var(--sub-gutter);
+}
+
+.header-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sub-space-2) var(--sub-space-6);
+  align-items: center;
+  justify-content: space-between;
+  min-block-size: 3.75rem;
+}
+
+.brand {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.brand a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.brand a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.brand span {
+  font-weight: 400;
+}
+
+.phase {
+  margin-inline-start: var(--sub-space-3);
+  padding: 2px 8px;
+  background: #1d70b8;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.header-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sub-space-1) var(--sub-space-6);
+  justify-content: flex-end;
+}
+
+.theme {
+  display: inline-flex;
+  gap: var(--sub-space-2);
+  align-items: center;
+  min-block-size: var(--sub-target-size);
+  cursor: pointer;
+}
+
+.theme input {
+  inline-size: 1.375rem;
+  block-size: 1.375rem;
+  margin: 0;
+  accent-color: #fff;
+}
+
+/* ---- layout ------------------------------------------------------------------------------ */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sub-space-4) var(--sub-space-12);
+  padding-block: var(--sub-space-6) var(--sub-space-16);
+}
+
+@media (min-width: 60rem) {
+  .layout {
+    grid-template-columns: 14rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .nav-menu {
+    position: sticky;
+    inset-block-start: var(--sub-space-4);
+    max-block-size: calc(100vh - 2 * var(--sub-space-4));
+    overflow: auto;
+    padding-inline-end: var(--sub-space-2);
+  }
+
+  .nav-menu > summary {
+    display: none;
+  }
+}
+
+.nav-menu > summary {
+  min-block-size: var(--sub-target-size);
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--sub-color-border);
+  padding-inline: var(--sub-space-3);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (min-width: 60rem) {
+  .nav-menu > summary {
+    display: none;
+  }
+}
+
+#nav h2 {
+  margin: var(--sub-space-4) 0 var(--sub-space-1);
+  padding-inline-start: var(--sub-space-3);
+  color: var(--sub-color-muted);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+#nav section:first-child h2 {
+  margin-block-start: 0;
+}
+
+#nav ul,
+.cards {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#nav a {
+  display: block;
+  padding: var(--sub-space-2) var(--sub-space-3);
+  min-block-size: var(--sub-target-size);
+  border-inline-start: 4px solid transparent;
+  color: var(--sub-color-link);
+  text-decoration: none;
+}
+
+#nav a:hover {
+  text-decoration: underline;
+  background: var(--sub-color-surface-hover);
+}
+
+#nav a[aria-current='page'] {
+  border-inline-start-color: var(--sub-color-link);
+  color: var(--sub-color-text);
+  font-weight: 700;
+}
+
+main {
+  min-inline-size: 0;
+}
+
+main:focus {
+  outline: none;
+}
+
+h1 {
+  margin: var(--sub-space-4) 0 var(--sub-space-4);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: var(--sub-leading-tight);
+}
+
+.lead {
+  max-inline-size: 44rem;
+  margin: 0 0 var(--sub-space-8);
+  font-size: 1.375rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+h2 {
+  margin: 0 0 var(--sub-space-4);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: var(--sub-leading-snug);
+}
+
+h3 {
+  margin: var(--sub-space-6) 0 var(--sub-space-2);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.block {
+  margin-block-end: var(--sub-space-12);
+}
+
+/* ---- overview cards ------------------------------------------------------------------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: var(--sub-space-4);
+}
+
+.cards li {
+  padding: var(--sub-space-4);
+  border-block-start: 5px solid var(--sub-color-link);
+  background: var(--sub-color-surface-hover);
+}
+
+.cards a {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.cards p {
+  margin: var(--sub-space-1) 0 0;
+  font-size: 1rem;
+}
+
+#overview section + section {
+  margin-block-start: var(--sub-space-8);
+}
+
+/* ---- example box (the "Example" tab, as in the GOV.UK design system) ---------------------- */
+.example {
+  position: relative;
+  border: 1px solid var(--sub-color-border-subtle);
+  background: var(--sub-color-surface);
+}
+
+.samples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--sub-space-4);
+  padding: var(--sub-space-8) var(--sub-space-6);
+}
+
+.samples > * {
+  max-inline-size: 100%;
+}
+
+#result {
+  margin: 0;
+  padding: var(--sub-space-3) var(--sub-space-6);
+  border-block-start: 1px solid var(--sub-color-border-subtle);
+  background: var(--sub-color-surface-hover);
+  color: var(--sub-color-muted);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- tables, tags ----------------------------------------------------------------------- */
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+th,
+td {
+  padding: var(--sub-space-2) var(--sub-space-3) var(--sub-space-2) 0;
+  border-block-end: 1px solid var(--sub-color-border-subtle);
+  text-align: start;
+  vertical-align: top;
+}
+
+th {
+  font-weight: 700;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 2px solid currentColor;
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tag--pass {
+  background: var(--sub-color-success-subtle);
+  color: var(--sub-color-success);
+}
+
+.tag--fail {
+  background: var(--sub-color-danger-subtle);
+  color: var(--sub-color-danger);
+}
+
+.tag--warn,
+.tag--manual {
+  background: var(--sub-color-warning-subtle);
+  color: var(--sub-color-warning);
+}
+
+/* ---- accessibility panel ------------------------------------------------------------------ */
+.a11y-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sub-space-4) var(--sub-space-8);
+  align-items: center;
+  padding: var(--sub-space-4) var(--sub-space-6);
+  border: 5px solid var(--sub-color-border);
+  margin-block-end: var(--sub-space-4);
+}
+
+.a11y-score {
+  margin: 0;
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.a11y-score span {
+  font-size: inherit;
+}
+
+.a11y-verdict {
+  margin: 0 0 var(--sub-space-2);
+}
+
+.a11y-report {
+  margin-block-end: var(--sub-space-2);
+  border: 1px solid var(--sub-color-border-subtle);
+}
+
+.a11y-report > summary {
+  min-block-size: var(--sub-target-size);
+  padding: var(--sub-space-2) var(--sub-space-3);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.a11y-report .table-wrap {
+  padding: 0 var(--sub-space-3) var(--sub-space-3);
+}
+
+/* ---- configure panel ---------------------------------------------------------------------- */
+.cfg-hint {
+  margin: 0 0 var(--sub-space-3);
+  color: var(--sub-color-muted);
+  font-size: 1rem;
+}
+
+.cfg-group {
+  border: 2px solid var(--sub-color-border);
+  margin-block-end: var(--sub-space-3);
+}
+
+.cfg-group > summary {
+  min-block-size: var(--sub-target-size);
+  display: flex;
+  align-items: center;
+  padding-inline: var(--sub-space-3);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cfg-group > .cfg-hint {
+  padding-inline: var(--sub-space-3);
+}
+
+.cfg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: var(--sub-space-4) var(--sub-space-6);
+  padding: var(--sub-space-3);
+  border-block-start: 1px solid var(--sub-color-border-subtle);
+}
+
+.cfg-row {
+  display: grid;
+  gap: var(--sub-space-1);
+  align-content: start;
+  min-inline-size: 0;
+}
+
+.cfg-row label {
+  display: grid;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.cfg-row label code {
+  color: var(--sub-color-muted);
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.cfg-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sub-space-2);
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.cfg-pair input[type='number'],
+.cfg-row select,
+.cfg-row input[type='text'],
+.cfg-row input[type='number'] {
+  min-block-size: var(--sub-target-size);
+  padding: var(--sub-space-1) var(--sub-space-2);
+  border: 2px solid var(--sub-color-border);
+  background: var(--sub-color-surface);
+  color: var(--sub-color-text);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.cfg-pair input[type='number'] {
+  inline-size: 6rem;
+}
+
+.cfg-pair input[type='range'] {
+  flex: 1;
+  min-inline-size: 5rem;
+  accent-color: var(--sub-color-accent);
+}
+
+.cfg-row input[type='color'] {
+  inline-size: 4rem;
+  block-size: var(--sub-target-size);
+  padding: 2px;
+  border: 2px solid var(--sub-color-border);
+  background: var(--sub-color-surface);
+  cursor: pointer;
+}
+
+.cfg-check {
+  display: flex !important;
+  gap: var(--sub-space-3);
+  align-items: center;
+  min-block-size: var(--sub-target-size);
+  cursor: pointer;
+}
+
+.cfg-check input {
+  inline-size: 1.375rem;
+  block-size: 1.375rem;
+  margin: 0;
+  accent-color: var(--sub-color-accent);
+}
+
+.unit {
+  min-inline-size: 2ch;
+  color: var(--sub-color-muted);
+  font-size: 1rem;
+}
+
+.cfg-out textarea {
+  inline-size: 100%;
+  padding: var(--sub-space-3);
+  border: 2px solid var(--sub-color-border);
+  background: var(--sub-color-surface-hover);
+  color: var(--sub-color-text);
+  font: 1rem var(--sub-font-mono);
+}
+
+.cfg-actions {
+  display: flex;
+  gap: var(--sub-space-3);
+  margin-block-start: var(--sub-space-2);
+}
+
+.cfg-actions button {
+  min-block-size: var(--sub-target-size);
+  padding: var(--sub-space-2) var(--sub-space-4);
+  border: 2px solid var(--sub-color-border);
+  background: var(--sub-color-surface);
+  color: var(--sub-color-text);
+  font: 700 1rem var(--sub-font-sans);
+  cursor: pointer;
+}
+
+.cfg-actions button:hover {
+  background: var(--sub-color-surface-hover);
+}
+
+/* ---- helpers used by the demos only (not part of the library) ---------------------------- */
+.stack {
+  display: grid;
+  gap: var(--sub-space-6);
+  inline-size: 100%;
+  max-inline-size: 30rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--sub-space-3);
+}
+
+.wide {
+  inline-size: 100%;
+}
+
+.demo-box {
+  inline-size: 100%;
+  min-block-size: 8rem;
+  padding: var(--sub-space-4);
+  border: 2px dashed var(--sub-color-border);
+}
+
+/* ---- two panes: the component on the left, its editor on the right ---------------------- */
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sub-space-6) var(--sub-space-8);
+}
+
+.pane-editor {
+  min-inline-size: 0;
+  padding: var(--sub-space-4);
+  border: 2px solid var(--sub-color-border);
+  background: var(--sub-color-surface);
+}
+
+.pane-editor h2 {
+  margin-block-end: var(--sub-space-1);
+}
+
+@media (min-width: 72rem) {
+  .workbench {
+    grid-template-columns: minmax(0, 1fr) 26rem;
+    align-items: start;
+  }
+
+  .pane-editor {
+    position: sticky;
+    inset-block-start: var(--sub-space-4);
+    max-block-size: calc(100vh - 2 * var(--sub-space-4));
+    overflow: auto;
+  }
+
+  .pane-editor .a11y-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sub-space-2);
+    border-width: 4px;
+  }
+}
+
+/* ---- Studio: the sample application and its theme editor ------------------------------------ */
+.studio-frame {
+  border: 2px solid var(--sub-color-border);
+  overflow: hidden;
+}
+
+.app-surface {
+  background: var(--sub-color-page);
+  color: var(--sub-color-text);
+  font-family: var(--sub-font-sans);
+}
+
+.app-layout {
+  min-block-size: 36rem;
+}
+
+.app-header {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--sub-space-3) var(--sub-space-6);
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--sub-space-2);
+}
+
+.app-brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.app-search {
+  flex: 1 1 14rem;
+  max-inline-size: 22rem;
+}
+
+.app-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sub-space-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-form {
+  display: grid;
+  gap: var(--sub-field-gap);
+  max-inline-size: 34rem;
+}
+
+/* ---- Dev Desk (the Studio's sample app): only library tokens, so every theme recolours it ---- */
+.app-muted {
+  margin: 0;
+  color: var(--sub-color-muted);
+  font-size: var(--sub-text-sm);
+}
+
+.app-now {
+  display: flex;
+  gap: var(--sub-space-4);
+  align-items: center;
+  margin-block-end: var(--sub-space-4);
+}
+
+.app-now-icon {
+  --sub-icon-md: 3.5rem;
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  color: var(--sub-color-accent);
+}
+
+.app-temp {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.app-range {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.app-clamp {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  min-inline-size: 14rem;
+}
+
+.app-two,
+.app-stats {
+  align-items: start;
+}
+
+.app-mini {
+  margin-block-end: var(--sub-space-4);
+}
+
+.app-chart {
+  margin: 0;
+}
+
+.app-bars {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  block-size: 8rem;
+  padding: var(--sub-space-2) var(--sub-space-2) 0;
+  border-block-end: 2px solid var(--sub-color-border);
+}
+
+.app-bars > span {
+  flex: 1;
+  min-inline-size: 2px;
+  background: var(--sub-color-accent);
+}
+
+.app-chart figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sub-space-2) var(--sub-space-4);
+  justify-content: space-between;
+  padding-block: var(--sub-space-2);
+  font-size: var(--sub-text-sm);
+}
+
+.app-chart details {
+  margin-block-start: var(--sub-space-2);
+}
+
+.app-chart summary {
+  min-block-size: var(--sub-target-size);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.app-search-form,
+.app-note-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sub-space-3);
+  align-items: end;
+}
+
+.app-search-form sub-input,
+.app-note-form sub-mentions {
+  flex: 1 1 16rem;
+}
+
+.ed-block {
+  margin-block: var(--sub-space-6);
+  padding-block-end: var(--sub-space-4);
+  border-block-end: 1px solid var(--sub-color-border-subtle);
+}
+
+.ed-block:last-child {
+  border-block-end: 0;
+}
+
+.ed-block h3 {
+  margin-block-start: 0;
+}
+
+.ed-fields {
+  display: grid;
+  gap: var(--sub-space-6);
+}
+
+.ed-presets,
+.ed-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sub-space-2);
+  margin-block: var(--sub-space-3);
+}
+
+.ed-issues {
+  margin: var(--sub-space-2) 0 0;
+  padding-inline-start: var(--sub-space-4);
+  font-size: 1rem;
+}
+
+.ed-audit {
+  margin-block-start: var(--sub-space-3);
+  font-size: 1rem;
+}
+
+.pane-editor pre {
+  max-block-size: 18rem;
+  margin: 0;
+  padding: var(--sub-space-3);
+  overflow: auto;
+  background: var(--sub-color-surface-hover);
+  border: 1px solid var(--sub-color-border-subtle);
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+.app-note {
+  margin: 0;
+  color: var(--sub-color-muted);
+  font-size: 1rem;
+}

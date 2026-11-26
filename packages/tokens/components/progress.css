@@ -1,0 +1,8 @@
+/* Tier 3 - COMPONENT tokens for <sub-progress>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-progress-height: 1.25rem; /* @length 0.5 3 rem | Bar height */
+  --sub-progress-radius: var(--sub-control-radius); /* @length 0 2 rem | Corner radius */
+  --sub-progress-border-width: var(--sub-control-border-width); /* @length 0 6 px | Border width */
+}

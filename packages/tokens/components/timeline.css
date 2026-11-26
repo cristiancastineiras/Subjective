@@ -1,0 +1,8 @@
+/* Tier 3 - COMPONENT tokens for <sub-timeline>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-timeline-dot-size: 1.5rem; /* @length 0.75 3 rem | Marker size */
+  --sub-timeline-line-width: 2px; /* @length 1 8 px | Connector thickness */
+  --sub-timeline-gap: var(--sub-space-4); /* @length 0 3 rem | Space between items */
+}

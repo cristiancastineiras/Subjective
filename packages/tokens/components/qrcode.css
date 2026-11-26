@@ -1,0 +1,8 @@
+/* Tier 3 - COMPONENT tokens for <sub-qrcode>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-qrcode-size: 10rem; /* @length 4 24 rem | Size */
+  --sub-qrcode-padding: var(--sub-space-3); /* @length 0 3 rem | Quiet zone padding */
+  --sub-qrcode-border-width: var(--sub-border-width-base); /* @length 0 8 px | Border width */
+}

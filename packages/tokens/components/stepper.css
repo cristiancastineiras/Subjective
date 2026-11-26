@@ -1,0 +1,8 @@
+/* Tier 3 - COMPONENT tokens for <sub-stepper>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-stepper-bar-height: 4px; /* @length 1 12 px | Thickness of the progress bar */
+  --sub-stepper-gap: var(--sub-space-2); /* @length 0 2 rem | Space between steps */
+  --sub-stepper-font-size: var(--sub-text-sm); /* @length 0.75 1.5 rem | Step text size */
+}

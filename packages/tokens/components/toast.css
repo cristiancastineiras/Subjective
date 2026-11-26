@@ -1,0 +1,10 @@
+/* Tier 3 - COMPONENT tokens for <sub-toast>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-toast-radius: var(--sub-surface-radius); /* @length 0 2 rem | Corner radius */
+  --sub-toast-border-width: var(--sub-surface-border-width); /* @length 0 8 px | Border width */
+  --sub-toast-padding: var(--sub-space-2); /* @length 0 2 rem | Padding */
+  --sub-toast-gap: var(--sub-space-3); /* @length 0 2 rem | Space between parts */
+  --sub-toast-width: 28rem; /* @length 15 50 rem | Maximum width */
+}

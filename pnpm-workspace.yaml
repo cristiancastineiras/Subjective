@@ -1,0 +1,5 @@
+packages:
+  - packages/*
+  - playground
+minimumReleaseAgeExclude:
+  - vite@8.4.0

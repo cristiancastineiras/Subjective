@@ -1,0 +1,10 @@
+/* Tier 3 - COMPONENT tokens for <sub-tooltip>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-tooltip-radius: var(--sub-surface-radius); /* @length 0 2 rem | Corner radius */
+  --sub-tooltip-padding-block: var(--sub-space-2); /* @length 0 2 rem | Vertical padding */
+  --sub-tooltip-padding-inline: var(--sub-space-3); /* @length 0 2 rem | Horizontal padding */
+  --sub-tooltip-font-size: var(--sub-text-sm); /* @length 0.75 1.5 rem | Text size */
+  --sub-tooltip-max-width: 20rem; /* @length 8 40 rem | Maximum width */
+}

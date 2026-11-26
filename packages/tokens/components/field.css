@@ -1,0 +1,16 @@
+/* Tier 3 - COMPONENT tokens for <sub-field>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-field-radius: var(--sub-control-radius); /* @length 0 2 rem | Corner radius */
+  --sub-field-border-width: var(--sub-control-border-width); /* @length 0 8 px | Border width */
+  --sub-field-invalid-ring-width: var(--sub-border-width-base); /* @length 0 8 px | Extra ring drawn inside an invalid field */
+  --sub-field-padding-block: var(--sub-control-padding-block); /* @length 0 2 rem | Vertical padding */
+  --sub-field-padding-inline: var(--sub-control-padding-inline); /* @length 0 3 rem | Horizontal padding */
+  --sub-field-min-size: var(--sub-control-min-size); /* @length 1 4 rem | Minimum height (2.75rem = 44px) */
+  --sub-field-font-size: var(--sub-control-font-size); /* @length 0.75 2 rem | Input text size */
+  --sub-field-label-size: var(--sub-text-md); /* @length 0.75 2 rem | Label text size */
+  --sub-field-label-weight: var(--sub-weight-semibold); /* @number 400 700 | Label font weight */
+  --sub-field-label-gap: var(--sub-label-gap); /* @length 0 2 rem | Space between label, hint, control and error */
+  --sub-field-hint-size: var(--sub-text-sm); /* @length 0.75 1.5 rem | Hint and error text size */
+}

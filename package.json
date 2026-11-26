@@ -1,0 +1,22 @@
+{
+  "name": "sub",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.23.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @sub/playground dev",
+    "build": "pnpm -r build",
+    "check": "pnpm build && tsc -p playground && pnpm --filter @sub/tokens check && pnpm --filter @sub/tokens check:usage && pnpm --filter @sub/core test:unit",
+    "test": "pnpm build && playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.1",
+    "@playwright/test": "1.65.1",
+    "@types/node": "^22.0.0",
+    "typescript": "7.0.2",
+    "vite": "8.4.0"
+  }
+}

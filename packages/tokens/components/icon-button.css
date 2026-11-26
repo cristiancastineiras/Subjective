@@ -1,0 +1,9 @@
+/* Tier 3 - COMPONENT tokens for <sub-icon-button>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-icon-button-radius: var(--sub-control-radius); /* @length 0 2 rem | Corner radius */
+  --sub-icon-button-border-width: var(--sub-control-border-width); /* @length 0 8 px | Border width */
+  --sub-icon-button-size: var(--sub-control-min-size); /* @length 1 4 rem | Hit area (2.75rem = 44px) */
+  --sub-icon-button-icon-size: var(--sub-icon-md); /* @length 0.75 2.5 rem | Glyph size */
+}

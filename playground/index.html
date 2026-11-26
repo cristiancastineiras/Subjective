@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" data-sub-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SUB Playground</title>
+    <script>
+    try {
+      if (JSON.parse(localStorage.getItem('sub-playground-prefs') || '{}').dark) document.documentElement.dataset.subTheme = 'dark'
+    } catch (e) {}
+  </script>
+</head>
+  <body>
+    <header class="site-header">
+      <sub-skip-link href="#main">Skip to main content</sub-skip-link>
+      <div class="wrap header-row">
+        <p class="brand"><a href="/">SUB <span>Design System</span></a> <strong class="phase">Playground</strong></p>
+        <div class="header-opts">
+          <label class="theme"><input id="compact-density" type="checkbox"> Compact density</label>
+          <label class="theme"><input id="dark-theme" type="checkbox"> Dark theme</label>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap layout">
+      <details id="nav-menu" class="nav-menu" open>
+        <summary>Components</summary>
+        <nav id="nav" aria-label="Components"></nav>
+      </details>
+
+      <main id="main" tabindex="-1">
+        <sub-breadcrumbs id="crumbs" label="Breadcrumb"></sub-breadcrumbs>
+        <h1 id="title"></h1>
+        <p class="lead" id="intro"></p>
+        <div id="overview" hidden></div>
+
+        <div id="studio" class="workbench" hidden>
+          <div class="pane-preview">
+            <section aria-labelledby="studio-preview-title" class="block">
+              <h2 id="studio-preview-title">Live preview</h2>
+              <p class="cfg-hint">A complete application built only with SUB components. It is themed on its own: the playground around it does not change.</p>
+              <div class="studio-frame" id="studio-preview"></div>
+            </section>
+          </div>
+          <section class="pane-editor" id="studio-editor" aria-labelledby="studio-editor-title" tabindex="0"></section>
+        </div>
+
+        <div id="workbench" class="workbench" hidden>
+          <div class="pane-preview">
+            <section aria-labelledby="preview-title" class="block">
+              <h2 id="preview-title">Example</h2>
+              <div class="example">
+                <div class="samples" id="preview"></div>
+                <p role="status" id="result">No action yet.</p>
+              </div>
+            </section>
+
+            <section aria-labelledby="keys-title" class="block" id="keys-block" hidden>
+              <h2 id="keys-title">Keyboard</h2>
+              <table>
+                <caption class="sr-only">Keyboard interaction</caption>
+                <thead><tr><th scope="col">Keys</th><th scope="col">Action</th></tr></thead>
+                <tbody id="keys"></tbody>
+              </table>
+            </section>
+          </div>
+
+          <section class="pane-editor" id="editor" aria-labelledby="editor-title" tabindex="0">
+            <h2 id="editor-title">Editor</h2>
+            <p class="cfg-hint">Every value changes the real component live; the accessibility result updates with it.</p>
+            <div id="a11y" class="a11y"></div>
+            <h3 id="cfg-title">Configure</h3>
+            <div id="configure" class="configure"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

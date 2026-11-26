@@ -1,0 +1,14 @@
+/* Tier 3 - COMPONENT tokens for <sub-tabs>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-tabs-gap: var(--sub-space-1); /* @length 0 2 rem | Space between tabs */
+  --sub-tabs-radius: var(--sub-control-radius); /* @length 0 2 rem | Tab top corner radius */
+  --sub-tabs-indicator-width: 4px; /* @length 0 10 px | Thickness of the selected-tab bar */
+  --sub-tabs-border-width: var(--sub-border-width-thin); /* @length 0 6 px | Thickness of the line under the tab list */
+  --sub-tabs-padding-block: var(--sub-control-padding-block); /* @length 0 2 rem | Vertical padding */
+  --sub-tabs-padding-inline: var(--sub-space-4); /* @length 0 3 rem | Horizontal padding */
+  --sub-tabs-min-size: var(--sub-control-min-size); /* @length 1 4 rem | Minimum tab height (2.75rem = 44px) */
+  --sub-tabs-font-size: var(--sub-control-font-size); /* @length 0.75 2 rem | Tab text size */
+  --sub-tabs-selected-weight: var(--sub-weight-bold); /* @number 400 700 | Font weight of the selected tab */
+}

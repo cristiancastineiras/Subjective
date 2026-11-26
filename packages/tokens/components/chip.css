@@ -1,0 +1,11 @@
+/* Tier 3 - COMPONENT tokens for <sub-chip>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-chip-radius: var(--sub-control-radius); /* @length 0 2 rem | Corner radius */
+  --sub-chip-border-width: var(--sub-control-border-width); /* @length 0 6 px | Border width */
+  --sub-chip-padding-inline: var(--sub-space-3); /* @length 0 2 rem | Horizontal padding */
+  --sub-chip-gap: var(--sub-space-1); /* @length 0 2 rem | Space between label and remove button */
+  --sub-chip-min-size: var(--sub-control-min-size); /* @length 1 4 rem | Chip height (2.75rem = 44px) */
+  --sub-chip-font-size: var(--sub-control-font-size); /* @length 0.75 2 rem | Text size */
+}

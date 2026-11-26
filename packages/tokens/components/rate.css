@@ -1,0 +1,8 @@
+/* Tier 3 - COMPONENT tokens for <sub-rate>. Defaults point at the shared tiers.
+ * Override any of them from CSS (on :root or any ancestor) or live in the playground.
+ * Each token ends with a trailing comment: @type min max unit | description (read by the playground). */
+:root {
+  --sub-rate-star-size: 2rem; /* @length 1 3.5 rem | Star size */
+  --sub-rate-gap: 0.125rem; /* @length 0 1 rem | Space between stars */
+  --sub-rate-min-size: var(--sub-control-min-size); /* @length 1.5 4 rem | Star hit area (2.75rem = 44px) */
+}
