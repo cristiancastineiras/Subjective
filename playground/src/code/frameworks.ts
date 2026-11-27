@@ -76,7 +76,7 @@ const defines = (tags: Set<string>) => unique([...tags].map((t) => entryOf(t)?.d
 function importLine(names: string[], from: string, indent = ''): string {
   if (!names.length) return ''
   const one = `${indent}import { ${names.join(', ')} } from '${from}'`
-  return one.length <= 100 ? one : `${indent}import {\n${names.map((n) => `${indent}  ${n},`).join('\n')}\n${indent}} from '${from}'`
+  return one.length <= MAX ? one : `${indent}import {\n${names.map((n) => `${indent}  ${n},`).join('\n')}\n${indent}} from '${from}'`
 }
 
 // ------------------------------------------------------------------------------------------------ printing
@@ -92,6 +92,8 @@ interface Dialect {
   voidEnd: string
   /** JSX drops a line break between words and an inline element, HTML reads it as a space: `{' '}` keeps it */
   space?: string
+  /** A line before an element that starts a line (Svelte: which of its a11y warnings the demo means to trigger) */
+  before?: (n: El) => string | undefined
 }
 
 const escapeText = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -100,7 +102,8 @@ const quote = (v: string) => {
   const s = v.replace(/&(?=[\w#]+;)/g, '&amp;')
   return !s.includes('"') ? `"${s}"` : !s.includes("'") ? `'${s}'` : `"${s.replace(/"/g, '&quot;')}"`
 }
-const MAX = 100
+/** Line width (Prettier's default): longer opening tags get one attribute per line */
+const MAX = 80
 
 type El = Extract<Node, { kind: 'element' }>
 /** Content as a stream: words, line breaks, inline elements, and what takes its own lines (blocks, comments) */
@@ -149,6 +152,8 @@ function print(nodes: Node[], d: Dialect, indent: string): string[] {
       last = null
     } else if (tok.t === 'own') {
       endLine()
+      const note = tok.n.kind === 'element' ? d.before?.(tok.n) : undefined
+      if (note) lines.push(indent + note)
       lines.push(...(tok.n.kind === 'element' ? printElement(tok.n, d, indent) : [indent + d.comment(tok.n.kind === 'comment' ? tok.n.text : '')]))
       last = null
     } else if (tok.t === 'text') {
@@ -156,6 +161,8 @@ function print(nodes: Node[], d: Dialect, indent: string): string[] {
       if (tok.s.trim()) last = 'text'
     } else {
       const one = inline(tok.n, d)
+      const note = !run.trim() ? d.before?.(tok.n) : undefined
+      if (note) lines.push(indent + note)
       // alone on its line and too long: its attributes go one per line
       if (!run.trim() && lineEnds(toks, k + 1) && (indent + one).length > MAX) lines.push(...printElement(tok.n, d, indent))
       else run += one
@@ -192,7 +199,7 @@ function printElement(n: El, d: Dialect, indent: string): string[] {
     const end = VOID.has(n.tag) ? d.voidEnd.trim() : d.selfClose ? '/>' : `></${name}>`
     return wrap ? [...openLines, `${indent}${end}`] : [`${head}${end.startsWith('/') ? ' ' : ''}${end}`]
   }
-  const content = n.block ? print(n.children, d, `${indent}  `) : [`${indent}  ${n.children.map((c) => inline(c, d)).join('').trim()}`]
+  const content = print(n.children, d, `${indent}  `)
   if (wrap) return [...openLines, `${close}>`, ...content, `${indent}</${name}>`]
   return [`${head}>`, ...content, `${indent}</${name}>`]
 }
@@ -211,33 +218,63 @@ const markupDialect = (text: (s: string) => string, value: (tag: string, a: [str
   voidEnd: '>',
 })
 
-/** A SUB attribute that is a boolean property: written bare */
-const plain = (tag: string, [name, value]: [string, string]) => (value === '' && (HTML_BOOLEAN.has(name) || kindOf(tag, name)?.[1] === 'boolean') ? name : `${name}=${quote(value)}`)
+/**
+ * A SUB attribute written as its PROPERTY in a framework: frameworks set properties on custom elements and their
+ * types list properties, and the two names can differ (`static` is `inline`, `offset-top` is `offset`).
+ * Booleans are bare, numbers typed (`{5}`), strings as they are.
+ */
+function subAttr(tag: string, [name, value]: [string, string], write: (prop: string, kind: 'boolean' | 'number' | 'string', value: string) => string): string | undefined {
+  const known = kindOf(tag, name)
+  if (!known) return undefined
+  const [prop, kind] = known
+  return write(prop, kind === 'number' && !isNumber(value) ? 'string' : kind, value)
+}
 
-const svelteDialect = markupDialect(
-  (s) => s.replace(/[{}]/g, (c) => `{'${c}'}`),
-  (tag, [name, value]) => {
-    const kind = kindOf(tag, name)?.[1]
-    if (kind === 'number' && isNumber(value)) return `${name}={${Number(value)}}`
-    if (/[{}]/.test(value)) return `${name}={${JSON.stringify(value)}}` // `{…}` in a value is an expression
-    return plain(tag, [name, value])
-  },
-)
+/** An attribute that is not a SUB property: boolean HTML attributes bare, the rest quoted */
+const plain = ([name, value]: [string, string]) => (value === '' && HTML_BOOLEAN.has(name) ? name : `${name}=${quote(value)}`)
 
-/** Inside a TS template literal; `{`, `}` and `@` are template syntax in Angular text */
+const INTERACTIVE = new Set(['a', 'button', 'input', 'select', 'textarea', 'summary', 'details', 'label', 'option', 'audio', 'video', 'iframe'])
+
+/**
+ * The demos mean these: `autofocus` on the field a dialog opens on (as the HTML spec advises), and `tabindex="0"`
+ * on a region that scrolls (so a keyboard can scroll it). Svelte would warn whoever copies the example.
+ */
+function svelteIgnore(n: El): string | undefined {
+  const has = (name: string) => n.attrs.find(([a]) => a === name)
+  const codes = [
+    has('autofocus') && 'a11y_autofocus',
+    !n.tag.includes('-') && !INTERACTIVE.has(n.tag) && Number(has('tabindex')?.[1] ?? -1) >= 0 && 'a11y_no_noninteractive_tabindex',
+  ].filter(Boolean)
+  return codes.length ? `<!-- svelte-ignore ${codes.join(' ')} -->` : undefined
+}
+
+const svelteDialect: Dialect = {
+  ...markupDialect(
+    (s) => s.replace(/[{}]/g, (c) => `{'${c}'}`),
+    (tag, a) =>
+      subAttr(tag, a, (prop, kind, value) =>
+        kind === 'boolean' ? prop : kind === 'number' ? `${prop}={${Number(value)}}` : /[{}]/.test(value) ? `${prop}={${JSON.stringify(value)}}` : `${prop}=${quote(value)}`,
+      ) ?? (/[{}]/.test(a[1]) ? `${a[0]}={${JSON.stringify(a[1])}}` : plain(a)), // `{…}` in a value is an expression
+  ),
+  before: svelteIgnore,
+}
+
+/** Inside a TS template literal; `{`, `}` and `@` are template syntax in Angular text. Inputs by name: typed */
 const angularDialect = markupDialect(
   (s) => s.replace(/[{}@]/g, (c) => (c === '@' ? '&#64;' : `{{ '${c}' }}`)),
-  (tag, a) => plain(tag, a),
+  (tag, a) => subAttr(tag, a, (prop, kind, value) => (kind === 'boolean' ? prop : `${prop}=${quote(value)}`)) ?? plain(a),
 )
 
+const kebab = (s: string) => s.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)
+
+/** Vue templates: props in kebab-case, numbers bound (`:max="5"`) */
 const vueDialect: Dialect = {
   name: (tag) => entryOf(tag)?.component ?? tag,
   attrs: (tag, attrs) =>
-    attrs.map(([name, value]) => {
-      const kind = kindOf(tag, name)?.[1]
-      if (kind === 'number' && isNumber(value)) return `:${name}="${Number(value)}"`
-      return plain(tag, [name, value])
-    }),
+    attrs.map(
+      (a) =>
+        subAttr(tag, a, (prop, kind, value) => (kind === 'boolean' ? kebab(prop) : kind === 'number' ? `:${kebab(prop)}="${Number(value)}"` : `${kebab(prop)}=${quote(value)}`)) ?? plain(a),
+    ),
   text: (s) => escapeText(s).replace(/\{\{|\}\}/g, (c) => `{{ '${c}' }}`),
   comment: (s) => `<!-- ${s} -->`,
   selfClose: true,
@@ -248,14 +285,19 @@ const jsxText = (s: string) => escapeText(s).replace(/[{}]/g, (c) => `{'${c}'}`)
 const jsxValue = (v: string) => (v.includes('"') || v.includes('\n') ? `{${JSON.stringify(v)}}` : `"${v}"`)
 const jsxComment = (s: string) => `{/* ${s.replace(/\*\//g, '* /')} */}`
 
-/** Solid and Preact: the elements themselves (they set properties on custom elements); typed values in braces */
+/** HTML attributes that are numbers in JSX's types (`tabIndex={0}`, `maxLength={20}`) */
+const HTML_NUMBERS = new Set(['tabindex', 'maxlength', 'minlength', 'rows', 'cols', 'size', 'colspan', 'rowspan', 'span', 'start'])
+const jsxSub = (tag: string, a: [string, string]) => subAttr(tag, a, (prop, kind, value) => (kind === 'boolean' ? prop : kind === 'number' ? `${prop}={${Number(value)}}` : `${prop}=${jsxValue(value)}`))
+
+/** Solid and Preact: the elements themselves (both set properties on custom elements); typed values in braces */
 const elementJsx: Dialect = {
   name: (tag) => tag,
   attrs: (tag, attrs) =>
     attrs.map(([name, value]) => {
-      const kind = kindOf(tag, name)?.[1]
-      if (kind === 'number' && isNumber(value)) return `${name}={${Number(value)}}`
-      if (value === '' && (kind === 'boolean' || HTML_BOOLEAN.has(name))) return name
+      const sub = jsxSub(tag, [name, value])
+      if (sub) return sub
+      if (HTML_NUMBERS.has(name) && isNumber(value)) return `${name}={${Number(value)}}`
+      if (value === '' && HTML_BOOLEAN.has(name)) return name
       return `${name}=${jsxValue(value)}`
     }),
   text: jsxText,
@@ -274,7 +316,10 @@ const REACT_ATTRS: Record<string, string> = {
   referrerpolicy: 'referrerPolicy', fetchpriority: 'fetchPriority', playsinline: 'playsInline', itemscope: 'itemScope',
 }
 
-/** `style="min-inline-size: 12rem; --x: 1"` -> `{{ minInlineSize: '12rem', '--x': 1 }}` */
+/**
+ * `style="min-inline-size: 12rem; --x: 1"` -> `{{ minInlineSize: '12rem', '--x': 1 } as CSSProperties}`: React's
+ * style type has no custom properties, so an object with one is cast (and the file imports the type)
+ */
 function styleObject(css: string): string {
   const entries = css
     .split(';')
@@ -287,21 +332,18 @@ function styleObject(css: string): string {
       const key = prop.startsWith('--') ? `'${prop}'` : camel(prop.replace(/^-(webkit|moz|ms)-/, (_, v: string) => `${v === 'ms' ? 'ms' : pascal(v)}-`))
       return `${key}: ${/^-?\d+(\.\d+)?$/.test(value) ? value : `'${value.replace(/'/g, "\\'")}'`}`
     })
-  return `{{ ${entries.join(', ')} }}`
+  const object = `{ ${entries.join(', ')} }`
+  return `{${css.includes('--') ? `${object} as CSSProperties` : object}}`
 }
 
 const reactDialect: Dialect = {
   name: (tag) => entryOf(tag)?.component ?? tag,
   attrs: (tag, attrs) =>
     attrs.map(([name, value]) => {
-      const known = kindOf(tag, name)
-      if (known) {
-        const [prop, kind] = known
-        if (kind === 'boolean') return prop // an attribute that is present is true
-        if (kind === 'number' && isNumber(value)) return `${prop}={${Number(value)}}`
-        return `${prop}=${jsxValue(value)}`
-      }
+      const sub = jsxSub(tag, [name, value])
+      if (sub) return sub
       if (name === 'style') return `style=${styleObject(value)}`
+      if (HTML_NUMBERS.has(name) && isNumber(value)) return `${REACT_ATTRS[name] ?? name}={${Number(value)}}`
       // an uncontrolled native field keeps its first value (`value` alone would be read-only in React)
       const native = !entryOf(tag)
       const field = native && (tag === 'input' || tag === 'textarea' || tag === 'select')
@@ -354,7 +396,9 @@ function htmlCode(demo: SnippetSource): string {
 function reactCode(demo: SnippetSource): string {
   const nodes = tree(demo)
   const components = unique([...subTags(nodes)].map((t) => entryOf(t)!.component))
-  return file(importLine(components, '@sub/react'), `export function ${componentName(demo.id)}() {\n${jsxReturn(nodes, reactDialect)}\n}`)
+  const body = `export function ${componentName(demo.id)}() {\n${jsxReturn(nodes, reactDialect)}\n}`
+  const types = body.includes(' as CSSProperties}') ? "import type { CSSProperties } from 'react'\n" : ''
+  return file(types + importLine(components, '@sub/react'), body)
 }
 
 function vueCode(demo: SnippetSource): string {

@@ -31,7 +31,12 @@ export function readElements({ optional = false } = {}) {
       const fields = (decl.members ?? []).filter(
         (m) => m.kind === 'field' && !m.static && !m.readonly && !['private', 'protected'].includes(m.privacy) && !m.name.startsWith('_') && !m.name.startsWith('#') && !NOT_INPUTS.has(m.name),
       )
-      const props = fields.map((f) => ({ name: f.name, attribute: f.attribute, type: f.type?.text ?? 'unknown', boolean: f.type?.text === 'boolean', number: f.type?.text === 'number' }))
+      const props = fields.map((f) => {
+        const type = f.type?.text ?? 'unknown'
+        // `number | undefined` (an optional number) is still a number: `max="5"` must become 5, not "5"
+        const base = type.replace(/\s*\|\s*(undefined|null)\b/g, '').trim()
+        return { name: f.name, attribute: f.attribute, type, boolean: base === 'boolean', number: base === 'number' }
+      })
       const events = (decl.events ?? []).filter((e) => e.name).map((e) => ({ name: e.name, type: e.type?.text ?? 'Event', handler: `on${pascal(e.name)}` }))
       const has = (n) => props.some((p) => p.name === n)
       // two-way binding: the checked state for check boxes and switches, else the value; updated on change / input

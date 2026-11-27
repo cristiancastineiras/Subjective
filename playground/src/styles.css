@@ -447,13 +447,19 @@ h3 {
   --code-react: #61dafb;
 }
 
+.code-frameworks {
+  container-type: inline-size;
+}
+
 .code-frameworks:empty {
   display: none;
 }
 
-/* One tab per framework: a row that scrolls sideways on small screens */
+/* One tab per framework, sharing the row; it scrolls sideways only if even the compact tabs do not fit */
 .code-tabs {
-  display: flex;
+  display: grid;
+  grid-auto-columns: minmax(max-content, 1fr);
+  grid-auto-flow: column;
   overflow-x: auto;
   border-block: 1px solid var(--sub-color-border-subtle);
   background: var(--sub-color-surface);
@@ -463,9 +469,9 @@ h3 {
 
 .code-tabs [role='tab'] {
   display: inline-flex;
-  flex: none;
   gap: var(--sub-space-2);
   align-items: center;
+  justify-content: center;
   min-block-size: var(--sub-target-size);
   padding: 0 var(--sub-space-3);
   border: 0;
@@ -587,7 +593,15 @@ h3 {
   color: var(--code-type);
 }
 
-@media (max-width: 40rem) {
+/* The block is narrow (the preview column beside the editor, a phone): the logo above the name, all seven
+   tabs in one row, each still a 44px target */
+@container (max-width: 40rem) {
+  .code-tabs [role='tab'] {
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: var(--sub-space-1) 0.125rem;
+    font-size: 0.8125rem;
+  }
   .code-view {
     padding-inline: var(--sub-space-3);
     font-size: 0.875rem;

@@ -99,6 +99,7 @@ La regla que lo hace sostenible: los paquetes por framework no se editan a mano.
 - **Dependencias mínimas:** cada paquete declara `@sub/core` y su framework como *peer*; en ejecución no añade nada salvo el wrapper de React.
 - **Un fichero por componente también en los paquetes** (`@sub/react/button`), como el core, para que cada app cargue solo lo que usa.
 - **Coste de un componente nuevo:** escribirlo en el core con su JSDoc. Los seis paquetes, sus tipos y su documentación salen solos.
+- **La documentación también compila:** el bloque *Code* de cada página del playground muestra el ejemplo en los siete formatos (HTML, React, Vue, Angular, Svelte, Solid, Preact), escrito a partir de la demo con los nombres del mismo contrato (`scripts/contract.mjs`). `pnpm test:snippets` compila todos esos ejemplos con el compilador real de cada framework (tsc, ngc con `strictTemplates`, Svelte, Vue), así que un ejemplo no puede quedarse desfasado respecto a la API.
 
 ## Plan por fases
 

@@ -125,6 +125,19 @@ crossfade (none with reduced motion), Back/Forward restore each page's scroll po
 the navigation reads an index built from the demo files (`virtual:demo-index`), and pointing at a link starts
 loading its page. Ctrl/Cmd+K finds a component, every page has its **Code** (with Copy) and Previous / Next links.
 
+## The example in every framework
+
+A page's **Code** block has one tab per framework: HTML, React, Vue, Angular, Svelte, Solid and Preact, each with its
+logo (`playground/src/code/`). The demo's markup is the single source: it is parsed once and written by each
+framework's rules, with the names of the real packages read from the same contract as the generator
+(`scripts/contract.mjs`, served to the page as `virtual:sub-elements`). So React gets `<SubButton>`, `className`,
+`style={{ … }}` and camelCase props; Vue gets `<script setup>` and `:max="5"`; Angular a standalone component with the
+directives; Svelte, Solid and Preact the elements with `defineButton()`. Attributes become the property each
+framework sets (`static` is `inline`) and numbers stay numbers (`max={5}`). The code is coloured like an editor (light
+and dark, every colour at least 4.5:1), the tabs follow the WAI-ARIA pattern (arrows, Home/End), Copy copies the
+tab you are reading, and the framework you pick is remembered. `pnpm test:snippets` reads every example of every
+page and compiles it with each framework's own compiler (tsc, ngc with `strictTemplates`, Svelte, Vue).
+
 ## Responsive and mobile
 
 Every component reflows to 320px without page-level horizontal scrolling (a Playwright spec checks all of them),
@@ -157,7 +170,9 @@ attached to what it came from (`shared/position.ts`): it follows every scroll of
 in the same frame (never lagging), a resize, the phone keyboard and pinch zoom; it moves above its anchor when there
 is no room below (and keeps its side while it still fits, so it does not jump while you scroll); when it fits on
 neither side it keeps to the larger room and scrolls inside; and when its anchor leaves the screen, it leaves with
-it instead of sticking to the edge. `data-placement="top|bottom"` on the popup says where it went.
+it instead of sticking to the edge. `data-placement="top|bottom"` on the popup says where it went. The tour's highlight
+and step glide only to a NEW step (placed by where the highlight ends, not where its glide is); while you scroll
+they stay pinned to the target, animations on or off.
 
 ## Corners: controls, panels, items
 
@@ -294,6 +309,8 @@ pnpm dev        playground with live reload (components from source)
 pnpm build      tokens, core (one file per component + .d.ts), playground
 pnpm check      build + type-check + token contrast + token usage + theme SDK unit tests
 pnpm test       build + Playwright: axe on every demo and the Studio in both themes, audit per component, keyboard specs
+pnpm test:frameworks   build + the same conformance suite against the six framework example apps
+pnpm test:snippets     build + every Code example of every page, compiled by its framework's own compiler
 ```
 
 Playwright needs a browser: `SUB_BROWSER_CHANNEL=chrome pnpm test` uses the installed Chrome. `SUB_FIREFOX=1` adds the

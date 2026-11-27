@@ -12,7 +12,8 @@
     "check": "pnpm build && tsc -p playground && pnpm --filter @sub/tokens check && pnpm --filter @sub/tokens check:usage && pnpm --filter @sub/core test:unit",
     "test": "pnpm build && playwright test",
     "generate": "node scripts/gen-frameworks.mjs",
-    "test:frameworks": "pnpm build && playwright test -c examples/playwright.config.ts"
+    "test:frameworks": "pnpm build && playwright test -c examples/playwright.config.ts",
+    "test:snippets": "pnpm build && playwright test -c playwright.snippets.config.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.1",

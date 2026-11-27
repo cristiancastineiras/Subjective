@@ -3,26 +3,28 @@ import { baseStyles } from './shared/styles'
 import { define, emit } from './shared/utils'
 
 /**
- * Keeps its content visible while the page scrolls (`position: sticky`). `offset-top` is the gap to
- * the viewport top in px. Fires `sub-affix-change` ({stuck}) and reflects `stuck`. Sticky content must
+ * Keeps its content visible while the page scrolls (`position: sticky`). `offset-top` (property `offset`;
+ * not `offsetTop`, which every element already has: its layout position) is the gap to the viewport top
+ * in px. Fires `sub-affix-change` ({stuck}) and reflects `stuck`. Sticky content must
  * never cover focused elements (WCAG 2.4.11): keep it small and give scrolled targets
  * `scroll-margin-top`.
  * @fires {CustomEvent<{ stuck: boolean }>} sub-affix-change - It became fixed or went back in the flow
  */
 export class SubAffix extends LitElement {
   static override properties = {
-    offsetTop: { type: Number, attribute: 'offset-top' },
+    offset: { type: Number, attribute: 'offset-top' },
     stuck: { type: Boolean, reflect: true },
   }
 
-  declare offsetTop: number
+  /** Gap to the viewport top in px (attribute `offset-top`) */
+  declare offset: number
   declare stuck: boolean
 
   #observer: IntersectionObserver | undefined
 
   constructor() {
     super()
-    this.offsetTop = 0
+    this.offset = 0
     this.stuck = false
   }
 
@@ -49,8 +51,8 @@ export class SubAffix extends LitElement {
   }
 
   protected override updated(changed: Map<string, unknown>): void {
-    this.style.setProperty('--_top', `${this.offsetTop}px`)
-    if (changed.has('offsetTop')) this.#watch()
+    this.style.setProperty('--_top', `${this.offset}px`)
+    if (changed.has('offset')) this.#watch()
   }
 
   #watch(): void {
@@ -65,7 +67,7 @@ export class SubAffix extends LitElement {
           emit(this, 'sub-affix-change', { stuck })
         }
       },
-      { threshold: [1], rootMargin: `-${this.offsetTop + 1}px 0px 0px 0px` },
+      { threshold: [1], rootMargin: `-${this.offset + 1}px 0px 0px 0px` },
     )
     this.#observer.observe(this)
   }
