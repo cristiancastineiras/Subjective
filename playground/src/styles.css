@@ -410,20 +410,197 @@ h3 {
   font-weight: 700;
 }
 
-.code-block pre {
-  max-block-size: 24rem;
-  margin: 0;
-  padding: var(--sub-space-3);
-  overflow: auto;
+/* Editor colours (GitHub's): every token is at least 4.5:1 on its background, in both themes */
+.code-frameworks {
+  --code-bg: #f6f8fa;
+  --code-text: #1f2328;
+  --code-muted: #59636e;
+  --code-border: #d1d9e0;
+  --code-punct: #59636e;
+  --code-keyword: #cf222e;
+  --code-string: #0a3069;
+  --code-tag: #116329;
+  --code-component: #8250df;
+  --code-attr: #0550ae;
+  --code-comment: #59636e;
+  --code-number: #0550ae;
+  --code-function: #6639ba;
+  --code-type: #953800;
+  --code-react: #087ea4;
+}
+
+:root[data-sub-theme='dark'] .code-frameworks {
+  --code-bg: #0d1117;
+  --code-text: #e6edf3;
+  --code-muted: #9198a1;
+  --code-border: #3d444d;
+  --code-punct: #9198a1;
+  --code-keyword: #ff7b72;
+  --code-string: #a5d6ff;
+  --code-tag: #7ee787;
+  --code-component: #d2a8ff;
+  --code-attr: #79c0ff;
+  --code-comment: #9198a1;
+  --code-number: #79c0ff;
+  --code-function: #d2a8ff;
+  --code-type: #ffa657;
+  --code-react: #61dafb;
+}
+
+.code-frameworks:empty {
+  display: none;
+}
+
+/* One tab per framework: a row that scrolls sideways on small screens */
+.code-tabs {
+  display: flex;
+  overflow-x: auto;
   border-block: 1px solid var(--sub-color-border-subtle);
+  background: var(--sub-color-surface);
+  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+}
+
+.code-tabs [role='tab'] {
+  display: inline-flex;
+  flex: none;
+  gap: var(--sub-space-2);
+  align-items: center;
+  min-block-size: var(--sub-target-size);
+  padding: 0 var(--sub-space-3);
+  border: 0;
+  border-block-end: 3px solid transparent;
+  background: transparent;
+  color: var(--sub-color-muted);
+  font: 600 0.9375rem var(--sub-font-sans);
+  cursor: pointer;
+}
+
+.code-tabs [role='tab']:hover {
   background: var(--sub-color-surface-hover);
-  font-size: 1rem;
+  color: var(--sub-color-text);
+}
+
+.code-tabs [role='tab'][aria-selected='true'] {
+  border-block-end-color: var(--sub-color-accent);
+  color: var(--sub-color-text);
+}
+
+.code-tabs [role='tab']:focus-visible {
+  outline: var(--sub-focus-width) solid var(--sub-color-focus);
+  outline-offset: calc(var(--sub-focus-width) * -1);
+}
+
+.code-logo {
+  flex: none;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+.code-logo-react {
+  fill: var(--code-react);
+  stroke: var(--code-react);
+}
+
+/* File name and Copy above the code, on the editor's background */
+.code-head {
+  display: flex;
+  gap: var(--sub-space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sub-space-1) var(--sub-space-1) var(--sub-space-1) var(--sub-space-4);
+  border-block-end: 1px solid var(--code-border);
+  background: var(--code-bg);
+}
+
+.code-file {
+  overflow: hidden;
+  color: var(--code-muted);
+  font: 0.875rem var(--sub-font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.code-copy {
+  flex: none;
+  min-block-size: var(--sub-target-size);
+  padding: var(--sub-space-2) var(--sub-space-4);
+  border: 2px solid var(--sub-color-border);
+  background: var(--sub-color-surface);
+  color: var(--sub-color-text);
+  font: 700 1rem var(--sub-font-sans);
+  cursor: pointer;
+}
+
+.code-copy:hover {
+  background: var(--sub-color-surface-hover);
+}
+
+.code-view {
+  max-block-size: 28rem;
+  margin: 0;
+  padding: var(--sub-space-3) var(--sub-space-4);
+  overflow: auto;
+  background: var(--code-bg);
+  color: var(--code-text);
+  font: 0.9375rem / 1.6 var(--sub-font-mono);
+  tab-size: 2;
   white-space: pre;
 }
 
-.code-block .cfg-actions {
-  margin: 0;
-  padding: var(--sub-space-3);
+.code-view:focus-visible {
+  outline: var(--sub-focus-width) solid var(--sub-color-focus);
+  outline-offset: calc(var(--sub-focus-width) * -1);
+}
+
+.tok-punct {
+  color: var(--code-punct);
+}
+.tok-keyword {
+  color: var(--code-keyword);
+}
+.tok-string {
+  color: var(--code-string);
+}
+.tok-tag {
+  color: var(--code-tag);
+}
+.tok-component {
+  color: var(--code-component);
+}
+.tok-attr {
+  color: var(--code-attr);
+}
+.tok-comment {
+  color: var(--code-comment);
+  font-style: italic;
+}
+.tok-number,
+.tok-literal {
+  color: var(--code-number);
+}
+.tok-function,
+.tok-decorator {
+  color: var(--code-function);
+}
+.tok-type {
+  color: var(--code-type);
+}
+
+@media (max-width: 40rem) {
+  .code-view {
+    padding-inline: var(--sub-space-3);
+    font-size: 0.875rem;
+  }
+  .code-head {
+    padding-inline-start: var(--sub-space-3);
+  }
+}
+
+@media (forced-colors: active) {
+  .code-tabs [role='tab'][aria-selected='true'] {
+    border-block-end-color: Highlight;
+  }
 }
 
 /* ---- previous / next component ------------------------------------------------------------ */

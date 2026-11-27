@@ -7,6 +7,8 @@ import { afterNavigation } from '@sub/core/focus'
 import { matchesShortcut } from '@sub/core/keys'
 import { defineSkipLink } from '@sub/core/skip-link'
 import demoIndex from 'virtual:demo-index'
+import type { SnippetSource } from './code/frameworks'
+import type { CodePanel } from './code/panel'
 import type { Demo, DemoMeta } from './demo'
 import { createRouter } from './router'
 import type { Workbench } from './workbench'
@@ -284,32 +286,22 @@ function render(route: Route) {
   } else {
     const demo = ready.demos.get(route.meta.id)!
     $('intro').textContent = demo.description
-    currentCode = demo.html.trim()
+    codeDemo = { id: demo.id, html: demo.html }
     codeBlock.open = false
-    code.textContent = ''
+    codePanel?.clear()
     workbench = ready.workbench!.mountWorkbench(demo, { compact: density.checked })
     renderPager(demo.id)
   }
 }
 
-// ---- the example's code: written into the page only while it is open (one copy of the demo's text) ------
+// ---- the example's code, in every framework: loaded on first open, in the page only while it is open ------
 const codeBlock = $<HTMLDetailsElement>('code-block')
-const code = $('code')
-let currentCode = ''
-codeBlock.addEventListener('toggle', () => (code.textContent = codeBlock.open ? currentCode : ''))
-const copy = $<HTMLButtonElement>('code-copy')
-let copyTimer: ReturnType<typeof setTimeout> | undefined
-copy.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(currentCode)
-    copy.textContent = 'Copied'
-    announce('Code copied')
-  } catch {
-    getSelection()?.selectAllChildren(code)
-    copy.textContent = 'Selected: press Ctrl+C'
-  }
-  clearTimeout(copyTimer)
-  copyTimer = setTimeout(() => (copy.textContent = 'Copy code'), 1800)
+let codeDemo: SnippetSource | undefined
+let codePanel: CodePanel | undefined
+codeBlock.addEventListener('toggle', async () => {
+  if (!codeBlock.open) return codePanel?.clear()
+  codePanel ??= (await import('./code/panel')).createCodePanel($('code-tabs'), announce)
+  if (codeBlock.open && codeDemo) codePanel.show(codeDemo)
 })
 
 // ---- start -------------------------------------------------------------------

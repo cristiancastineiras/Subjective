@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, searchForWorkspaceRoot, type Plugin } from 'vite'
+import { manifestPath, readElements, snippetTable } from '../scripts/contract.mjs'
 
 const coreSrc = fileURLToPath(new URL('../packages/core/src/', import.meta.url))
 const demosDir = fileURLToPath(new URL('./src/demos/', import.meta.url))
@@ -53,8 +54,30 @@ function demoIndex(): Plugin {
   }
 }
 
+/**
+ * `virtual:sub-elements`: the names each framework package gives every tag and its attribute types, from the
+ * component contract (packages/core/custom-elements.json, the same reader as the framework generator). Only the
+ * Code panel imports it, on first open. Before the core's first build the table is empty and the examples use
+ * the naming rules alone.
+ */
+function subElements(): Plugin {
+  const ID = 'virtual:sub-elements'
+  const RESOLVED = `\0${ID}`
+  return {
+    name: 'sub-elements',
+    resolveId: (id) => (id === ID ? RESOLVED : undefined),
+    load(id) {
+      if (id !== RESOLVED) return
+      this.addWatchFile(manifestPath)
+      const elements = readElements({ optional: true })
+      if (!elements.length) this.warn('packages/core/custom-elements.json not found (build @sub/core): the code examples use the naming rules only')
+      return `export default ${JSON.stringify(snippetTable(elements))}`
+    },
+  }
+}
+
 export default defineConfig(({ command, isPreview }) => ({
-  plugins: [demoIndex()],
+  plugins: [demoIndex(), subElements()],
   resolve: {
     // In dev, use the TypeScript sources (instant reload). Build/preview use the real package exports.
     alias:

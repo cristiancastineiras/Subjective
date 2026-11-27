@@ -123,6 +123,14 @@ export class SubTour extends LitElement {
           0 0 0 var(--sub-tour-ring-width) var(--sub-color-focus-inner),
           0 0 0 100vmax var(--sub-color-overlay);
         transition:
+          opacity var(--sub-duration-base) var(--sub-ease-standard),
+          overlay var(--sub-duration-base) allow-discrete,
+          display var(--sub-duration-base) allow-discrete;
+      }
+
+      /* Only a step change glides to the next target; while the page scrolls both stay pinned to it (no lag) */
+      .spot[data-travel] {
+        transition:
           top var(--sub-duration-base) var(--sub-ease-standard),
           left var(--sub-duration-base) var(--sub-ease-standard),
           width var(--sub-duration-base) var(--sub-ease-standard),
@@ -151,6 +159,14 @@ export class SubTour extends LitElement {
         font-family: var(--sub-font-sans);
         opacity: 0;
         translate: 0 calc(var(--sub-motion-distance) * -0.5);
+        transition:
+          opacity var(--sub-duration-fast) var(--sub-ease-standard),
+          translate var(--sub-duration-fast) var(--sub-ease-standard),
+          overlay var(--sub-duration-fast) allow-discrete,
+          display var(--sub-duration-fast) allow-discrete;
+      }
+
+      .card[data-travel] {
         transition:
           opacity var(--sub-duration-fast) var(--sub-ease-standard),
           translate var(--sub-duration-fast) var(--sub-ease-standard),
@@ -340,10 +356,16 @@ export class SubTour extends LitElement {
     return this.renderRoot.querySelector<HTMLElement>('.spot')
   }
 
-  #place = (): void => {
+  /**
+   * Highlight the step's target and put the step card beside it. `travel` (a new step) lets both glide there;
+   * otherwise (scroll, resize) they move at once, so they never trail behind the target.
+   */
+  #place = (travel = false): void => {
     const card = this.#card
     const spot = this.#spot
     if (!card || !spot || !this.open) return
+    spot.toggleAttribute('data-travel', travel)
+    card.toggleAttribute('data-travel', travel)
     const step = this.#steps[this.index]
     const target = this.#target(step)
     card.classList.toggle('centered', !target)
@@ -358,8 +380,14 @@ export class SubTour extends LitElement {
       card.style.top = card.style.left = '' // docked to the bottom edge (CSS)
       return
     }
-    this.#cardSide = placeNear({ getBoundingClientRect: () => spot.getBoundingClientRect() }, card, step?.placement ?? 'bottom', 'start', 12, 8, { current: this.#cardSide })
+    // the card goes next to where the highlight ENDS (target + its padding), not where its glide is right now
+    const pad = parseFloat(getComputedStyle(spot).paddingTop) || 0
+    const ring = new DOMRect(r.left - pad, r.top - pad, r.width + pad * 2, r.height + pad * 2)
+    this.#cardSide = placeNear({ getBoundingClientRect: () => ring }, card, step?.placement ?? 'bottom', 'start', 12, 8, { current: this.#cardSide })
   }
+
+  /** autoUpdate passes the scroll / resize event: following is never a glide */
+  #follow = (): void => this.#place(false)
 
   /** Phones: the step is docked to the bottom edge; on a NEW step, scroll its target above it (never while the user scrolls) */
   #keepTargetAboveDock(): void {
@@ -412,17 +440,17 @@ export class SubTour extends LitElement {
         card.setAttribute('data-open', '')
       }
       // the highlight and the step stay attached to the target while the page scrolls
-      this.#stopFollowing = autoUpdate(this.#place)
+      this.#stopFollowing = autoUpdate(this.#follow)
       document.addEventListener('keydown', this.#onKey, true)
     }
     if (changed.has('index') || changed.has('open')) {
       const target = this.#target(this.#steps[this.index])
       target?.scrollIntoView({ block: 'center', inline: 'nearest' })
       this.#cardSide = undefined // a new step picks its side again
-      this.#place()
+      this.#place(!changed.has('open')) // glide from the previous step (the first one just appears)
       this.#keepTargetAboveDock()
       card.focus({ preventScroll: true }) // screen readers read the step's name and description
-    } else this.#place()
+    } else this.#follow()
   }
 
   protected override render() {

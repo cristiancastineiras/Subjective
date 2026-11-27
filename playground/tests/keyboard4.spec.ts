@@ -167,14 +167,17 @@ test.describe('tour', () => {
     await open(page, 'tour')
     await page.getByRole('button', { name: 'Start the tour' }).click()
     await page.getByRole('button', { name: 'Next' }).click() // "New project"
-    const near = await page.evaluate(() => {
-      const tour = document.querySelector('sub-tour')!.shadowRoot!
-      const spot = tour.querySelector('.spot')!.getBoundingClientRect()
-      const card = tour.querySelector('.card')!.getBoundingClientRect()
-      const target = document.querySelector('#tour-new')!.getBoundingClientRect()
-      return { aligned: Math.abs(spot.left - target.left) < 14, below: card.top >= spot.bottom - 1 || card.bottom <= spot.top + 1 }
-    })
-    expect(near).toEqual({ aligned: true, below: true })
+    // the highlight and the step glide to the new target together; once there, the step sits right beside it
+    const near = () =>
+      page.evaluate(() => {
+        const tour = document.querySelector('sub-tour')!.shadowRoot!
+        const spot = tour.querySelector('.spot')!.getBoundingClientRect()
+        const card = tour.querySelector('.card')!.getBoundingClientRect()
+        const target = document.querySelector('#tour-new')!.getBoundingClientRect()
+        const gap = Math.max(card.top - spot.bottom, spot.top - card.bottom)
+        return { aligned: Math.abs(spot.left - target.left) < 14, beside: gap >= 8 && gap <= 16 }
+      })
+    await expect.poll(near).toEqual({ aligned: true, beside: true })
     await page.keyboard.press('Escape')
     await expect(page.getByRole('dialog', { name: 'Create a project' })).toBeHidden()
     await expect(status(page)).toHaveText('Tour closed (escape).')

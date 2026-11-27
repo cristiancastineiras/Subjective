@@ -72,6 +72,43 @@ const putAnchorAt = (page: Page, parts: string, y: number) =>
 /** Distance between the panel and the anchor edge it hangs from */
 const gap = (m: Awaited<ReturnType<typeof measure>>) => (m.side === 'top' ? m.anchor.top - m.panel.bottom : m.panel.top - m.anchor.bottom)
 
+test('tour with animations on: a scroll never leaves the highlight or the step behind (only a new step glides)', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 })
+  await open(page, 'tour')
+  await page.evaluate(() => {
+    const spacer = Object.assign(document.createElement('div'), { className: 'test-spacer' })
+    spacer.style.blockSize = '150vh'
+    document.body.append(spacer)
+  })
+  await page.getByRole('button', { name: 'Start the tour' }).click()
+  await page.getByRole('button', { name: 'Next' }).click()
+  await page.waitForTimeout(600) // the glide to the second step is over
+  const offsets = () =>
+    page.evaluate(() => {
+      const tour = document.querySelector('sub-tour')!.shadowRoot!
+      const spot = tour.querySelector('.spot')!.getBoundingClientRect()
+      const card = tour.querySelector('.card')!.getBoundingClientRect()
+      const target = document.querySelector('#tour-new')!.getBoundingClientRect()
+      return { spot: Math.round(target.top - spot.top), card: Math.round(card.top - target.top) }
+    })
+  const before = await offsets()
+  // one frame after the scroll (not after a 200ms transition) both are already where they belong
+  const after = await page.evaluate(
+    () =>
+      new Promise<{ spot: number; card: number }>((done) => {
+        window.scrollBy(0, 90)
+        requestAnimationFrame(() => {
+          const tour = document.querySelector('sub-tour')!.shadowRoot!
+          const spot = tour.querySelector('.spot')!.getBoundingClientRect()
+          const card = tour.querySelector('.card')!.getBoundingClientRect()
+          const target = document.querySelector('#tour-new')!.getBoundingClientRect()
+          done({ spot: Math.round(target.top - spot.top), card: Math.round(card.top - target.top) })
+        })
+      }),
+  )
+  expect(after).toEqual(before)
+})
+
 for (const c of CASES) {
   test(`${c.id}: stays attached while scrolling, moves above at the bottom, leaves with its anchor`, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 720 })
