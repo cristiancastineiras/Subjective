@@ -9,6 +9,7 @@ import { define, emit } from './shared/utils'
  * is left, one consistent phrase ("Load 20 more products (64 remaining)"), keeps focus on the
  * button while loading, and when the list is complete moves focus to the "all loaded" message.
  * Append the new items yourself on `sub-load`, then update `loaded` / `total` and clear `loading`.
+ * @fires {CustomEvent<{ count: number }>} sub-load - Load more was pressed: how many items to show now
  */
 export class SubLoadMore extends LitElement {
   static override properties = {

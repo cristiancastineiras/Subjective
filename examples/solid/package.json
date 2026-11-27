@@ -1,0 +1,22 @@
+{
+  "name": "@sub/example-solid",
+  "private": true,
+  "type": "module",
+  "description": "Every SUB component rendered by SolidJS through @sub/solid: a gallery to look at and to test",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@sub/core": "workspace:*",
+    "@sub/example-shared": "workspace:*",
+    "@sub/solid": "workspace:*",
+    "@sub/tokens": "workspace:*",
+    "solid-js": "^1.9.0"
+  },
+  "devDependencies": {
+    "vite-plugin-solid": "latest",
+    "vite": "8.4.0"
+  }
+}

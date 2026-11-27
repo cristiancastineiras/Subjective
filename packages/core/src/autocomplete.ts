@@ -26,6 +26,9 @@ export interface Suggestion {
  *
  * Keys: Down opens/moves, Up moves back (to the input), Enter picks, Esc closes (input is kept), Tab closes.
  * The number of suggestions is announced politely once the list settles, not per keystroke.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
+ * @fires {CustomEvent<{ query: string }>} sub-search - The text changed and is long enough to search (remote suggestions)
+ * @fires {CustomEvent<{ value: string; label: string }>} sub-select - A suggestion was chosen
  */
 export class SubAutocomplete extends SubTextField {
   static override properties = {

@@ -1,0 +1,22 @@
+{
+  "name": "@sub/example-preact",
+  "private": true,
+  "type": "module",
+  "description": "Every SUB component rendered by Preact through @sub/preact: a gallery to look at and to test",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@sub/core": "workspace:*",
+    "@sub/example-shared": "workspace:*",
+    "@sub/preact": "workspace:*",
+    "@sub/tokens": "workspace:*",
+    "preact": "^10.0.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "latest",
+    "vite": "8.4.0"
+  }
+}

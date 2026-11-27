@@ -48,6 +48,7 @@ export class SubTabPanel extends LitElement {
  *   </sub-tabs>
  *
  * Panels get their accessible name from the tab text (an id reference could not cross the shadow root).
+ * @fires {CustomEvent<{ index: number; label: string }>} sub-tab-change - Another tab was selected
  */
 export class SubTabs extends LitElement {
   static override shadowRootOptions: ShadowRootInit = { mode: 'open', delegatesFocus: true }

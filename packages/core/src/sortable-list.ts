@@ -193,6 +193,9 @@ export class SubSortableItem extends LitElement {
   }
 }
 
+/**
+ * @fires {CustomEvent<{ from: number; to: number; labels: string[] }>} sub-reorder - An item was moved
+ */
 export class SubSortableList extends LitElement {
   static override properties = {
     label: { type: String },

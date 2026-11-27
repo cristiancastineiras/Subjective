@@ -1,6 +1,6 @@
 import { LitElement, css, html, nothing, type PropertyDeclarations, type TemplateResult } from 'lit'
 import { getTabbable } from './focus'
-import { placeNear } from './shared/position'
+import { autoUpdate, placeNear, type Placement } from './shared/position'
 import { baseStyles, focusStyles, popupMotion } from './shared/styles'
 import { define, emit, warn } from './shared/utils'
 
@@ -13,6 +13,8 @@ const supportsPopover = typeof HTMLElement !== 'undefined' && typeof HTMLElement
  * open; Esc, a click outside, or Tab leaving the panel closes it and Esc returns focus to the trigger.
  *
  *   <sub-popover label="Shipping details"><button slot="trigger">Details</button>Free over 50.</sub-popover>
+ * @fires {CustomEvent} sub-close - The panel closed
+ * @fires {CustomEvent} sub-open - The panel opened
  */
 export class SubPopover extends LitElement {
   static override properties: PropertyDeclarations = {
@@ -70,8 +72,18 @@ export class SubPopover extends LitElement {
     document.addEventListener('pointerdown', this.#onOutside)
   }
 
+  #stopFollowing: (() => void) | undefined
+  #current: Placement | undefined
+
+  #unfollow(): void {
+    this.#stopFollowing?.()
+    this.#stopFollowing = undefined
+    this.#current = undefined
+  }
+
   override disconnectedCallback(): void {
     super.disconnectedCallback()
+    this.#unfollow()
     this.removeEventListener('click', this.#onHostClick)
     document.removeEventListener('pointerdown', this.#onOutside)
   }
@@ -118,10 +130,13 @@ export class SubPopover extends LitElement {
     if (this.open) {
       if (supportsPopover) panel.showPopover()
       else panel.setAttribute('data-open', '')
-      if (t) placeNear(t, panel, this.placement, 'start', 6)
+      // attached to its trigger while open: follows scrolling, flips when there is no room
+      this.#unfollow()
+      if (t) this.#stopFollowing = autoUpdate(() => (this.#current = placeNear(t, panel, this.placement, 'start', 6, 8, { current: this.#current, fitHeight: true })), [t, panel])
       this.initialFocus()?.focus()
       emit(this, 'sub-open')
     } else {
+      this.#unfollow()
       if (supportsPopover && panel.matches(':popover-open')) panel.hidePopover()
       panel.removeAttribute('data-open')
       emit(this, 'sub-close')

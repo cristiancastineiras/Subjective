@@ -1,5 +1,14 @@
 packages:
   - packages/*
   - playground
+  - examples/*
 minimumReleaseAgeExclude:
   - vite@8.4.0
+# each package resolves its peers from its own dependencies: the Angular example compiles with the TypeScript it
+# declares (5.9, a JavaScript API), not the workspace root's native TypeScript 7
+resolvePeersFromWorkspaceRoot: false
+# @analogjs/vite-plugin-angular imports typescript without declaring it: declared here, so it gets the app's 5.9
+packageExtensions:
+  '@analogjs/vite-plugin-angular':
+    peerDependencies:
+      typescript: '*'

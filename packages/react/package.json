@@ -1,0 +1,31 @@
+{
+  "name": "@sub/react",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SUB for React 18 and 19 (components, events as onX props, ref = the element), generated from @sub/core's custom-elements.json",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": true,
+  "scripts": {
+    "build": "node ../../scripts/gen-frameworks.mjs react && tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@lit/react": "^1.0.8",
+    "@sub/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "react": "^19.0.0",
+    "@types/react": "^19.0.0"
+  }
+}

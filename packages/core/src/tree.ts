@@ -15,6 +15,8 @@ export interface TreeNode {
  * items, Right expands (or enters the first child), Left collapses (or goes to the parent), Home/End,
  * `*` expands all siblings, Enter/Space select, type a letter to jump. `aria-level`, `aria-expanded`,
  * `aria-selected` are set for you. `nodes` is a property: `el.nodes = [{ id, label, children }]`.
+ * @fires {CustomEvent<{ id: string; expanded: boolean }>} sub-expand - A branch opened or closed
+ * @fires {CustomEvent<{ id: string; label: string }>} sub-select - A node was chosen
  */
 export class SubTree extends LitElement {
   static override properties = {

@@ -1,0 +1,29 @@
+{
+  "name": "@sub/solid",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SUB for SolidJS (JSX types with prop: and on:, registerAll), generated from @sub/core's custom-elements.json",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": true,
+  "scripts": {
+    "build": "node ../../scripts/gen-frameworks.mjs solid && tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@sub/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "solid-js": ">=1.8"
+  },
+  "devDependencies": {
+    "solid-js": "^1.9.0"
+  }
+}

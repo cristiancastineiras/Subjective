@@ -1,0 +1,31 @@
+{
+  "name": "@sub/example-angular",
+  "private": true,
+  "type": "module",
+  "description": "Every SUB component rendered by Angular through @sub/angular: a gallery to look at and to test",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@angular/common": "latest",
+    "@angular/compiler": "latest",
+    "@angular/core": "latest",
+    "@angular/forms": "latest",
+    "@angular/platform-browser": "latest",
+    "@sub/angular": "workspace:*",
+    "@sub/core": "workspace:*",
+    "@sub/example-shared": "workspace:*",
+    "@sub/tokens": "workspace:*",
+    "rxjs": "^7.8.0",
+    "tslib": "^2.6.0"
+  },
+  "devDependencies": {
+    "@analogjs/vite-plugin-angular": "latest",
+    "@angular/build": "22.3.0",
+    "@angular/compiler-cli": "22.3.0",
+    "typescript": "~6.0.3",
+    "vite": "8.4.0"
+  }
+}

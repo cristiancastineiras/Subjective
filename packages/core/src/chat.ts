@@ -17,6 +17,9 @@ import { iconStop } from './shared/material-icons'
  *
  * Put `<sub-chat-message>` children inside. Events: `sub-send` {message, source},
  * `sub-stop`, `sub-escalate`.
+ * @fires {CustomEvent} sub-escalate - The user asked for a human
+ * @fires {CustomEvent<{ message: string; source: 'composer' | 'suggestion' | 'example' }>} sub-send - The user sent a message
+ * @fires {CustomEvent} sub-stop - The user asked to stop generating
  */
 export class SubChat extends LitElement {
   static override properties = {

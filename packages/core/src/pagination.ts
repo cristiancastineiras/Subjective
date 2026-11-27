@@ -3,6 +3,7 @@ import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, emit } from './shared/utils'
 import { iconChevronLeft, iconChevronRight } from './shared/material-icons'
+import { routeLink } from './shared/navigate'
 
 type Slot = number | 'gap'
 
@@ -29,6 +30,8 @@ export function pageWindow(page: number, pages: number, siblings: number): Slot[
  * Always tells where you are: "Page 3 of 24" and, with `total-items`/`page-size`, "Showing 41-60 of 247".
  * Navigation = links when `href-template` is set (`?page={page}`), buttons otherwise.
  * On narrow containers: Previous, "Page x of y", Next.
+ * @fires {CustomEvent<{ href: string; url: string }>} sub-navigate - A link inside the component was clicked; cancelable: cancel it to route it yourself (see configure({ navigate }))
+ * @fires {CustomEvent<{ page: number }>} sub-page-change - A page was requested; cancelable (an SPA routes it itself)
  */
 export class SubPagination extends LitElement {
   static override shadowRootOptions: ShadowRootInit = { mode: 'open', delegatesFocus: true }
@@ -161,6 +164,7 @@ export class SubPagination extends LitElement {
     const proceed = emit(this, 'sub-page-change', { page: n }, { cancelable: true })
     if (!proceed) event.preventDefault()
     else if (!this.hrefTemplate) this.page = n
+    else routeLink(this, event as MouseEvent) // a link: offered to the app's router (sub-navigate)
   }
 
   #control(n: number, content: unknown, opts: { current?: boolean; disabled?: boolean; name?: string; cls?: string } = {}) {

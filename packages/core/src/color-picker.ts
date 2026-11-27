@@ -12,6 +12,8 @@ const HEX = /^#[0-9a-fA-F]{6}$/
  * presets are buttons with names and `aria-pressed` (never just a coloured square).
  *
  *   <sub-color-picker label="Brand colour" value="#1d70b8" presets="#1d70b8:Blue,#00703c:Green"></sub-color-picker>
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
+ * @fires {Event} input - The value is changing while the user types (native event)
  */
 export class SubColorPicker extends SubFormControl {
   static override properties = {

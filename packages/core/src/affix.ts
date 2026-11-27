@@ -7,6 +7,7 @@ import { define, emit } from './shared/utils'
  * the viewport top in px. Fires `sub-affix-change` ({stuck}) and reflects `stuck`. Sticky content must
  * never cover focused elements (WCAG 2.4.11): keep it small and give scrolled targets
  * `scroll-margin-top`.
+ * @fires {CustomEvent<{ stuck: boolean }>} sub-affix-change - It became fixed or went back in the flow
  */
 export class SubAffix extends LitElement {
   static override properties = {

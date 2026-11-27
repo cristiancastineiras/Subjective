@@ -13,6 +13,7 @@ import { OptionsController, defineOption } from './option'
  *
  * `variant="card"` makes each option a bordered card (the whole card is the target).
  * `orientation="horizontal"` only for 2-3 short options such as Yes/No.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
  */
 export class SubRadioGroup extends SubFormControl {
   static override properties = {

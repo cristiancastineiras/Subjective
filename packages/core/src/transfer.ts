@@ -15,6 +15,7 @@ export interface TransferItem {
  * Move items between two lists ("Available" -> "Selected"). Each list is a labelled group of NATIVE
  * checkboxes with a select-all; two real buttons move the ticked items and announce the result. No
  * drag-only interaction. The selected keys are submitted under `name`.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
  */
 export class SubTransfer extends SubFormControl {
   static override properties = {

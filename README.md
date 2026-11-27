@@ -12,6 +12,8 @@ accessible each component is **as you configure it**.
 | [`@sub/tokens`](packages/tokens) | Design tokens in three tiers (palette -> semantic -> component), light/dark themes, Atkinson Hyperlegible fonts |
 | [`@sub/core`](packages/core) | The components (Lit), shared building blocks, `audit()`, focus/announce utilities, Material Symbols icons |
 | [`playground`](playground) | **Studio** (a complete app + theme editor), then one page per component: live example on the left, **Configure** and **Accessibility** on the right |
+| `@sub/react` `@sub/vue` `@sub/angular` `@sub/preact` `@sub/solid` `@sub/svelte` | The same components for each framework, **generated** from the components' contract (see [Frameworks](#frameworks)) |
+| [`examples`](examples) | Every component rendered by each of the six frameworks (a grid to look at and to test) |
 
 ## Quick start
 
@@ -29,6 +31,31 @@ defineButton()
 
 Every component has its own entry (`@sub/core/<name>`), so you only ship what you use. `@sub/core` also
 exports everything and `defineAll()`. Set `data-sub-theme="dark"` on any ancestor for the dark theme.
+
+## Frameworks
+
+The Web Components are the only implementation. Their contract (properties, attributes, typed events, methods)
+is `packages/core/custom-elements.json`, produced on every build by the Custom Elements Manifest analyzer; a
+plugin there fails the build if a component fires an event its JSDoc does not declare (`@fires {Type} name`).
+`scripts/gen-frameworks.mjs` turns that contract into one package per framework: **never edit `generated/`**,
+change the component or the generator (`pnpm generate`). Why this approach: [docs/integracion-frameworks.md](docs/integracion-frameworks.md).
+
+| Package | You write |
+|---|---|
+| `@sub/react` | `<SubSelect label="Plan" options={opts} onSubSelect={(e) => e.detail.value} ref={el} />` (React 18 and 19), `useSubNavigate(navigate)` |
+| `@sub/vue` | `<SubSelect v-model="plan" label="Plan" @sub-select="..." />`, `app.use(subRouter(router))` |
+| `@sub/angular` | `imports: [SUB]`, then `<sub-select [options]="opts" (sub-select)="..." [(ngModel)]="plan">` (or `formControl`) |
+| `@sub/preact`, `@sub/solid`, `@sub/svelte` | `<sub-select>` itself, fully typed (`onsub-select`, `on:sub-select`), and `registerAll()` |
+
+Every control is form-associated, so a native `<form>` submits it in any framework. Links that components draw
+inside their shadow root (button `href`, link, pagination, menu, breadcrumbs, nav menu) go through your router:
+`configure({ navigate: (href) => router.push(href) })`, or cancel the `sub-navigate` event; a framework link
+component you put inside breadcrumbs or a nav menu keeps its own click handler.
+
+`examples/<framework>` renders every component through its package, plus two-way binding, a form and a router
+(`pnpm build`, then `pnpm --filter @sub/example-vue dev`: React 4301, Preact 4302, Solid 4303, Vue 4304, Svelte 4305,
+Angular 4306). `pnpm test:frameworks` runs one conformance suite against the six. `@sub/angular` ships TypeScript
+sources compiled by the app's Angular compiler; publishing it needs ng-packagr (partial compilation).
 
 ## Principles
 
@@ -120,8 +147,17 @@ Components that are containers answer to their **own** width (container queries)
 `<sub-carousel>` shows "2 / 5" in one row of controls below 24rem and changes slide with a swipe (the buttons do the
 same, WCAG 2.5.1), `<sub-splitter>` stacks its panes below 24rem, `<sub-transfer>` stacks its lists with full-width
 buttons whose arrows point up and down, `<sub-descriptions>` stacks label over value. Touch screens are not offered
-"drag and drop" (`<sub-upload>`). Wide tables scroll inside their own keyboard-focusable region. Popups that fit
-neither above nor below their anchor (a landscape phone, a zoomed page) stay on screen and scroll inside.
+"drag and drop" (`<sub-upload>`). Wide tables scroll inside their own keyboard-focusable region.
+
+## Popups stay attached
+
+Everything that hangs from a component (menu and dropdown, date picker calendar, popover and popconfirm, the option
+panels of select / autocomplete / mentions / tree select / cascader, tooltip, the tour's highlight and step) is
+attached to what it came from (`shared/position.ts`): it follows every scroll of the page or of any scroll container
+in the same frame (never lagging), a resize, the phone keyboard and pinch zoom; it moves above its anchor when there
+is no room below (and keeps its side while it still fits, so it does not jump while you scroll); when it fits on
+neither side it keeps to the larger room and scrolls inside; and when its anchor leaves the screen, it leaves with
+it instead of sticking to the edge. `data-placement="top|bottom"` on the popup says where it went.
 
 ## Corners: controls, panels, items
 

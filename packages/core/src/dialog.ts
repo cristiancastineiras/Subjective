@@ -18,6 +18,8 @@ const supportsClosedBy = typeof HTMLDialogElement !== 'undefined' && 'closedBy' 
  * - Footer buttons go in `slot="actions"`.
  *
  * Avoid stacking modals and avoid them for non-critical content (prefer inline disclosure).
+ * @fires {CustomEvent<{ returnValue: string }>} close - The dialog closed
+ * @fires {CustomEvent} sub-cancel - Esc or the close button; cancelable (call preventDefault to keep it open)
  */
 export class SubDialog extends LitElement {
   static override properties = {

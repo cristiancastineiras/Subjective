@@ -14,6 +14,7 @@ import { iconChevronLeft, iconChevronRight, iconPause, iconPlayArrow } from './s
  * (and stops autoplay); the Previous / Next buttons are its single-tap alternative (WCAG 2.5.1).
  *
  *   <sub-carousel label="Featured products"><div>Slide 1</div><div>Slide 2</div></sub-carousel>
+ * @fires {CustomEvent<{ index: number }>} sub-slide - The visible slide changed
  */
 export class SubCarousel extends LitElement {
   static override properties = {

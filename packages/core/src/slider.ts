@@ -8,6 +8,7 @@ import { define } from './shared/utils'
  * Slider (native `<input type="range">`): arrows adjust, Home/End jump to min/max, PageUp/PageDown
  * make bigger steps; the current value is always visible as text (`<output>`), never only a thumb.
  * Use for approximate values; for exact numbers prefer <sub-input-number>.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
  */
 export class SubSlider extends SubFormControl {
   static override properties = {

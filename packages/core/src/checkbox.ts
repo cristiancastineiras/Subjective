@@ -10,6 +10,7 @@ import { define, emit } from './shared/utils'
  * Checkbox: non-exclusive choice (none, one or many). The visible label sits to the right and the
  * whole row is the click target (>= 44px). Use `indeterminate` for a parent of partly-checked children.
  * Submits `value` (default "on") under `name` only while checked.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
  */
 export class SubCheckbox extends SubFormControl {
   static override properties = {
@@ -150,6 +151,7 @@ export class SubCheckbox extends SubFormControl {
 /**
  * Group of related checkboxes: `fieldset` + `legend` (the group's accessible name).
  * `select-all` adds a parent checkbox with that label that reflects (indeterminate) and drives the children.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
  */
 export class SubCheckboxGroup extends LitElement {
   static override properties = {

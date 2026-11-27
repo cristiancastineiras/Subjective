@@ -14,6 +14,7 @@ const LABEL: Record<AlertVariant, string> = { info: 'Information', success: 'Suc
  * `error` is announced assertively (`role="alert"`); the rest politely (`role="status"`).
  * Never auto-dismisses. System errors: say what happened, why, and what to do (put the action in
  * `slot="actions"`: "Try again", "Contact support"), without codes or stack traces.
+ * @fires {CustomEvent} sub-dismiss - The user dismissed the alert
  */
 export class SubAlert extends LitElement {
   static override shadowRootOptions: ShadowRootInit = { mode: 'open', delegatesFocus: true }

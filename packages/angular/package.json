@@ -1,0 +1,28 @@
+{
+  "name": "@sub/angular",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SUB for Angular (typed directives and form value accessors), generated from @sub/core's custom-elements.json",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "files": [
+    "src",
+    "generated"
+  ],
+  "sideEffects": true,
+  "scripts": {
+    "build": "node ../../scripts/gen-frameworks.mjs angular"
+  },
+  "dependencies": {
+    "@sub/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=20",
+    "@angular/forms": ">=20"
+  }
+}

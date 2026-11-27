@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": [
+      "vite/client"
+    ],
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "noUncheckedIndexedAccess": false,
+    "outDir": "dist/tsc"
+  },
+  "include": [
+    "src",
+    "../shared"
+  ],
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  }
+}

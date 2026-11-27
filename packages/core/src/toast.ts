@@ -26,6 +26,7 @@ interface ToastItem extends Required<Pick<ToastOptions, 'message' | 'variant'>> 
  * Timers pause while the pointer or focus is inside (WCAG 2.2.1); errors never auto-dismiss.
  * Use for confirmations ("Notifications turned off") and short Undo windows (~5 s), never for
  * field errors or anything the user must read.
+ * @fires {CustomEvent<{ id: string; message: string }>} sub-toast-action - A toast's action button was pressed
  */
 export class SubToaster extends LitElement {
   static override properties = {

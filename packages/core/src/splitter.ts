@@ -9,6 +9,7 @@ import { define, emit } from './shared/utils'
  * the limits; Enter collapses / restores the first pane. Dragging works with the pointer, but the
  * keyboard alternative is complete (WCAG 2.5.7). Values are the first pane's percentage.
  * Narrower than 24rem (a phone), a horizontal splitter stacks its panes at full width (no handle).
+ * @fires {CustomEvent<{ value: number }>} sub-resize - The first pane size changed (percent)
  */
 export class SubSplitter extends LitElement {
   static override properties = {

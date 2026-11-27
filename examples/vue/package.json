@@ -1,0 +1,22 @@
+{
+  "name": "@sub/example-vue",
+  "private": true,
+  "type": "module",
+  "description": "Every SUB component rendered by Vue through @sub/vue: a gallery to look at and to test",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@sub/core": "workspace:*",
+    "@sub/example-shared": "workspace:*",
+    "@sub/tokens": "workspace:*",
+    "@sub/vue": "workspace:*",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "latest",
+    "vite": "8.4.0"
+  }
+}

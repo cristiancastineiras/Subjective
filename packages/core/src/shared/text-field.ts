@@ -5,7 +5,11 @@ import { debounce } from './utils'
 
 type Field = HTMLInputElement | HTMLTextAreaElement
 
-/** Behaviour shared by <sub-input> and <sub-textarea>: value, native validity, character counter. */
+/**
+ * Behaviour shared by <sub-input> and <sub-textarea>: value, native validity, character counter.
+ *
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
+ */
 export abstract class SubTextField extends SubFormControl {
   static override properties: PropertyDeclarations = {
     value: { type: String },

@@ -1,10 +1,11 @@
 import { LitElement, css, html, nothing } from 'lit'
-import { placeNear } from './shared/position'
+import { autoUpdate, placeNear, type Placement } from './shared/position'
 import { bottomSheet, isSheet } from './shared/sheet'
 import { baseStyles, controlTypography, focusInset, focusStyles, iconStyles, popupMotion, visuallyHidden } from './shared/styles'
 import { define, emit, warn, wrap } from './shared/utils'
 import { OptionsController, defineOption } from './option'
 import { iconKeyboardArrowDown, iconMoreHoriz } from './shared/material-icons'
+import { routeLink } from './shared/navigate'
 
 const supportsPopover = typeof HTMLElement !== 'undefined' && typeof HTMLElement.prototype.showPopover === 'function'
 
@@ -17,6 +18,8 @@ const supportsPopover = typeof HTMLElement !== 'undefined' && typeof HTMLElement
  * to the trigger, Tab closes. `icon-only` shows "..." with `label` as its accessible name.
  * On small screens the list is an action sheet docked to the bottom edge (full-width items within thumb
  * reach); tapping the dimmed page closes it without touching what is underneath.
+ * @fires {CustomEvent<{ href: string; url: string }>} sub-navigate - A link inside the component was clicked; cancelable: cancel it to route it yourself (see configure({ navigate }))
+ * @fires {CustomEvent<{ value: string }>} sub-select - An item was chosen
  */
 export class SubMenu extends LitElement {
   static override shadowRootOptions: ShadowRootInit = { mode: 'open', delegatesFocus: true }
@@ -93,6 +96,7 @@ export class SubMenu extends LitElement {
         border-radius: var(--sub-menu-radius);
         background: var(--sub-color-surface-raised);
         color: var(--sub-color-text);
+        overflow-y: auto; /* a short screen: it keeps to the room beside its button and scrolls */
         z-index: var(--sub-z-dropdown);
       }
 
@@ -144,8 +148,29 @@ export class SubMenu extends LitElement {
     defineOption()
   }
 
+  #stopFollowing: (() => void) | undefined
+  #placement: Placement | undefined
+
+  #position = (): void => {
+    const menu = this.#menu
+    const trigger = this.#trigger
+    if (!menu || !trigger) return
+    if (isSheet()) {
+      menu.style.top = menu.style.left = menu.style.maxBlockSize = ''
+      return
+    }
+    this.#placement = placeNear(trigger, menu, 'bottom', 'start', 4, 8, { current: this.#placement, fitHeight: true })
+  }
+
+  #unfollow(): void {
+    this.#stopFollowing?.()
+    this.#stopFollowing = undefined
+    this.#placement = undefined
+  }
+
   override disconnectedCallback(): void {
     super.disconnectedCallback()
+    this.#unfollow()
     // Removed while open (a route change, a re-render): the popover closes with it, so stop listening to the page.
     // Removal hides the popover without a toggle event, hence the explicit reset.
     document.removeEventListener('pointerdown', this.#onOutside)
@@ -173,9 +198,8 @@ export class SubMenu extends LitElement {
     this._open = true
     if (supportsPopover) menu.showPopover()
     else menu.setAttribute('data-open', '')
-    // an action sheet on small screens (CSS): no placement
-    if (isSheet()) menu.style.top = menu.style.left = ''
-    else placeNear(trigger, menu, 'bottom', 'start', 4)
+    // attached to its button while open (an action sheet on small screens: no placement)
+    this.#stopFollowing = autoUpdate(this.#position, [trigger, menu])
     const items = this.#items
     if (focus !== 'none') (focus === 'last' ? items[items.length - 1] : items[0])?.focus()
     document.addEventListener('pointerdown', this.#onOutside)
@@ -187,6 +211,7 @@ export class SubMenu extends LitElement {
     this._open = false
     if (supportsPopover && menu.matches(':popover-open')) menu.hidePopover()
     menu.removeAttribute('data-open')
+    this.#unfollow()
     document.removeEventListener('pointerdown', this.#onOutside)
     if (returnFocus) this.#trigger?.focus()
   }
@@ -199,6 +224,7 @@ export class SubMenu extends LitElement {
   #onToggle = (event: Event): void => {
     if ((event as ToggleEvent).newState === 'closed' && this._open) {
       this._open = false
+      this.#unfollow()
       this.#trigger?.focus()
     }
   }
@@ -284,7 +310,7 @@ export class SubMenu extends LitElement {
         <div class="items" role="none">
           ${options.map((o) =>
             o.href
-              ? html`<a role="menuitem" href=${o.href} tabindex="-1" aria-disabled=${o.disabled ? 'true' : nothing} @click=${() => this.#hide(false)}>${o.label}</a>`
+              ? html`<a role="menuitem" href=${o.href} tabindex="-1" aria-disabled=${o.disabled ? 'true' : nothing} @click=${(e: MouseEvent) => (routeLink(this, e), this.#hide(false))}>${o.label}</a>`
               : html`<button
                   role="menuitem"
                   type="button"

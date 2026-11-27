@@ -3,6 +3,7 @@ import { ChildrenController } from './shared/children'
 import { baseStyles, focusInset, focusStyles, iconStyles } from './shared/styles'
 import { define } from './shared/utils'
 import { iconKeyboardArrowDown } from './shared/material-icons'
+import { forwardClick } from './shared/navigate'
 
 /**
  * Site / app navigation (SUB "Menu"). A `nav` of links with optional groups, using the disclosure
@@ -15,6 +16,7 @@ import { iconKeyboardArrowDown } from './shared/material-icons'
  *   </sub-nav-menu>
  *
  * `orientation="horizontal"` lays the top level in a row. Tab walks links; Enter/Space opens a group.
+ * @fires {CustomEvent<{ href: string; url: string }>} sub-navigate - A link inside the component was clicked; cancelable: cancel it to route it yourself (see configure({ navigate }))
  */
 export class SubNavMenu extends LitElement {
   static override properties = {
@@ -111,7 +113,7 @@ export class SubNavMenu extends LitElement {
   ]
 
   #link(a: HTMLElement) {
-    return html`<a href=${a.getAttribute('href') ?? '#'} aria-current=${a.getAttribute('aria-current') ?? nothing}>${a.textContent?.trim()}</a>`
+    return html`<a href=${a.getAttribute('href') ?? '#'} @click=${(e: MouseEvent) => forwardClick(this, e, a)} aria-current=${a.getAttribute('aria-current') ?? nothing}>${a.textContent?.trim()}</a>`
   }
 
   #toggle(id: string): void {

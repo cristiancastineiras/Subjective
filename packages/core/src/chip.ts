@@ -8,6 +8,7 @@ import { iconClose } from './shared/material-icons'
  * Chip / tag, optionally removable (an active filter). The remove button names WHAT it removes:
  * "Remove filter: In stock". Removing fires `sub-remove`; the host app updates the list and moves
  * focus somewhere sensible (e.g. the next chip or the results heading).
+ * @fires {CustomEvent} sub-remove - The remove button was pressed
  */
 export class SubChip extends LitElement {
   static override shadowRootOptions: ShadowRootInit = { mode: 'open', delegatesFocus: true }

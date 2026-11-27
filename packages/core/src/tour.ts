@@ -3,7 +3,7 @@ import { defineButton } from './button'
 import { rememberFocus } from './focus'
 import { isSheet, supportsPopover } from './shared/listbox'
 import { messages } from './shared/messages'
-import { placeNear } from './shared/position'
+import { autoUpdate, placeNear, type Placement } from './shared/position'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, emit, warn } from './shared/utils'
 import { iconClose } from './shared/material-icons'
@@ -60,6 +60,8 @@ export class SubTourStep extends LitElement {
  *     <sub-tour-step heading="That is all">No target: the step is centred.</sub-tour-step>
  *   </sub-tour>
  *   tour.start()          // or: tour.steps = [{ target, title, description }]
+ * @fires {CustomEvent<{ index: number; step: unknown }>} sub-tour-change - Another step is shown
+ * @fires {CustomEvent<{ reason: 'finish' | 'skip' | 'escape'; index: number }>} sub-tour-close - The tour ended
  */
 export class SubTour extends LitElement {
   static override properties = {
@@ -353,19 +355,23 @@ export class SubTour extends LitElement {
     const r = target.getBoundingClientRect()
     Object.assign(spot.style, { padding: '', margin: '', top: `${r.top}px`, left: `${r.left}px`, width: `${r.width}px`, height: `${r.height}px` })
     if (isSheet()) {
-      card.style.top = card.style.left = ''
-      // keep the target above the docked step
-      const over = r.bottom - (innerHeight - card.offsetHeight - 16)
-      if (over > 0) scrollBy({ top: over })
+      card.style.top = card.style.left = '' // docked to the bottom edge (CSS)
       return
     }
-    placeNear({ getBoundingClientRect: () => spot.getBoundingClientRect() }, card, step?.placement ?? 'bottom', 'start', 12)
+    this.#cardSide = placeNear({ getBoundingClientRect: () => spot.getBoundingClientRect() }, card, step?.placement ?? 'bottom', 'start', 12, 8, { current: this.#cardSide })
   }
 
-  #schedule = (): void => {
-    cancelAnimationFrame(this.#raf)
-    this.#raf = requestAnimationFrame(this.#place)
+  /** Phones: the step is docked to the bottom edge; on a NEW step, scroll its target above it (never while the user scrolls) */
+  #keepTargetAboveDock(): void {
+    const card = this.#card
+    const target = this.#target(this.#steps[this.index])
+    if (!isSheet() || !card || !target) return
+    const over = target.getBoundingClientRect().bottom - (innerHeight - card.offsetHeight - 16)
+    if (over > 0) scrollBy({ top: over })
   }
+
+  #stopFollowing: (() => void) | undefined
+  #cardSide: Placement | undefined
 
   #onKey = (event: KeyboardEvent): void => {
     if (event.key === 'Escape' && this.open) {
@@ -385,8 +391,8 @@ export class SubTour extends LitElement {
     spot?.removeAttribute('data-open')
     card?.removeAttribute('data-open')
     this.#shown = false
-    window.removeEventListener('resize', this.#schedule)
-    window.removeEventListener('scroll', this.#schedule, true)
+    this.#stopFollowing?.()
+    this.#stopFollowing = undefined
     document.removeEventListener('keydown', this.#onKey, true)
     cancelAnimationFrame(this.#raf)
   }
@@ -405,14 +411,16 @@ export class SubTour extends LitElement {
         spot.setAttribute('data-open', '')
         card.setAttribute('data-open', '')
       }
-      window.addEventListener('resize', this.#schedule)
-      window.addEventListener('scroll', this.#schedule, true)
+      // the highlight and the step stay attached to the target while the page scrolls
+      this.#stopFollowing = autoUpdate(this.#place)
       document.addEventListener('keydown', this.#onKey, true)
     }
     if (changed.has('index') || changed.has('open')) {
       const target = this.#target(this.#steps[this.index])
       target?.scrollIntoView({ block: 'center', inline: 'nearest' })
+      this.#cardSide = undefined // a new step picks its side again
       this.#place()
+      this.#keepTargetAboveDock()
       card.focus({ preventScroll: true }) // screen readers read the step's name and description
     } else this.#place()
   }

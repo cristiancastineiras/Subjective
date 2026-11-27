@@ -17,11 +17,12 @@ export interface OptionData {
  * Renders nothing; the parent control reads it and renders native, accessible markup itself.
  */
 export class SubOption extends LitElement {
+  // Reflected: the parent reads the attributes, and frameworks (Preact, Vue, Svelte, Solid) set the PROPERTIES
   static override properties = {
-    value: { type: String },
-    description: { type: String },
-    href: { type: String },
-    group: { type: String },
+    value: { type: String, reflect: true },
+    description: { type: String, reflect: true },
+    href: { type: String, reflect: true },
+    group: { type: String, reflect: true },
     disabled: { type: Boolean, reflect: true },
   }
 
@@ -34,10 +35,7 @@ export class SubOption extends LitElement {
 
   constructor() {
     super()
-    this.value = ''
-    this.description = ''
-    this.href = ''
-    this.group = ''
+    // value, description, href and group stay unset: a reflected '' would replace the label as the value
     this.disabled = false
   }
 

@@ -24,6 +24,8 @@ const addMonths = (d: Date, n: number) => {
  * day/week, Home/End go to the start/end of the week, PageUp/PageDown change month (Shift: year),
  * Enter/Space select. Days are buttons with full-date names ("Thursday, 26 November 2026"); today is
  * `aria-current="date"`, the selection is `aria-selected`. `locale` drives names and the first weekday.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
+ * @fires {CustomEvent<{ value: string }>} sub-select - A day was chosen (ISO date)
  */
 export class SubCalendar extends LitElement {
   static override properties = {

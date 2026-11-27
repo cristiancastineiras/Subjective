@@ -22,6 +22,8 @@ type Focusable = 'trigger' | 'listbox' | 'search'
  *
  * Keys (focus stays on the field, `aria-activedescendant` marks the option): Down/Up/Alt+Down open, Up/Down move,
  * Home/End, Enter/Space choose, a letter jumps to a match, Esc closes and keeps focus on the field, Tab closes.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
+ * @fires {CustomEvent<{ value: string; values: string[] }>} sub-select - The selection changed
  */
 export class SubSelect extends SubFormControl {
   static override properties: PropertyDeclarations = {

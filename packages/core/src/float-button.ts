@@ -10,6 +10,7 @@ import { define, emit } from './shared/utils'
  * `back-top` turns it into "Back to top": it appears after scrolling, and after jumping it moves
  * keyboard focus to the page heading (the button itself disappears, so focus must not be left on it).
  * `static` renders it in flow (docs, previews). Keep it small: it must never cover content or focus.
+ * @fires {CustomEvent} sub-float-click - The button was pressed
  */
 export class SubFloatButton extends LitElement {
   static override properties = {

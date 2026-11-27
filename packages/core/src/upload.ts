@@ -13,6 +13,7 @@ const size = (bytes: number): string => (bytes < 1024 ? `${bytes} B` : bytes < 1
  * drag-and-drop zone that is only an ENHANCEMENT (the button always works), and a file list with named
  * remove buttons. Type/size/count problems are written next to the field and announced. Files are
  * submitted with the form (FormData). Uploading itself is up to the app: listen to `sub-files`.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
  */
 export class SubUpload extends SubFormControl {
   static override properties = {

@@ -13,6 +13,8 @@ import { define, emit, warn } from './shared/utils'
  *  - alertdialog semantics; the message states the consequences
  *
  * Events: `sub-confirm`, `sub-cancel`. Open with `show()` or `open`.
+ * @fires {CustomEvent} sub-cancel - The user cancelled
+ * @fires {CustomEvent} sub-confirm - The user confirmed
  */
 export class SubConfirmDialog extends LitElement {
   static override properties = {

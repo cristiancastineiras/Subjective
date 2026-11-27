@@ -3,6 +3,7 @@ import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles, visuallyHidden } from './shared/styles'
 import { define, warn } from './shared/utils'
 import { iconOpenInNew } from './shared/material-icons'
+import { routeLink } from './shared/navigate'
 
 const VAGUE = /^(click here|here|read more|more|link)$/i
 
@@ -10,6 +11,7 @@ const VAGUE = /^(click here|here|read more|more|link)$/i
  * Navigation link. Always underlined (colour alone fails colour-blind users), visited state
  * distinct, 2px focus ring. External links announce "(opens in a new tab)".
  * Use `<sub-button href>` when it must look like a button.
+ * @fires {CustomEvent<{ href: string; url: string }>} sub-navigate - A link inside the component was clicked; cancelable: cancel it to route it yourself (see configure({ navigate }))
  */
 export class SubLink extends LitElement {
   static override shadowRootOptions: ShadowRootInit = { mode: 'open', delegatesFocus: true }
@@ -81,6 +83,7 @@ export class SubLink extends LitElement {
       target=${this.external ? '_blank' : nothing}
       rel=${this.external ? 'noopener noreferrer' : nothing}
       download=${this.download || nothing}
+      @click=${(e: MouseEvent) => routeLink(this, e)}
       ><slot></slot>${this.external
         ? html`<span class="sr-only"> ${messages.opensInNewTab}</span>${iconOpenInNew()}`
         : nothing}</a

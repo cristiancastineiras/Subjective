@@ -9,6 +9,7 @@ import { define } from './shared/utils'
  *
  * `label` names the SETTING ("Email notifications"), never the state ("Turn off ..."). The state is
  * shown as position AND text ("On"/"Off"), not colour alone. `button role="switch"`, Space/Enter toggle.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
  */
 export class SubSwitch extends SubFormControl {
   static override properties = {

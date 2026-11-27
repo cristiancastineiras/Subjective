@@ -19,6 +19,7 @@ type Validatable = HTMLElement & {
  *    with a link per field and focuses it
  *  - suppresses the browser's own error bubbles (sets `novalidate` on the form)
  * Works with <sub-*> controls and with native inputs. Listen to `sub-invalid` / `submit` as usual.
+ * @fires {CustomEvent<{ errors: Array<{ label: string; message: string; target: HTMLElement }> }>} sub-invalid - Submit was blocked: the errors shown
  */
 export class SubForm extends LitElement {
   static override properties = {

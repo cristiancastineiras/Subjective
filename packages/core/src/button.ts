@@ -2,6 +2,7 @@ import { LitElement, css, html, nothing } from 'lit'
 import { messages } from './shared/messages'
 import { baseStyles, controlTypography, focusStyles, visuallyHidden } from './shared/styles'
 import { define } from './shared/utils'
+import { routeLink } from './shared/navigate'
 
 /**
  * Hierarchy (SubUX): exactly ONE `primary` per view; `secondary` outlined; `tertiary` text-style;
@@ -16,6 +17,7 @@ export type ButtonType = 'button' | 'submit' | 'reset'
  *
  * Disabled: `disabled` removes it from the tab order. With `disabled-reason` it stays focusable
  * (`aria-disabled`) and the reason is shown next to it, so nobody wonders why.
+ * @fires {CustomEvent<{ href: string; url: string }>} sub-navigate - A link inside the component was clicked; cancelable: cancel it to route it yourself (see configure({ navigate }))
  */
 export class SubButton extends LitElement {
   static formAssociated = true
@@ -269,6 +271,7 @@ export class SubButton extends LitElement {
         target=${this.target || nothing}
         rel=${this.rel || (newTab ? 'noopener noreferrer' : nothing)}
         download=${this.download || nothing}
+        @click=${(e: MouseEvent) => routeLink(this, e)}
         >${this.#content()}${newTab ? html`<span class="sr-only"> ${messages.opensInNewTab}</span>` : nothing}</a
       >`
     }

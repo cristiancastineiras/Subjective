@@ -64,6 +64,9 @@ function caretRect(ta: HTMLTextAreaElement, pos: number): DOMRect {
  * Keys: Down/Up move, Enter inserts the highlighted one (never auto-selected: press Down first),
  * Esc closes and keeps the text, Tab moves on. Inserting writes `@value ` and emits `sub-select`.
  * Remote lists: listen to `sub-search` ({query, prefix}), assign `options`, set `remote`.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
+ * @fires {CustomEvent<{ query: string; prefix: string }>} sub-search - A mention is being typed (remote suggestions)
+ * @fires {CustomEvent<{ value: string; label: string; prefix: string }>} sub-select - A mention was inserted
  */
 export class SubMentions extends SubTextField {
   static override properties = {

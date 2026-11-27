@@ -1,6 +1,6 @@
 import { css, html, type ReactiveControllerHost } from 'lit'
 import { iconCheck } from './material-icons'
-import { placeNear } from './position'
+import { autoUpdate, placeNear, type Placement } from './position'
 import { isSheet, sheetHeadStyles } from './sheet'
 
 /** One entry of an option panel (select, autocomplete) */
@@ -56,7 +56,8 @@ export class Popup {
   readonly #gap: () => number
   readonly #onClosed: () => void
   readonly #sheet: boolean
-  #raf = 0
+  #stop: (() => void) | undefined
+  #placement: Placement | undefined
 
   constructor(host: ReactiveControllerHost & HTMLElement, o: { panel: () => HTMLElement | null; anchor: () => Pick<HTMLElement, 'getBoundingClientRect'> | null; gap?: () => number; sheet?: boolean; onClosed: () => void }) {
     this.#host = host
@@ -78,9 +79,9 @@ export class Popup {
     } else panel.setAttribute('data-open', '')
     // `auto` popovers dismiss natively; manual ones (and browsers without the API) need this
     if (manual || !supportsPopover) document.addEventListener('pointerdown', this.#onOutside)
-    this.place()
-    window.addEventListener('resize', this.#schedule)
-    window.addEventListener('scroll', this.#schedule, true)
+    // attached to its field while open: follows every scroll and resize, flips above when there is no room below
+    const anchor = this.#anchor()
+    this.#stop = autoUpdate(() => this.place(), [anchor instanceof Element ? anchor : this.#host, panel])
     return true
   }
 
@@ -97,12 +98,12 @@ export class Popup {
     const anchor = this.#anchor()
     if (!panel || !anchor || !this.open) return
     if (this.#sheet && isSheet()) {
-      panel.style.top = panel.style.left = panel.style.minInlineSize = ''
+      panel.style.top = panel.style.left = panel.style.minInlineSize = panel.style.maxBlockSize = ''
       return
     }
     const width = anchor.getBoundingClientRect().width
     panel.style.minInlineSize = width > 1 ? `${width}px` : '' // a caret (mentions) has no width: the CSS minimum applies
-    placeNear(anchor, panel, 'bottom', 'start', this.#gap())
+    this.#placement = placeNear(anchor, panel, 'bottom', 'start', this.#gap(), 8, { current: this.#placement, fitHeight: true, minHeight: 96 })
   }
 
   dispose(): void {
@@ -114,14 +115,9 @@ export class Popup {
     this.open = false
     panel.removeEventListener('toggle', this.#onToggle)
     document.removeEventListener('pointerdown', this.#onOutside)
-    window.removeEventListener('resize', this.#schedule)
-    window.removeEventListener('scroll', this.#schedule, true)
-    cancelAnimationFrame(this.#raf)
-  }
-
-  #schedule = (): void => {
-    cancelAnimationFrame(this.#raf)
-    this.#raf = requestAnimationFrame(() => this.place())
+    this.#stop?.()
+    this.#stop = undefined
+    this.#placement = undefined
   }
 
   /** Native light dismiss (Esc, outside click) closed the popover */

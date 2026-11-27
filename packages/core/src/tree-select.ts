@@ -42,6 +42,8 @@ const norm = (s: string): string => s.normalize('NFD').replace(/[̀-ͯ]/g, '').t
  * Keys: Down/Up open and move, Right opens a branch (or enters it), Left closes it (or goes to the parent),
  * Home/End, Enter/Space choose, a letter jumps, Esc closes and keeps focus on the field, Tab closes.
  * shortcut: choosing a parent does not cascade to its children; upgrade when a "check all below" is needed.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
+ * @fires {CustomEvent<{ value: string; values: string[] }>} sub-select - The selection changed
  */
 export class SubTreeSelect extends SubFormControl {
   static override properties: PropertyDeclarations = {

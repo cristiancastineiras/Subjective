@@ -11,6 +11,8 @@ import { iconAdd, iconRemove } from './shared/material-icons'
  * Numeric input for real quantities (spinbutton): native `type="number"` (Up/Down change the value,
  * min/max/step validate) plus labelled +/- buttons that are also reachable by keyboard.
  * For codes, phone numbers or card numbers use <sub-input inputmode="numeric"> instead.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
+ * @fires {Event} input - The value is changing while the user types (native event)
  */
 export class SubInputNumber extends SubTextField {
   static override properties = {

@@ -9,6 +9,7 @@ import { iconStar, iconStarFill } from './shared/material-icons'
  * Rating. Interactive: a radio group of stars (arrows move, each star says "3 of 5 stars"), `allow-clear`
  * lets the user unset it. `readonly`: one `role="img"` that says "4 of 5 stars". Filled star + outline
  * star differ by shape (not colour alone).
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
  */
 export class SubRate extends SubFormControl {
   static override properties = {

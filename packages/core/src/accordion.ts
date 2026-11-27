@@ -9,6 +9,7 @@ import { iconError, iconKeyboardArrowDown } from './shared/material-icons'
  * One accordion section: `<h{level}><button aria-expanded>` + a `region` panel. The whole header is
  * the target, the chevron sits next to the label. The panel is `hidden="until-found"` so
  * find-in-page can open it. Never collapse critical information by default.
+ * @fires {CustomEvent<{ open: boolean }>} sub-toggle - An item opened or closed
  */
 export class SubAccordionItem extends LitElement {
   static override shadowRootOptions: ShadowRootInit = { mode: 'open', delegatesFocus: true }

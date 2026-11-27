@@ -16,6 +16,7 @@ export interface CascaderOption {
  * select). The value is the path joined with `/`.
  *
  *   el.options = [{ value: 'es', label: 'Spain', children: [...] }]
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
  */
 export class SubCascader extends SubFormControl {
   static override properties = {

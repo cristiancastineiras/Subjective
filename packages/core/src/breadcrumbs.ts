@@ -4,6 +4,7 @@ import { messages } from './shared/messages'
 import { baseStyles, focusStyles, iconStyles } from './shared/styles'
 import { define, warn } from './shared/utils'
 import { iconArrowBack, iconChevronRight } from './shared/material-icons'
+import { forwardClick } from './shared/navigate'
 
 /**
  * Breadcrumb trail for hierarchies of 3+ levels: Home > Category > Sub > Current.
@@ -11,6 +12,7 @@ import { iconArrowBack, iconChevronRight } from './shared/material-icons'
  * should match the page's h1). On narrow containers only the parent shows: "<- Category".
  *
  *   <sub-breadcrumbs><a href="/">Home</a><a href="/shoes">Shoes</a><span>Running shoes</span></sub-breadcrumbs>
+ * @fires {CustomEvent<{ href: string; url: string }>} sub-navigate - A link inside the component was clicked; cancelable: cancel it to route it yourself (see configure({ navigate }))
  */
 export class SubBreadcrumbs extends LitElement {
   static override properties = {
@@ -125,13 +127,13 @@ export class SubBreadcrumbs extends LitElement {
           return html`<li>
             ${last
               ? html`<span aria-current="page">${text}</span>`
-              : html`<a href=${el.getAttribute('href') ?? '#'}>${text}</a
+              : html`<a href=${el.getAttribute('href') ?? '#'} @click=${(e: MouseEvent) => forwardClick(this, e, el)}>${text}</a
                   ><span class="sep" aria-hidden="true">${iconChevronRight()}</span>`}
           </li>`
         })}
       </ol>
       ${parent
-        ? html`<a class="back" href=${parent.getAttribute('href') ?? '#'}>${iconArrowBack()}${parent.textContent?.trim()}</a>`
+        ? html`<a class="back" href=${parent.getAttribute('href') ?? '#'} @click=${(e: MouseEvent) => forwardClick(this, e, parent)}>${iconArrowBack()}${parent.textContent?.trim()}</a>`
         : nothing}
     </nav>`
   }

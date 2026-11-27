@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit'
-import { placeNear, type Placement } from './shared/position'
+import { autoUpdate, placeNear, type Placement } from './shared/position'
 import { baseStyles } from './shared/styles'
 import { define, uid, warn } from './shared/utils'
 
@@ -183,18 +183,22 @@ export class SubTooltip extends LitElement {
     if (this.open || !this.#target) return
     if (supportsPopover) this.showPopover()
     else this.setAttribute('data-open', '')
-    placeNear(this.#target, this, this.placement)
-    window.addEventListener('scroll', this.#hide, { capture: true, passive: true })
-    window.addEventListener('resize', this.#hide)
+    const target = this.#target
+    // attached to its target while shown: follows scrolling, flips when there is no room
+    this.#stopFollowing = autoUpdate(() => (this.#current = placeNear(target, this, this.placement, 'center', 8, 8, { current: this.#current })), [target, this])
   }
+
+  #stopFollowing: (() => void) | undefined
+  #current: Placement | undefined
 
   hide(): void {
     clearTimeout(this.#timer)
     if (!this.open) return
     if (supportsPopover) this.hidePopover()
     else this.removeAttribute('data-open')
-    window.removeEventListener('scroll', this.#hide, { capture: true })
-    window.removeEventListener('resize', this.#hide)
+    this.#stopFollowing?.()
+    this.#stopFollowing = undefined
+    this.#current = undefined
   }
 
   #onEnter = (event: Event): void => {

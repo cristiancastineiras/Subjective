@@ -1,0 +1,9 @@
+import '@angular/compiler'
+import '@sub/tokens/fonts.css'
+import '@sub/tokens/theme.css'
+import '../../shared/styles.css'
+import { provideZonelessChangeDetection } from '@angular/core'
+import { bootstrapApplication } from '@angular/platform-browser'
+import { AppComponent } from './app.component'
+
+bootstrapApplication(AppComponent, { providers: [provideZonelessChangeDetection()] }).catch((error: unknown) => console.error(error))

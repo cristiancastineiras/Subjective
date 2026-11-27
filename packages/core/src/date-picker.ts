@@ -4,7 +4,7 @@ import { live } from 'lit/directives/live.js'
 import { defineCalendar, parseIso, toIso, type SubCalendar } from './calendar'
 import { SubFormControl, formControlStyles, type FormValue } from './shared/form-control'
 import { messages, type MessageContext } from './shared/messages'
-import { placeNear } from './shared/position'
+import { autoUpdate, placeNear, type Placement } from './shared/position'
 import { bottomSheet, isSheet, sheetHeadStyles, sheetHeader } from './shared/sheet'
 import { define } from './shared/utils'
 import { iconCalendarMonth } from './shared/material-icons'
@@ -23,6 +23,7 @@ const supportsPopover = typeof HTMLElement !== 'undefined' && typeof HTMLElement
  * where it was opened from (the field after Alt+Down, the button after a click or tap). `min` / `max` are
  * ISO dates. The value submitted is always ISO; digits alone (`20261126`) are accepted and formatted.
  * On small screens the calendar is a bottom sheet with the field's name and a Done button.
+ * @fires {Event} change - The value changed (native event: works with any framework and form library)
  */
 export class SubDatePicker extends SubFormControl {
   static override properties = {
@@ -129,8 +130,18 @@ export class SubDatePicker extends SubFormControl {
     document.addEventListener('pointerdown', this.#onOutside)
   }
 
+  #stopFollowing: (() => void) | undefined
+  #placement: Placement | undefined
+
+  #unfollow(): void {
+    this.#stopFollowing?.()
+    this.#stopFollowing = undefined
+    this.#placement = undefined
+  }
+
   override disconnectedCallback(): void {
     super.disconnectedCallback()
+    this.#unfollow()
     document.removeEventListener('pointerdown', this.#onOutside)
   }
 
@@ -169,9 +180,11 @@ export class SubDatePicker extends SubFormControl {
     this.#opener = opener
     if (supportsPopover) pop.showPopover()
     else pop.setAttribute('data-open', '')
-    // a bottom sheet on small screens (CSS): no placement
-    if (isSheet()) pop.style.top = pop.style.left = ''
-    else placeNear(anchor, pop, 'bottom', 'start', 4)
+    // attached to the field while open (a bottom sheet on small screens: no placement)
+    this.#stopFollowing = autoUpdate(() => {
+      if (isSheet()) pop.style.top = pop.style.left = pop.style.maxBlockSize = ''
+      else this.#placement = placeNear(anchor, pop, 'bottom', 'start', 4, 8, { current: this.#placement, fitHeight: true, minHeight: 160 })
+    }, [anchor, pop])
     const cal = this.renderRoot.querySelector<SubCalendar>('sub-calendar')
     cal?.focusDay()
   }
@@ -180,6 +193,7 @@ export class SubDatePicker extends SubFormControl {
     const pop = this.#pop
     if (!this._open || !pop) return
     this._open = false
+    this.#unfollow()
     if (supportsPopover && pop.matches(':popover-open')) pop.hidePopover()
     pop.removeAttribute('data-open')
     // back to the opener: the button after a tap does not pop up the phone keyboard

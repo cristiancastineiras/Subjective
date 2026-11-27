@@ -31,6 +31,9 @@ type Row = Record<string, unknown>
  * ticked). `expanded` holds the open keys; `expandAll()` / `collapseAll()` / `expand-all` set them in bulk.
  *
  * Not for layout. `sorting="server"` only emits `sub-sort` and leaves the order to you.
+ * @fires {CustomEvent<{ key: string; expanded: boolean }>} sub-expand - A row opened or closed its sub-rows
+ * @fires {CustomEvent<{ selected: string[] }>} sub-select - The selected rows changed
+ * @fires {CustomEvent<{ key: string; direction: 'ascending' | 'descending' }>} sub-sort - A column was sorted
  */
 export class SubTable extends LitElement {
   static override properties = {

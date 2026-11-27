@@ -9,6 +9,9 @@ import { iconContentCopy, iconRefresh, iconThumbDown, iconThumbUp } from './shar
  * One message in <sub-chat>. `assistant` messages are labelled as AI (never pretending to be a
  * person) and can offer Copy, Regenerate and Good/Bad feedback (labelled buttons, `aria-pressed`).
  * `sender`: `assistant` (default) or `user`. A visually hidden "Assistant said:" / "You said:" prefix keeps the log readable for screen readers.
+ * @fires {CustomEvent} sub-copy - The message was copied
+ * @fires {CustomEvent<{ value: '' | 'up' | 'down' }>} sub-feedback - Good / bad response feedback changed
+ * @fires {CustomEvent} sub-regenerate - The user asked for another answer
  */
 export class SubChatMessage extends LitElement {
   static override properties = {

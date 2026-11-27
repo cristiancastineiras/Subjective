@@ -1,0 +1,15 @@
+{
+  "name": "@sub/example-shared",
+  "private": true,
+  "type": "module",
+  "description": "What the six example apps share: the gallery of every demo, its styles, the framework list and the Vite setup",
+  "dependencies": {
+    "@sub/core": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "8.4.0"
+  },
+  "scripts": {
+    "build": "node ../../scripts/gen-frameworks.mjs examples"
+  }
+}
